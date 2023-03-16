@@ -7,7 +7,19 @@ export default function Home() {
                 <title>Invictus808</title>
             </Head>
             <div>
-                <h1 className='text-red-500'>Welcome to Invictus808.com</h1>
+                {/* Header */}
+
+                {/* Hero */}
+
+                {/* About */}
+
+                {/* Experience */}
+
+                {/* Skills */}
+
+                {/* Projects */}
+
+                {/* Contact Me */}
             </div>
         </>
     )
