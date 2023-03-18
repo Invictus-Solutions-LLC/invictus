@@ -1,8 +1,6 @@
 import React from 'react';
 import { Cursor, useTypewriter } from 'react-simple-typewriter';
 import BackgroundCircles from '@/components/BackgroundCircles';
-import Image from 'next/image';
-import profilePicture from '../../public/profile-picture.png';
 import Link from 'next/link';
 
 type Props = {};
@@ -25,13 +23,10 @@ function Hero({ }: Props) {
         >
             <BackgroundCircles />
 
-            <Image
+            <img
                 className='relative rounded-full h-32 w-32 mx-auto object-cover'
-                src={profilePicture}
+                src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
                 alt='profile picture'
-                placeholder='blur'
-                width='200'
-                height='200'
             />
             <div
                 className='z-20'
