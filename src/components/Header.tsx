@@ -12,7 +12,6 @@ function Header({ }: Props) {
         >
             {/* socials */}
             <motion.div
-                className='flex flex-row items-center'
                 initial={{
                     x: -500,
                     opacity: 0,
@@ -26,6 +25,7 @@ function Header({ }: Props) {
                 transition={{
                     duration: 1.5,
                 }}
+                className='flex flex-row items-center'
             >
                 {
                     socials.map((social: string, index: number) => {
@@ -43,7 +43,6 @@ function Header({ }: Props) {
 
             {/* contact */}
             <motion.div
-                className='flex flex-row items-center text-gray-300 cursor-pointer'
                 initial={{
                     x: 500,
                     opacity: 0,
@@ -57,6 +56,7 @@ function Header({ }: Props) {
                 transition={{
                     duration: 1.5,
                 }}
+                className='flex flex-row items-center text-gray-300 cursor-pointer'
             >
                 <SocialIcon
                     className='cursor-pointer'
