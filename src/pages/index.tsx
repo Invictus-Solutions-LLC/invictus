@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
+import Experience from '@/components/Experience';
 
 export default function Home() {
     return (
@@ -10,7 +11,7 @@ export default function Home() {
                 <title>Invictus808</title>
             </Head>
             <div
-                className='bg-[rgb(36,36,36)] text-white h-screen snap-y snap-mandatory overflow-scroll z-0'
+                className='bg-[rgb(36,36,36)] text-white h-screen snap-y snap-mandatory overflow-scroll scroll-smooth z-0'
             >
                 {/* header */}
                 <Header />
@@ -32,6 +33,12 @@ export default function Home() {
                 </section>
 
                 {/* experience */}
+                <section
+                    id='experience'
+                    className='snap-center'
+                >
+                    <Experience />
+                </section>
 
                 {/* skills */}
 

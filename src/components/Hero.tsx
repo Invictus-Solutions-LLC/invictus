@@ -24,9 +24,9 @@ function Hero({ }: Props) {
             <BackgroundCircles />
 
             <img
-                className='relative rounded-full h-32 w-32 mx-auto object-cover'
                 src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
                 alt='profile picture'
+                className='relative rounded-full h-32 w-32 mx-auto object-cover'
             />
             <div
                 className='z-20'
