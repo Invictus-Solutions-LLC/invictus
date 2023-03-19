@@ -11,7 +11,7 @@ function Skill({ directionLeft }: Props) {
             className='group relative flex cursor-pointer'
         >
             <motion.img
-                src='https://images.g2crowd.com/uploads/product/image/social_landscape/social_landscape_96102ac6497377cd53da621075fe828e/sanity.png'
+                src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
                 alt='skill picture'
                 initial={{
                     x: directionLeft ? -200 : 200,
