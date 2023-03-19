@@ -5,6 +5,7 @@ type Props = {};
 
 function Projects({ }: Props) {
     const projects = [1, 2, 3, 4, 5];
+
     return (
         <motion.div
             initial={{
@@ -25,7 +26,7 @@ function Projects({ }: Props) {
             </h3>
 
             <div
-                className='relative w-full flex overflow-x-scroll overflow-y-hidden snap-x snap-mandatory z-20'
+                className='relative w-full flex overflow-x-scroll overflow-y-hidden snap-x snap-mandatory z-20 scrollbar-thin scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
             >
                 {
                     projects.map((project, index) => {
