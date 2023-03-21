@@ -47,10 +47,10 @@ function About({ }: Props) {
                 />
 
                 <div
-                    className='static space-y-10 px-0 md:px-10 z-20'
+                    className='static space-y-10 px-10 z-20'
                 >
                     <h4
-                        className='text-4xl font-semibold'
+                        className='text-4xl font-semibold py-4'
                     >
                         Here is a&nbsp;
                         <span
@@ -61,7 +61,7 @@ function About({ }: Props) {
                         &nbsp;background
                     </h4>
                     <p
-                        className='text-base'
+                        className='text-base md:text-left'
                     >
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
