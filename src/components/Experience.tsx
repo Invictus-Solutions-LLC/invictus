@@ -16,16 +16,16 @@ function Experience({ }: Props) {
             transition={{
                 duration: 1.5,
             }}
-            className='h-screen flex relative overflow-hidden flex-col text-left md:flex:row max-w-full px-10 justify-evenly mx-auto items-center'
+            className='relative flex flex-col min-h-screen overflow-hidden text-left md:flex:row max-w-full mx-auto px-10 pb-36 justify-evenly items-center'
         >
             <h3
-                className='absolute top-24 uppercase tracking-[20px] text-gray-500 text-2xl'
+                className='static uppercase tracking-[20px] text-gray-500 text-2xl pt-32 pb-4 md:pt-16 md:pb-8 xl:pt-20 xl:pb-12 z-20'
             >
                 Experience
             </h3>
 
             <div
-                className='w-full flex space-x-5 overflow-x-scroll p-10 snap-x snap-mandatory scrollbar-thin scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
+                className='w-full flex space-x-5 overflow-x-scroll p-10 snap-x snap-mandatory scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
             >
                 <ExperienceCard />
                 <ExperienceCard />

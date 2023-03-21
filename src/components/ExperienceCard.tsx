@@ -29,20 +29,20 @@ function ExperienceCard({ }: Props) {
             />
 
             <div
-                className='px-0 md:px-10'
+                className='text-center md:text-left px-0 md:px-10'
             >
                 <h4
-                    className='text-4xl font-light'
+                    className='text-2xl md:text-4xl font-light'
                 >
                     JOB TITLE
                 </h4>
                 <p
-                    className='font-bold text-2xl mt-1'
+                    className='text-1xl md:text-2xl font-bold mt-1'
                 >
                     COMPANY
                 </p>
                 <div
-                    className='flex space-x-2 my-2'
+                    className='flex flex-row justify-center md:justify-start space-x-2 my-2'
                 >
                     <img
                         src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
@@ -66,10 +66,10 @@ function ExperienceCard({ }: Props) {
                     START DATE - END DATE
                 </p>
                 <div
-                    className='overflow-scroll h-40'
+                    className=''
                 >
                     <ul
-                        className='list-disc space-y-4 ml-5 text-lg'
+                        className='list-disc text-left text-sm md:text-lg space-y-4 ml-5 px-16'
                     >
                         <li>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
