@@ -28,21 +28,20 @@ function Contact({ }: Props) {
             transition={{
                 duration: 1.5,
             }}
-            className='h-screen relative flex flex-col text-center md:text-left md:flex-row max-w-7xl px-10 justify-evenly mx-auto items-center'
+            className='relative flex flex-col min-h-screen md:h-screen text-center md:text-left md:flex-row max-w-7xl px-10 pb-36 mx-auto justify-evenly items-center'
         >
             <h3
-                className='absolute top-24 uppercase tracking-[20px] text-gray-500 text-2xl'
+                className='static uppercase tracking-[20px] text-gray-500 text-2xl pt-32 pb-4 md:pt-16 md:pb-8 xl:pt-20 xl:pb-12 z-20'
             >
                 Contact
             </h3>
 
             <div
-                className='flex flex-col space-y-10'
+                className='static flex flex-col space-y-10 pt-5'
             >
                 <h4
-                    className='text-4xl font-semibold text-center'
+                    className='text-2xl md:text-4xl font-semibold text-center pt-0 md:pt-20'
                 >
-                    You're here for a reason.&nbsp;
                     <span
                         className='underline decoration-[#FF0000]/50'
                     >
@@ -60,7 +59,7 @@ function Contact({ }: Props) {
                             className='text-[#FF0000] w-7 h-7 animate-pulse'
                         />
                         <p
-                            className='text-2xl'
+                            className='text-1xl md:text-2xl'
                         >
                             +1-234-567-8900
                         </p>
@@ -73,7 +72,7 @@ function Contact({ }: Props) {
                             className='text-[#FF0000] w-7 h-7 animate-pulse'
                         />
                         <p
-                            className='text-2xl'
+                            className='text-1xl md:text-2xl'
                         >
                             [REDACTED]
                         </p>
@@ -86,7 +85,7 @@ function Contact({ }: Props) {
                             className='text-[#FF0000] w-7 h-7 animate-pulse'
                         />
                         <p
-                            className='text-2xl'
+                            className='text-1xl md:text-2xl'
                         >
                             [REDACTED]
                         </p>
@@ -95,7 +94,7 @@ function Contact({ }: Props) {
 
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className='flex flex-col space-y-2 w-fit mx-auto'
+                    className='flex flex-col space-y-2 w-screen md:w-fit mx-auto p-5'
                 >
                     <div
                         className='flex space-x-2'
