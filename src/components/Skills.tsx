@@ -20,7 +20,7 @@ function Skills({ }: Props) {
         >
             <div>
                 <h3
-                    className='static uppercase tracking-[20px] text-gray-500 text-2xl pt-32 pb-4 md:pt-16 md:pb-8 xl:pt-20 xl:pb-12 z-20'
+                    className='static uppercase tracking-[20px] text-gray-500 text-2xl pt-28 pb-4 md:pb-8 xl:pb-12 z-20'
                 >
                     Skills
                 </h3>
