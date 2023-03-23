@@ -85,7 +85,7 @@ function ExperienceCard({ }: Props) {
                 </p>
             </div>
             <div
-                className='overflow-y-scroll text-center md:text-left px-0 md:px-10 scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
+                className='md:overflow-y-scroll text-center md:text-left px-0 md:px-10 scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
             >
                 <ul
                     className='list-disc text-left text-sm md:text-lg space-y-4 ml-5'
