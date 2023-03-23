@@ -15,7 +15,7 @@ function About({ }: Props) {
             transition={{
                 duration: 1.5,
             }}
-            className='relative flex flex-col min-h-screen text-center max-w-7xl mx-auto px-10 pb-36 justify-evenly items-center'
+            className='relative flex flex-col overflow-hidden min-h-screen text-center max-w-7xl mx-auto px-10 pb-36 md:pb-0 justify-evenly items-center'
         >
             <h3
                 className='static uppercase tracking-[20px] text-gray-500 text-2xl pt-32 pb-4 md:pt-16 md:pb-8 xl:pt-20 xl:pb-12 z-20'

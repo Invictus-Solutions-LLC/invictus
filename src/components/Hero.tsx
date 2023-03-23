@@ -19,7 +19,7 @@ function Hero({ }: Props) {
 
     return (
         <div
-            className='h-screen flex flex-col space-y-8 items-center justify-center text-center overflow-hidden'
+            className='flex flex-col overflow-hidden h-screen space-y-8 items-center justify-center text-center'
         >
             <BackgroundCircles />
 
