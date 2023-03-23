@@ -6,7 +6,7 @@ type Props = {};
 function ExperienceCard({ }: Props) {
     return (
         <article
-            className='flex flex-col rounded-lg items-center space-y-7 flex-shrink-0 w-[500px] md:w-[600px] xl:w-[900px] snap-center bg-[#292929] p-10 opacity-40 hover:opacity-100 cursor-pointer transition-opacity duration-200 overflow-hidden'
+            className='flex flex-col rounded-lg items-center space-y-7 flex-shrink-0 w-[300px] md:w-[600px] xl:w-[900px] snap-center bg-[#292929] p-10 opacity-40 hover:opacity-100 cursor-pointer transition-opacity duration-200 overflow-hidden'
         >
             <motion.img
                 src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
@@ -69,7 +69,7 @@ function ExperienceCard({ }: Props) {
                     className=''
                 >
                     <ul
-                        className='list-disc text-left text-sm md:text-lg space-y-4 ml-5 px-16'
+                        className='list-disc text-left text-sm md:text-lg space-y-4 ml-5'
                     >
                         <li>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
