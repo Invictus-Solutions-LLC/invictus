@@ -1,9 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-type Props = {};
+type Experience = {
+    title: string,
+    company: string,
+    start: string,
+    end: string,
+    description: Array<string>,
+};
+type Props = {
+    experience: Experience,
+};
 
-function ExperienceCard({ }: Props) {
+function ExperienceCard({ experience }: Props) {
     return (
         <article
             className='flex flex-col rounded-lg items-center space-y-2  flex-shrink-0 w-[300px] md:w-[600px] xl:w-[900px] snap-center bg-[#292929] p-10 opacity-40 hover:opacity-100 cursor-pointer transition-opacity duration-200 overflow-hidden'
@@ -32,20 +41,20 @@ function ExperienceCard({ }: Props) {
                 />
 
                 <div
-                    className='flex flex-col text-left md:m-auto xl:m-0 pl-2 md:pl-0'
+                    className='flex flex-col text-left md:m-auto xl:m-0 ml-2 md:ml-4'
                 >
                     <h4
                         className='text-2xl md:text-4xl font-light my-auto pb-3 md:mt-0 md:pb-0'
                     >
-                        JOB TITLE
+                        {experience.title}
                     </h4>
                     <p
                         className='text-1xl md:text-2xl font-bold hidden md:inline mt-1'
                     >
-                        COMPANY
+                        {experience.company}
                     </p>
                 </div>
-                
+
             </div>
             <div
                 className='md:hidden'
@@ -53,7 +62,7 @@ function ExperienceCard({ }: Props) {
                 <p
                     className='text-1xl md:text-2xl font-bold mt-1'
                 >
-                    COMPANY
+                    {experience.company}
                 </p>
             </div>
             <div
@@ -81,7 +90,7 @@ function ExperienceCard({ }: Props) {
                 <p
                     className='uppercase text-gray-300 py-2 text-center md:text-left'
                 >
-                    START DATE - END DATE
+                    {experience.start} - {experience.end}
                 </p>
             </div>
             <div
@@ -90,24 +99,15 @@ function ExperienceCard({ }: Props) {
                 <ul
                     className='list-disc text-left text-sm md:text-lg space-y-4 ml-5'
                 >
-                    <li>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                    </li>
-                    <li>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                    </li>
-                    <li>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                    </li>
+                    {
+                        experience.description.map((note: string, index: number) => {
+                            return (
+                                <li>
+                                    {note}
+                                </li>
+                            );
+                        })
+                    }
                 </ul>
             </div>
         </article>

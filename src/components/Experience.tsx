@@ -1,8 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ExperienceCard from '@/components/ExperienceCard';
+import experiences from '@/constants/experiences';
 
 type Props = {};
+type Exp = {
+    title: string,
+    company: string,
+    start: string,
+    end: string,
+    description: Array<string>,
+};
 
 function Experience({ }: Props) {
     return (
@@ -27,10 +35,16 @@ function Experience({ }: Props) {
             <div
                 className='w-full flex space-x-5 overflow-x-scroll p-10 snap-x snap-mandatory scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
             >
-                <ExperienceCard />
-                <ExperienceCard />
-                <ExperienceCard />
-                <ExperienceCard />
+                {
+                    experiences.map((experience: Exp, index: number) => {
+                        return (
+                            <ExperienceCard
+                                key={index}
+                                experience={experience}
+                            />
+                        );
+                    })
+                }
             </div>
         </motion.div>
     );

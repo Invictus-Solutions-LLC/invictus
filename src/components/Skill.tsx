@@ -14,7 +14,7 @@ function Skill({ directionLeft }: Props) {
                 src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
                 alt='skill picture'
                 initial={{
-                    x: directionLeft ? -200 : 200,
+                    x: directionLeft ? -100 : 100,
                     opacity: 0,
                 }}
                 whileInView={{
@@ -29,7 +29,7 @@ function Skill({ directionLeft }: Props) {
 
             <motion.div
                 initial={{
-                    x: directionLeft ? -200 : 200,
+                    x: directionLeft ? -100 : 100,
                 }}
                 whileInView={{
                     x: 0,
