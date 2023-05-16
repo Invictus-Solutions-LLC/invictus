@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SocialIcon } from 'react-social-icons';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -8,6 +9,27 @@ import socials from '@/constants/socials';
 type Props = {};
 
 function Overlay({ }: Props) {
+    const elementRef = useRef<HTMLDivElement>(null);
+    const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        const handleClickAway = (event: MouseEvent) => {
+            if (elementRef.current && event.target instanceof Node && !elementRef.current.contains(event.target)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickAway);
+
+        return () => {
+            document.removeEventListener('click', handleClickAway);
+        };
+    }, []);
+
+    const handleClick = (event: React.MouseEvent) => {
+        setOpen(true);
+    };
+
     return (
         <>
             <header
@@ -82,36 +104,49 @@ function Overlay({ }: Props) {
             <footer
                 className='absolute left-0 right-0 bottom-5 mx-auto z-50'
             >
-                <motion.div
-                    initial={{
-                        x: 500,
-                        opacity: 0,
-                        scale: 0.5,
-                    }}
-                    animate={{
-                        x: 0,
-                        opacity: 1,
-                        scale: 1,
-                    }}
-                    transition={{
-                        duration: 1.5,
-                    }}
-                    className='flex space-x-2 items-center justify-center cursor-pointer'
-                >
-
-                    {
-                        socials.map((social: string, index: number) => {
-                            return (
-                                <SocialIcon
-                                    key={index}
-                                    url={social}
-                                    fgColor='gray'
-                                    bgColor='white'
-                                />
-                            );
-                        })
-                    }
-                </motion.div>
+                {
+                    open ?
+                        <motion.div
+                            initial={{
+                                x: 0,
+                                opacity: 1,
+                                scale: .5,
+                            }}
+                            animate={{
+                                x: 0,
+                                opacity: 1,
+                                scale: 1,
+                            }}
+                            transition={{
+                                duration: 1.5,
+                            }}
+                            className='flex space-x-2 items-center justify-center cursor-pointer'
+                            ref={elementRef}
+                        >
+                            {
+                                socials.map((social: string, index: number) => {
+                                    return (
+                                        <SocialIcon
+                                            key={index}
+                                            url={social}
+                                            fgColor='gray'
+                                            bgColor='white'
+                                        />
+                                    );
+                                })
+                            }
+                        </motion.div>
+                        :
+                        <div
+                            className='flex space-x-2 items-center justify-center cursor-pointer'
+                        >
+                            <SocialIcon
+                                fgColor='gray'
+                                bgColor='white'
+                                onMouseUp={handleClick}
+                            />
+                        </div>
+                }
             </footer>
         </>
     );

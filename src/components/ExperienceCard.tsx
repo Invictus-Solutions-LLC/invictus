@@ -102,7 +102,9 @@ function ExperienceCard({ experience }: Props) {
                     {
                         experience.description.map((note: string, index: number) => {
                             return (
-                                <li>
+                                <li
+                                    key={index}
+                                >
                                     {note}
                                 </li>
                             );
