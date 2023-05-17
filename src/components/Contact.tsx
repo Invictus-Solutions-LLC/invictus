@@ -45,7 +45,7 @@ function Contact({ }: Props) {
                     <span
                         className='underline decoration-[#FF0000]/50'
                     >
-                        Let's Talk.
+                        Let&apos;s Talk.
                     </span>
                 </h4>
 
@@ -87,7 +87,7 @@ function Contact({ }: Props) {
                         <p
                             className='text-1xl md:text-2xl'
                         >
-                            [REDACTED]
+                            [REDACTED], Hawai&apos;i
                         </p>
                     </div>
                 </div>

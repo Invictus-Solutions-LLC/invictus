@@ -34,12 +34,12 @@ function Hero({ }: Props) {
                 <h2
                     className='text-sm uppercase text-gray-500 pb-2 tracking-[10px] md:tracking-[15px]'
                 >
-                    // Software Engineer
+                    &sol;&sol; Software Engineer
                 </h2>
                 <h2
                     className='text-sm uppercase text-gray-500 pb-2 tracking-[10px] md:tracking-[15px]'
                 >
-                    // Ethical Hacker
+                    &sol;&sol; Ethical Hacker
                 </h2>
                 <h1
                     className='text-xl lg:text-3xl font-semibold scroll-px-10'
