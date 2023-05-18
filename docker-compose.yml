@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  invictus:
+    image: invictus808/invictus:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: invictus
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"
+    # volumes:
+    #   - /path/to/src:/path/to/dst
+    # depends_on:
+    #   - serviceName

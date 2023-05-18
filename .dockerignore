@@ -1,0 +1,66 @@
+# Ignore node_modules folder
+node_modules
+
+# Ignore build output
+.next
+
+# Ignore development-specific files
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.next-env.d.ts
+
+# Ignore build artifacts
+out
+# public
+
+# Ignore package manager cache
+.yarn-cache
+.pnp.*
+.pnpm
+
+# Ignore editor-specific files
+.idea
+.vscode
+
+# Ignore test files and directories
+__tests__
+test
+tests
+
+# Ignore linting and formatting files
+.eslintcache
+prettier.config.js
+
+# Ignore version control files and directories
+.git
+.gitignore
+.gitattributes
+
+# Ignore log files
+*.log
+
+# Ignore temporary files
+*.tmp
+
+# Ignore documentation files
+docs
+
+# Ignore backup files
+*.bak
+*.backup
+
+# Ignore local development files
+.next-cache
+node_modules/.cache
+node_modules/.bin
+
+# Ignore editor backup files
+*~
+.*.swp
+
+# Ignore macOS-specific files
+.DS_Store
