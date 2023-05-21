@@ -3,16 +3,9 @@ import { Cursor, useTypewriter } from 'react-simple-typewriter';
 import BackgroundCircles from '@/components/BackgroundCircles';
 import Link from 'next/link';
 
-type Props = {};
-
-function Hero({ }: Props) {
-    const prefix = "root@invictus:~# ";
+function Hero({ prefix, titles, words }: APIHero) {
     const [text, count] = useTypewriter({
-        words: [
-            "Hi, I'm [REDACTED]",
-            "./ethical-hacker.sh",
-            "PWN3D !!!",
-        ],
+        words: words,
         loop: true,
         delaySpeed: 2000,
     });
@@ -31,16 +24,18 @@ function Hero({ }: Props) {
             <div
                 className='z-20'
             >
-                <h2
-                    className='text-sm uppercase text-gray-500 pb-2 tracking-[10px] md:tracking-[15px]'
-                >
-                    &sol;&sol; Software Engineer
-                </h2>
-                <h2
-                    className='text-sm uppercase text-gray-500 pb-2 tracking-[10px] md:tracking-[15px]'
-                >
-                    &sol;&sol; Ethical Hacker
-                </h2>
+                {
+                    titles.map((title: string, index: number) => {
+                        return (
+                            <h2
+                                key={index}
+                                className='text-sm uppercase text-gray-500 pb-2 tracking-[10px] md:tracking-[15px]'
+                            >
+                                // {title}
+                            </h2>
+                        );
+                    })
+                }
                 <h1
                     className='text-xl lg:text-3xl font-semibold scroll-px-10'
                 >

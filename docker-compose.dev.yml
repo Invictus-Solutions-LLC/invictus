@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  invictus:
+    image: invictus808/invictus:1.0.0-SNAPSHOT
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: invictus
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - API_URL=http://localhost:3000/api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src/:/app/src/
+      - ./public/:/app/public/
+    # depends_on:
+    #   - serviceName

@@ -13,8 +13,9 @@ ENV NODE_ENV="development"
 # set working directory
 WORKDIR /app/
 
-# add application dependencies lists
+# add application
 COPY package.json yarn.lock /app/
+COPY ./ /app/
 
 # change file permissions
 RUN chown development:development -R /app/
@@ -24,6 +25,9 @@ USER development
 
 # install application dependencies
 RUN yarn install
+
+# run application
+CMD ["yarn", "dev"]
 
 
 # stage 0: dependencies

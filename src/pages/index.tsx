@@ -8,7 +8,12 @@ import Projects from '@/components/Projects';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 
-export default function Home() {
+type Props = {
+    hero: APIHero;
+    about: APIAbout;
+};
+
+export default function Home({ hero, about }: Props) {
     return (
         <>
             <Head>
@@ -25,7 +30,9 @@ export default function Home() {
                     id='hero'
                     className='snap-start'
                 >
-                    <Hero />
+                    <Hero
+                        {...hero}
+                    />
                 </section>
 
                 {/* about */}
@@ -33,7 +40,9 @@ export default function Home() {
                     id='about'
                     className='snap-start'
                 >
-                    <About />
+                    <About
+                        {...about}
+                    />
                 </section>
 
                 {/* experience */}
@@ -78,4 +87,19 @@ export default function Home() {
             </div>
         </>
     );
+}
+
+export async function getServerSideProps() {
+    const heroResponse = await fetch(`${process.env.API_URL}/hero`);
+    const hero: APIHero = await heroResponse.json();
+    const aboutResponse = await fetch(`${process.env.API_URL}/about`);
+    const about: APIAbout = await aboutResponse.json();
+    console.log(about);
+
+    return {
+        props: {
+            hero: hero,
+            about: about,
+        },
+    };
 }

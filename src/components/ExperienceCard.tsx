@@ -1,15 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-type Experience = {
-    title: string,
-    company: string,
-    start: string,
-    end: string,
-    description: Array<string>,
-};
 type Props = {
-    experience: Experience,
+    experience: ExperienceInformation,
 };
 
 function ExperienceCard({ experience }: Props) {

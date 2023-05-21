@@ -6,9 +6,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: production
     container_name: invictus
     environment:
       - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - API_URL=http://localhost:3000/api
     ports:
       - "3000:3000"
     # volumes:

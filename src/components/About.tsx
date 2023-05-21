@@ -1,9 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-type Props = {};
-
-function About({ }: Props) {
+function About({ header, text }: APIAbout) {
     return (
         <motion.div
             initial={{
@@ -52,22 +50,20 @@ function About({ }: Props) {
                     <h4
                         className='text-4xl font-semibold py-4'
                     >
-                        Here is a&nbsp;
-                        <span
-                            className='underline decoration-[#FF0000]/50'
-                        >
-                            little
-                        </span>
-                        &nbsp;background
+                        {header}
                     </h4>
-                    <p
-                        className='text-base md:text-left'
-                    >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                    </p>
+                    {
+                        text.map((paragraph: string, index: number) => {
+                            return (
+                                <p
+                                    key={index}
+                                    className='text-base md:text-left'
+                                >
+                                    {paragraph}
+                                </p>
+                            );
+                        })
+                    }
                 </div>
             </div>
         </motion.div>

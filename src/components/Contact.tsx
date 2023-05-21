@@ -3,17 +3,11 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/solid';
 
-type Inputs = {
-    name: string;
-    email: string;
-    subject: string;
-    message: string;
-};
 type Props = {};
 
 function Contact({ }: Props) {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
-    const onSubmit: SubmitHandler<Inputs> = (formData) => {
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<ContactInputs>();
+    const onSubmit: SubmitHandler<ContactInputs> = (formData) => {
         window.location.href = `mailto:[REDACTED]?subject=${formData.subject}&body=To whom it may concern,%0D%0A%0D%0AMy name is ${formData.name}.%0D%0A%0D%0A${formData.message}%0D%0A%0D%0A(${formData.email})`;
     };
 

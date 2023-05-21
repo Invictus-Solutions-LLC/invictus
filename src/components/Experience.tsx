@@ -4,13 +4,6 @@ import ExperienceCard from '@/components/ExperienceCard';
 import experiences from '@/constants/experiences';
 
 type Props = {};
-type Exp = {
-    title: string,
-    company: string,
-    start: string,
-    end: string,
-    description: Array<string>,
-};
 
 function Experience({ }: Props) {
     return (
@@ -36,7 +29,7 @@ function Experience({ }: Props) {
                 className='w-full flex space-x-5 overflow-x-scroll p-10 snap-x snap-mandatory scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
             >
                 {
-                    experiences.map((experience: Exp, index: number) => {
+                    experiences.map((experience: ExperienceInformation, index: number) => {
                         return (
                             <ExperienceCard
                                 key={index}
