@@ -1,10 +1,4 @@
-type APIHero = {
-    words: Array<string>;
-    titles: Array<string>;
-    prefix: string;
-};
-
-type APIAbout = {
+type AboutProps = {
     header: string;
     text: Array<string>;
 };
@@ -20,7 +14,7 @@ type ErrorResponse = {
     message: string;
 };
 
-type ExperienceInformation = {
+type Experience = {
     title: string;
     company: string;
     start: string;
@@ -28,7 +22,17 @@ type ExperienceInformation = {
     description: Array<string>;
 };
 
-type ProjectInformation = {
+type ExperienceProps = {
+    experiences: Array<Experience>;
+};
+
+type HeroProps = {
+    words: Array<string>;
+    titles: Array<string>;
+    prefix: string;
+};
+
+type Project = {
     name: string;
     description: string;
 };

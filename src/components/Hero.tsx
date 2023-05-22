@@ -3,7 +3,7 @@ import { Cursor, useTypewriter } from 'react-simple-typewriter';
 import BackgroundCircles from '@/components/BackgroundCircles';
 import Link from 'next/link';
 
-function Hero({ prefix, titles, words }: APIHero) {
+function Hero({ prefix, titles, words }: HeroProps) {
     const [text, count] = useTypewriter({
         words: words,
         loop: true,

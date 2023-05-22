@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-function About({ header, text }: APIAbout) {
+function About({ header, text }: AboutProps) {
     return (
         <motion.div
             initial={{

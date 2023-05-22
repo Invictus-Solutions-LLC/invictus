@@ -102,7 +102,7 @@ function Overlay({ }: Props) {
             </header>
 
             <footer
-                className='absolute left-0 right-0 bottom-5 mx-auto z-50'
+                className='absolute bottom-0 left-1/2 -translate-x-1/2 justify-center items-center max-w-7xl mx-auto p-5 md:p-10 z-50'
             >
                 {
                     open ?
@@ -120,7 +120,7 @@ function Overlay({ }: Props) {
                             transition={{
                                 duration: 1.5,
                             }}
-                            className='flex space-x-2 items-center justify-center cursor-pointer'
+                            className='flex space-x-2 flex-row justify-center cursor-pointer'
                             ref={elementRef}
                         >
                             {
@@ -138,7 +138,7 @@ function Overlay({ }: Props) {
                         </motion.div>
                         :
                         <div
-                            className='flex space-x-2 items-center justify-center cursor-pointer'
+                            className='flex flex-row justify-center cursor-pointer'
                         >
                             <SocialIcon
                                 fgColor='gray'

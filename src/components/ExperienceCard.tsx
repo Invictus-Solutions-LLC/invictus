@@ -1,11 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-type Props = {
-    experience: ExperienceInformation,
-};
-
-function ExperienceCard({ experience }: Props) {
+function ExperienceCard({ title, company, start, end, description }: Experience) {
     return (
         <article
             className='flex flex-col rounded-lg items-center space-y-2  flex-shrink-0 w-[300px] md:w-[600px] xl:w-[900px] snap-center bg-[#292929] p-10 opacity-40 hover:opacity-100 cursor-pointer transition-opacity duration-200 overflow-hidden'
@@ -39,12 +35,12 @@ function ExperienceCard({ experience }: Props) {
                     <h4
                         className='text-2xl md:text-4xl font-light my-auto pb-3 md:mt-0 md:pb-0'
                     >
-                        {experience.title}
+                        {title}
                     </h4>
                     <p
                         className='text-1xl md:text-2xl font-bold hidden md:inline mt-1'
                     >
-                        {experience.company}
+                        {company}
                     </p>
                 </div>
 
@@ -55,7 +51,7 @@ function ExperienceCard({ experience }: Props) {
                 <p
                     className='text-1xl md:text-2xl font-bold mt-1'
                 >
-                    {experience.company}
+                    {company}
                 </p>
             </div>
             <div
@@ -83,7 +79,7 @@ function ExperienceCard({ experience }: Props) {
                 <p
                     className='uppercase text-gray-300 py-2 text-center md:text-left'
                 >
-                    {experience.start} - {experience.end}
+                    {start} - {end}
                 </p>
             </div>
             <div
@@ -93,7 +89,7 @@ function ExperienceCard({ experience }: Props) {
                     className='list-disc text-left text-sm md:text-lg space-y-4 ml-5'
                 >
                     {
-                        experience.description.map((note: string, index: number) => {
+                        description.map((note: string, index: number) => {
                             return (
                                 <li
                                     key={index}

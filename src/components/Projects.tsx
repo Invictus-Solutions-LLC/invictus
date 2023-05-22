@@ -28,7 +28,7 @@ function Projects({ }: Props) {
                 className='relative flex w-full h-full overflow-x-scroll snap-x snap-mandatory scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80 z-10'
             >
                 {
-                    projects.map((project: ProjectInformation, index: number) => {
+                    projects.map((project: Project, index: number) => {
                         return (
                             <div
                                 key={index}

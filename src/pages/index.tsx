@@ -9,11 +9,12 @@ import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 
 type Props = {
-    hero: APIHero;
-    about: APIAbout;
+    heroProps: HeroProps;
+    aboutProps: AboutProps;
+    experienceProps: ExperienceProps;
 };
 
-export default function Home({ hero, about }: Props) {
+export default function Home({ heroProps, aboutProps, experienceProps }: Props) {
     return (
         <>
             <Head>
@@ -31,7 +32,7 @@ export default function Home({ hero, about }: Props) {
                     className='snap-start'
                 >
                     <Hero
-                        {...hero}
+                        {...heroProps}
                     />
                 </section>
 
@@ -41,7 +42,7 @@ export default function Home({ hero, about }: Props) {
                     className='snap-start'
                 >
                     <About
-                        {...about}
+                        {...aboutProps}
                     />
                 </section>
 
@@ -50,7 +51,9 @@ export default function Home({ hero, about }: Props) {
                     id='experience'
                     className='snap-start'
                 >
-                    <Experience />
+                    <Experience
+                        {...experienceProps}
+                    />
                 </section>
 
                 {/* skills */}
@@ -90,16 +93,18 @@ export default function Home({ hero, about }: Props) {
 }
 
 export async function getServerSideProps() {
-    const heroResponse = await fetch(`${process.env.API_URL}/hero`);
-    const hero: APIHero = await heroResponse.json();
-    const aboutResponse = await fetch(`${process.env.API_URL}/about`);
-    const about: APIAbout = await aboutResponse.json();
-    console.log(about);
+    const heroResponse: Response = await fetch(`${process.env.API_URL}/hero`);
+    const heroProps: HeroProps = await heroResponse.json();
+    const aboutResponse: Response = await fetch(`${process.env.API_URL}/about`);
+    const aboutProps: AboutProps = await aboutResponse.json();
+    const experienceResponse: Response = await fetch(`${process.env.API_URL}/experience`);
+    const experienceProps: ExperienceProps = await experienceResponse.json();
 
     return {
         props: {
-            hero: hero,
-            about: about,
+            heroProps: heroProps,
+            aboutProps: aboutProps,
+            experienceProps: experienceProps,
         },
     };
 }
