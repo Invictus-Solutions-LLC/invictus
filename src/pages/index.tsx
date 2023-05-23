@@ -12,9 +12,10 @@ type Props = {
     heroProps: HeroProps;
     aboutProps: AboutProps;
     experienceProps: ExperienceProps;
+    skillsProps: SkillsProps;
 };
 
-export default function Home({ heroProps, aboutProps, experienceProps }: Props) {
+export default function Home({ heroProps, aboutProps, experienceProps, skillsProps }: Props) {
     return (
         <>
             <Head>
@@ -61,7 +62,9 @@ export default function Home({ heroProps, aboutProps, experienceProps }: Props) 
                     id='skills'
                     className='snap-start'
                 >
-                    <Skills />
+                    <Skills
+                        {...skillsProps}
+                    />
                 </section>
 
                 {/* projects */}
@@ -99,12 +102,15 @@ export async function getServerSideProps() {
     const aboutProps: AboutProps = await aboutResponse.json();
     const experienceResponse: Response = await fetch(`${process.env.API_URL}/experience`);
     const experienceProps: ExperienceProps = await experienceResponse.json();
+    const skillsResponse: Response = await fetch(`${process.env.API_URL}/skills`);
+    const skillsProps: SkillsProps = await skillsResponse.json();
 
     return {
         props: {
             heroProps: heroProps,
             aboutProps: aboutProps,
             experienceProps: experienceProps,
+            skillsProps: skillsProps,
         },
     };
 }

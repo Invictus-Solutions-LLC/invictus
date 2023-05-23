@@ -2,9 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Skill from '@/components/Skill';
 
-type Props = {};
-
-function Skills({ }: Props) {
+function Skills({ header, skills }: SkillsProps) {
     return (
         <motion.div
             initial={{
@@ -28,27 +26,23 @@ function Skills({ }: Props) {
                 <h3
                     className='static uppercase tracking-[3px] text-gray-500 text-sm'
                 >
-                    Hover over a skill for current proficiency
+                    {header}
                 </h3>
             </div>
 
             <div
                 className='grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 mt-10 mx-auto'
             >
-                <Skill />
-                <Skill />
-                <Skill />
-                <Skill />
-                <Skill />
-                <Skill />
-                <Skill />
-                <Skill />
-                <Skill />
-                <Skill />
-                <Skill />
-                <Skill />
-                <Skill />
-                <Skill />
+                {
+                    skills.map((skill, index) => {
+                        return (
+                            <Skill
+                                key={index}
+                                {...skill}
+                            />
+                        );
+                    })
+                }
             </div>
         </motion.div>
     );

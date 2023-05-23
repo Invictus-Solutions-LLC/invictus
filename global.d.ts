@@ -36,3 +36,14 @@ type Project = {
     name: string;
     description: string;
 };
+
+type Skill = {
+    image: string;
+    level: number;
+    name: string;
+};
+
+type SkillsProps = {
+    header: string;
+    skills: Array<Skill>;
+};

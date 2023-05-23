@@ -1,20 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-type Props = {
-    directionLeft?: boolean;
-};
-
-function Skill({ directionLeft }: Props) {
+function Skill({ image, level, name }: Skill) {
     return (
         <div
             className='group relative flex cursor-pointer'
         >
             <motion.img
-                src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
-                alt='skill picture'
+                src={image}
+                alt={name}
                 initial={{
-                    x: directionLeft ? -100 : 100,
+                    x: 100,
                     opacity: 0,
                 }}
                 whileInView={{
@@ -29,7 +25,7 @@ function Skill({ directionLeft }: Props) {
 
             <motion.div
                 initial={{
-                    x: directionLeft ? -100 : 100,
+                    x: 100,
                 }}
                 whileInView={{
                     x: 0,
@@ -45,7 +41,7 @@ function Skill({ directionLeft }: Props) {
                     <p
                         className='text-3xl font-bold text-black opacity-100'
                     >
-                        100%
+                        {level}%
                     </p>
                 </div>
             </motion.div>
