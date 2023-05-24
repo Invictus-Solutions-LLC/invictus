@@ -3,9 +3,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/solid';
 
-type Props = {};
-
-function Contact({ }: Props) {
+function Contact({ header, phone, email, headquarters }: ContactProps) {
     const { register, handleSubmit, watch, formState: { errors } } = useForm<ContactInputs>();
     const onSubmit: SubmitHandler<ContactInputs> = (formData) => {
         window.location.href = `mailto:[REDACTED]?subject=${formData.subject}&body=To whom it may concern,%0D%0A%0D%0AMy name is ${formData.name}.%0D%0A%0D%0A${formData.message}%0D%0A%0D%0A(${formData.email})`;
@@ -39,7 +37,7 @@ function Contact({ }: Props) {
                     <span
                         className='underline decoration-[#FF0000]/50'
                     >
-                        Let&apos;s Talk.
+                        {header}
                     </span>
                 </h4>
 
@@ -55,7 +53,7 @@ function Contact({ }: Props) {
                         <p
                             className='text-1xl md:text-2xl'
                         >
-                            +1-234-567-8900
+                            {phone}
                         </p>
                     </div>
 
@@ -68,7 +66,7 @@ function Contact({ }: Props) {
                         <p
                             className='text-1xl md:text-2xl'
                         >
-                            [REDACTED]
+                            {email}
                         </p>
                     </div>
 
@@ -81,7 +79,7 @@ function Contact({ }: Props) {
                         <p
                             className='text-1xl md:text-2xl'
                         >
-                            [REDACTED], Hawai&apos;i
+                            {headquarters}
                         </p>
                     </div>
                 </div>

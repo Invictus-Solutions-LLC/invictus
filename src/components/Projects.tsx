@@ -2,9 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import projects from '@/constants/projects';
 
-type Props = {};
-
-function Projects({ }: Props) {
+function Projects({ projects }: ProjectsProps) {
     return (
         <motion.div
             initial={{
@@ -34,25 +32,29 @@ function Projects({ }: Props) {
                                 key={index}
                                 className='flex flex-col flex-shrink-0 w-full snap-center space-y-5 items-center'
                             >
-                                <motion.img
-                                    src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
-                                    alt='project picture'
-                                    initial={{
-                                        y: -100,
-                                        opacity: 0,
-                                    }}
-                                    whileInView={{
-                                        y: 0,
-                                        opacity: 1,
-                                    }}
-                                    transition={{
-                                        duration: 1.2,
-                                    }}
-                                    viewport={{
-                                        once: true,
-                                    }}
-                                    className='w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64'
-                                />
+                                <a
+                                    href={project.url}
+                                >
+                                    <motion.img
+                                        src={project.image}
+                                        alt={project.name}
+                                        initial={{
+                                            y: -100,
+                                            opacity: 0,
+                                        }}
+                                        whileInView={{
+                                            y: 0,
+                                            opacity: 1,
+                                        }}
+                                        transition={{
+                                            duration: 1.2,
+                                        }}
+                                        viewport={{
+                                            once: true,
+                                        }}
+                                        className='w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64'
+                                    />
+                                </a>
 
                                 <div
                                     className='relative space-y-10 px-0 md:px-10 max-w-6xl'

@@ -10,6 +10,13 @@ type ContactInputs = {
     message: string;
 };
 
+type ContactProps = {
+    header: string;
+    phone: string;
+    email: string;
+    headquarters: string;
+};
+
 type ErrorResponse = {
     message: string;
 };
@@ -34,7 +41,13 @@ type HeroProps = {
 
 type Project = {
     name: string;
+    image: string;
+    url: string;
     description: string;
+};
+
+type ProjectsProps = {
+    projects: Array<Project>;
 };
 
 type Skill = {

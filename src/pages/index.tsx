@@ -13,9 +13,11 @@ type Props = {
     aboutProps: AboutProps;
     experienceProps: ExperienceProps;
     skillsProps: SkillsProps;
+    projectsProps: ProjectsProps;
+    contactProps: ContactProps;
 };
 
-export default function Home({ heroProps, aboutProps, experienceProps, skillsProps }: Props) {
+export default function Home({ heroProps, aboutProps, experienceProps, skillsProps, projectsProps, contactProps }: Props) {
     return (
         <>
             <Head>
@@ -72,7 +74,9 @@ export default function Home({ heroProps, aboutProps, experienceProps, skillsPro
                     id='projects'
                     className='snap-start'
                 >
-                    <Projects />
+                    <Projects
+                        {...projectsProps}
+                    />
                 </section>
 
                 {/* contact */}
@@ -80,7 +84,9 @@ export default function Home({ heroProps, aboutProps, experienceProps, skillsPro
                     id='contact'
                     className='snap-start'
                 >
-                    <Contact />
+                    <Contact
+                        {...contactProps}
+                    />
                 </section>
 
                 {/* footer */}
@@ -104,6 +110,10 @@ export async function getServerSideProps() {
     const experienceProps: ExperienceProps = await experienceResponse.json();
     const skillsResponse: Response = await fetch(`${process.env.API_URL}/skills`);
     const skillsProps: SkillsProps = await skillsResponse.json();
+    const projectsResponse: Response = await fetch(`${process.env.API_URL}/projects`);
+    const projectsProps: ProjectsProps = await projectsResponse.json();
+    const contactResponse: Response = await fetch(`${process.env.API_URL}/contact`);
+    const contactProps: ContactProps = await contactResponse.json();
 
     return {
         props: {
@@ -111,6 +121,8 @@ export async function getServerSideProps() {
             aboutProps: aboutProps,
             experienceProps: experienceProps,
             skillsProps: skillsProps,
+            projectsProps: projectsProps,
+            contactProps: contactProps,
         },
     };
 }
