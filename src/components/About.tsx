@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-function About({ header, text }: AboutProps) {
+function About({ header, image, text }: AboutProps) {
     return (
         <motion.div
             initial={{
@@ -25,8 +25,8 @@ function About({ header, text }: AboutProps) {
                 className='flex flex-col md:flex-row'
             >
                 <motion.img
-                    src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
-                    alt='profile picture'
+                    src={image}
+                    alt='about profile picture'
                     initial={{
                         x: -200,
                         opacity: 0,

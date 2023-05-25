@@ -44,7 +44,7 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                 <div
                     className='space-y-10'
                 >
-                    <div
+                    {/* <div
                         className='flex items-center space-x-5 justify-center'
                     >
                         <PhoneIcon
@@ -55,7 +55,7 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                         >
                             {phone}
                         </p>
-                    </div>
+                    </div> */}
 
                     <div
                         className='flex items-center space-x-5 justify-center'

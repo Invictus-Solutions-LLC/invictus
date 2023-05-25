@@ -3,7 +3,7 @@ import { Cursor, useTypewriter } from 'react-simple-typewriter';
 import BackgroundCircles from '@/components/BackgroundCircles';
 import Link from 'next/link';
 
-function Hero({ prefix, titles, words }: HeroProps) {
+function Hero({ image, prefix, titles, words }: HeroProps) {
     const [text, count] = useTypewriter({
         words: words,
         loop: true,
@@ -17,8 +17,8 @@ function Hero({ prefix, titles, words }: HeroProps) {
             <BackgroundCircles />
 
             <img
-                src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
-                alt='profile picture'
+                src={image}
+                alt='hero profile picture'
                 className='relative rounded-full h-32 w-32 mx-auto object-cover'
             />
             <div
@@ -31,7 +31,7 @@ function Hero({ prefix, titles, words }: HeroProps) {
                                 key={index}
                                 className='text-sm uppercase text-gray-500 pb-2 tracking-[10px] md:tracking-[15px]'
                             >
-                                // {title}
+                                {'// ' + title}
                             </h2>
                         );
                     })

@@ -13,14 +13,7 @@ function Footer({ }: Props) {
                 <h1
                     className='font-bold text-gray-400'
                 >
-                    Invictus808
-                </h1>
-            </div>
-            <div>
-                <h1
-                    className='font-bold text-gray-400'
-                >
-                    Powered by Next.js
+                    Invictus808 &copy; Copyright 2023
                 </h1>
             </div>
         </div>

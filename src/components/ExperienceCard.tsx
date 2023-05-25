@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-function ExperienceCard({ title, company, start, end, description }: Experience) {
+function ExperienceCard({ title, company, logo, start, end, technologies, description }: Experience) {
     return (
         <article
             className='flex flex-col rounded-lg items-center space-y-2  flex-shrink-0 w-[300px] md:w-[600px] xl:w-[900px] snap-center bg-[#292929] p-10 opacity-40 hover:opacity-100 cursor-pointer transition-opacity duration-200 overflow-hidden'
@@ -10,8 +10,8 @@ function ExperienceCard({ title, company, start, end, description }: Experience)
                 className='flex flex-row xl:flex-col w-full md:px-10'
             >
                 <motion.img
-                    src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
-                    alt='experience picture'
+                    src={logo}
+                    alt={company}
                     initial={{
                         y: -100,
                         opacity: 0,
@@ -60,21 +60,18 @@ function ExperienceCard({ title, company, start, end, description }: Experience)
                 <div
                     className='flex flex-row justify-center md:justify-start space-x-2 my-2'
                 >
-                    <img
-                        src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
-                        alt='technology picture'
-                        className='h-10 w-10 rounded-full'
-                    />
-                    <img
-                        src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
-                        alt='technology picture'
-                        className='h-10 w-10 rounded-full'
-                    />
-                    <img
-                        src='https://gitlab.com/uploads/-/system/user/avatar/11223647/avatar.png?width=400'
-                        alt='technology picture'
-                        className='h-10 w-10 rounded-full'
-                    />
+                    {
+                        technologies.map((technology: Technology, index: number) => {
+                            return (
+                                <img
+                                    key={index}
+                                    src={technology.image}
+                                    alt={technology.name}
+                                    className='h-10 w-10 rounded-full'
+                                />
+                            );
+                        })
+                    }
                 </div>
                 <p
                     className='uppercase text-gray-300 py-2 text-center md:text-left'

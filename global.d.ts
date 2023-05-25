@@ -1,5 +1,6 @@
 type AboutProps = {
     header: string;
+    image: string;
     text: Array<string>;
 };
 
@@ -24,8 +25,10 @@ type ErrorResponse = {
 type Experience = {
     title: string;
     company: string;
+    logo: string;
     start: string;
     end: string;
+    technologies: Array<Technology>;
     description: Array<string>;
 };
 
@@ -34,6 +37,7 @@ type ExperienceProps = {
 };
 
 type HeroProps = {
+    image: string;
     words: Array<string>;
     titles: Array<string>;
     prefix: string;
@@ -50,13 +54,16 @@ type ProjectsProps = {
     projects: Array<Project>;
 };
 
-type Skill = {
-    image: string;
+type Skill = Technology & {
     level: number;
-    name: string;
 };
 
 type SkillsProps = {
     header: string;
     skills: Array<Skill>;
+};
+
+type Technology = {
+    image: string;
+    name: string;
 };
