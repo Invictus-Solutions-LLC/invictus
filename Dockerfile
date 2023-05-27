@@ -13,15 +13,15 @@ ENV NODE_ENV="development"
 # set working directory
 WORKDIR /app/
 
-# add application
-COPY package.json yarn.lock /app/
-COPY ./ /app/
-
-# change file permissions
-RUN chown development:development -R /app/
+# change directory permissions
+RUN chown development:development /app/
 
 # run as non-root user
 USER development
+
+# add dependencies list and application
+COPY --chown=development:development package.json yarn.lock /app/
+COPY --chown=development:development ./ /app/
 
 # install application dependencies
 RUN yarn install
@@ -48,7 +48,7 @@ RUN chown dependencies:dependencies /app/
 # run as non-root user
 USER dependencies
 
-# add application dependencies lists
+# add dependencies lists
 COPY --chown=dependencies:dependencies package.json yarn.lock /app/
 
 # install application dependencies
