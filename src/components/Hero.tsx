@@ -1,7 +1,8 @@
 import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { Cursor, useTypewriter } from 'react-simple-typewriter';
 import BackgroundCircles from '@/components/BackgroundCircles';
-import Link from 'next/link';
 
 function Hero({ image, prefix, titles, words }: HeroProps) {
     const [text, count] = useTypewriter({
@@ -16,9 +17,13 @@ function Hero({ image, prefix, titles, words }: HeroProps) {
         >
             <BackgroundCircles />
 
-            <img
+            <Image
                 src={image}
                 alt='hero profile picture'
+                width={128}
+                height={128}
+                quality={100}
+                priority={true}
                 className='relative rounded-full h-32 w-32 mx-auto object-cover'
             />
             <div
