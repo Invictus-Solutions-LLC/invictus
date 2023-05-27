@@ -17,7 +17,7 @@ function Experience({ experiences }: ExperienceProps) {
             className='relative flex flex-col md:flex:row overflow-hidden max-w-full min-h-screen md:h-screen text-left mx-auto px-10 pb-36 md:pb-5 items-center'
         >
             <h3
-                className='static uppercase tracking-[20px] text-gray-500 text-2xl pt-28 z-20'
+                className='static uppercase tracking-[20px] text-gray-500 text-2xl pt-16 md:pt-20 lg:pt-28 z-20'
             >
                 Experience
             </h3>

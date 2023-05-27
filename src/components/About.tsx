@@ -13,10 +13,10 @@ function About({ header, image, text }: AboutProps) {
             transition={{
                 duration: 1.5,
             }}
-            className='relative flex flex-col overflow-hidden min-h-screen text-center max-w-7xl mx-auto px-10 pb-36 md:pb-0 items-center'
+            className='relative flex flex-col overflow-hidden min-h-screen text-center max-w-7xl mx-auto px-10 pb-36 items-center'
         >
             <h3
-                className='static uppercase tracking-[20px] text-gray-500 text-2xl pt-28 pb-4 md:pb-8 xl:pb-12 z-20'
+                className='static uppercase tracking-[20px] text-gray-500 text-2xl pt-16 md:pt-20 lg:pt-28 pb-4 md:pb-8 xl:pb-12 z-20'
             >
                 About
             </h3>
@@ -41,7 +41,7 @@ function About({ header, image, text }: AboutProps) {
                     transition={{
                         duration: 1.2,
                     }}
-                    className='static m-auto md:mb-0 flex-shrink-0 w-56 h-56 rounded-full object-cover md:rounded-lg md:w-64 md:h-96 lg:w-64 lg:h-96 xl:w-[500px] xl:h-[600px]'
+                    className='static m-auto flex-shrink-0 w-56 h-56 rounded-full object-cover md:rounded-lg md:w-64 md:h-96 lg:w-64 lg:h-96 xl:w-[500px] xl:h-[600px]'
                 />
 
                 <div
