@@ -42,14 +42,14 @@ RUN apt-get update \
 # set working directory
 WORKDIR /app/
 
-# add application dependencies lists
-COPY package.json yarn.lock /app/
-
-# change file permissions
-RUN chown dependencies:dependencies -R /app/
+# change directory permissions
+RUN chown dependencies:dependencies /app/
 
 # run as non-root user
 USER dependencies
+
+# add application dependencies lists
+COPY --chown=dependencies:dependencies package.json yarn.lock /app/
 
 # install application dependencies
 RUN yarn install --frozen-lockfile
@@ -64,23 +64,28 @@ RUN apt-get update \
     && useradd -ms /bin/bash builder
 
 # set environment variables
-ENV NODE_ENV="production"
+ENV NODE_ENV="production" \
+    NEXT_TELEMETRY_DISABLED=1
 
 # set working directory
 WORKDIR /app/
 
-# add modules and application
-COPY --from=dependencies /app/node_modules/ /app/node_modules/
-COPY ./ /app/
-
-# change file permissions
-RUN chown builder:builder -R /app/
+# change directory permissions
+RUN chown builder:builder /app/
 
 # run as non-root user
 USER builder
 
-# build application
-RUN yarn build
+# add modules and application
+COPY --chown=builder:builder --from=dependencies /app/node_modules/ /app/node_modules/
+COPY --chown=builder:builder ./ /app/
+
+# build application, install production application dependencies, and cleanup
+RUN yarn build \
+    && yarn install --production --frozen-lockfile --ignore-scripts \
+    && yarn autoclean --init \
+    && yarn autoclean --force \
+    && yarn cache clean
 
 
 # stage 2: production
@@ -92,26 +97,24 @@ RUN apt-get update \
     && useradd -ms /bin/bash invictus
 
 # set environment variables
-ENV NODE_ENV="production"\
+ENV NODE_ENV="production" \
     NEXT_TELEMETRY_DISABLED=1
 
 # set working directory
 WORKDIR /app/
 
-# add application
-COPY --from=builder /app/next.config.js /app/
-COPY --from=builder /app/public/ /app/public/
-COPY --from=builder /app/package.json /app/yarn.lock /app/
-COPY --from=builder /app/.next/ /app/.next/
-
-# change file permissions
-RUN chown invictus:invictus -R /app/
+# change directory permissions
+RUN chown invictus:invictus /app/
 
 # run as non-root user
 USER invictus
 
-# install production application dependencies
-RUN yarn install --production --frozen-lockfile --ignore-scripts
+# add configurations, dependencies lists, modules, and application
+COPY --chown=invictus:invictus --from=builder /app/next.config.js /app/
+COPY --chown=invictus:invictus --from=builder /app/package.json /app/yarn.lock /app/
+COPY --chown=invictus:invictus --from=builder /app/node_modules/ /app/node_modules/
+COPY --chown=invictus:invictus --from=builder /app/public/ /app/public/
+COPY --chown=invictus:invictus --from=builder /app/.next/ /app/.next/
 
 # expose port
 EXPOSE 3000
