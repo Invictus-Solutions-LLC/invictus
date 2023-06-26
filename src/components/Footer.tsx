@@ -13,7 +13,7 @@ function Footer({ }: Props) {
                 <h1
                     className='font-bold text-gray-400'
                 >
-                    Invictus808 &copy; Copyright 2023
+                    &copy; 2023 Invictus808. All Rights Reserved.
                 </h1>
             </div>
         </div>
