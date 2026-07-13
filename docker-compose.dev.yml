@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   invictus:
     image: invictus808/invictus:1.0.0-SNAPSHOT

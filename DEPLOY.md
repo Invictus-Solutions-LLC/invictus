@@ -6,10 +6,16 @@ personal content**. All real content (name, contact info, job history, projects)
 the production host and is bind-mounted read-only into the container at deploy time — it's
 never part of the image, so the image is safe to keep public on GHCR.
 
+The stack is three containers: the app itself (not directly exposed), nginx (the only public
+entrypoint — TLS termination, gzip, security headers, reverse proxy to the app), and a certbot
+sidecar that keeps the Let's Encrypt certificate renewed automatically.
+
 ## One-time setup on the server
 
+0. Point your domain's DNS `A` (and `AAAA` if applicable) records at this server's public IP
+   before continuing — Let's Encrypt's HTTP-01 challenge needs that to already be in place.
 1. Install Docker and the Docker Compose plugin.
-2. Clone this repo (or just copy `docker-compose.prod.yml` and the `content/` folder).
+2. Clone this repo (or just copy `docker-compose.prod.yml`, `nginx/`, and the `content/` folder).
 3. Populate real content from the committed placeholder templates:
 
    ```bash
@@ -21,17 +27,23 @@ never part of the image, so the image is safe to keep public on GHCR.
    Edit each `content/*.json` file with your real data. Keep the files world-readable
    (`chmod 644 content/*.json`) so the container's non-root user can read them through the
    bind mount.
-4. Create a `.env` file next to `docker-compose.prod.yml` (gitignored, never committed) with
-   your Resend API key so the contact form can send email:
+4. Create a `.env` file next to `docker-compose.prod.yml` (gitignored, never committed):
 
    ```bash
    echo "RESEND_API_KEY=re_your_real_key" > .env
-   # optional, defaults to Resend's shared sandbox sender:
    echo "RESEND_FROM_EMAIL=contact@yourdomain.com" >> .env
+   echo "DOMAIN=yourdomain.com" >> .env
+   echo "LETSENCRYPT_EMAIL=you@yourdomain.com" >> .env
    ```
 
-   Docker Compose reads this file automatically. Without it, the site still works — only the
-   contact form's submit button will return an error instead of sending email.
+   Docker Compose reads this file automatically. `RESEND_API_KEY` is optional (the contact form
+   just returns an error without it); `DOMAIN` is required for nginx/TLS to work at all.
+5. Bootstrap the Let's Encrypt certificate (one-time only — see the comment in the script for
+   why this extra step exists):
+
+   ```bash
+   ./nginx/init-letsencrypt.sh
+   ```
 
 ## Deploy / update
 
@@ -43,15 +55,19 @@ docker compose -f docker-compose.prod.yml up -d
 To pick up new content without a new image, just edit the files in `content/` and restart:
 
 ```bash
-docker compose -f docker-compose.prod.yml restart
+docker compose -f docker-compose.prod.yml restart invictus
 ```
+
+Certificate renewal is automatic (the `certbot` container checks twice a day and only actually
+renews when the cert is due). No further action needed once step 5 above has run once.
 
 ## Health check
 
-The container reports health via `GET /api/health` (also used internally by Docker's
-`HEALTHCHECK`):
+The app container reports health via `GET /api/health` internally, and nginx has its own
+healthcheck on `/`:
 
 ```bash
-curl http://localhost:3000/api/health
+curl https://yourdomain.com/api/health
 docker inspect --format='{{json .State.Health}}' invictus
+docker inspect --format='{{json .State.Health}}' invictus-nginx
 ```
