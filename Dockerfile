@@ -1,6 +1,6 @@
 # stage alpha: development
 # pull official base image
-FROM node:22-slim AS development
+FROM node:26-slim AS development
 
 # install system dependencies
 RUN apt-get update \
@@ -34,7 +34,7 @@ CMD ["yarn", "dev"]
 
 # stage 0: dependencies
 # pull official base image
-FROM node:22-slim AS dependencies
+FROM node:26-slim AS dependencies
 
 # install system dependencies
 RUN apt-get update \
@@ -60,7 +60,7 @@ RUN yarn install --immutable
 
 
 # stage 1: builder
-FROM node:22-slim AS builder
+FROM node:26-slim AS builder
 
 # install system dependencies
 RUN apt-get update \
@@ -93,7 +93,7 @@ RUN yarn build \
 
 
 # stage 2: production
-FROM node:22-slim AS production
+FROM node:26-slim AS production
 
 # install system dependencies
 RUN apt-get update \
