@@ -4264,7 +4264,6 @@ __metadata:
     jest-environment-jsdom: "npm:^30.4.1"
     next: "npm:^15.5.20"
     node-mocks-http: "npm:^1.18.0"
-    postcss: "npm:^8.5.18"
     react: "npm:^19.2.7"
     react-dom: "npm:^19.2.7"
     react-hook-form: "npm:^7.81.0"
@@ -5681,21 +5680,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.3.11, nanoid@npm:^3.3.6":
-  version: 3.3.11
-  resolution: "nanoid@npm:3.3.11"
-  bin:
-    nanoid: bin/nanoid.cjs
-  checksum: 10c0/40e7f70b3d15f725ca072dfc4f74e81fcf1fbb02e491cf58ac0c79093adc9b0a73b152bcde57df4b79cd097e13023d7504acb38404a4da7bc1cd8e887b82fe0b
-  languageName: node
-  linkType: hard
-
 "nanoid@npm:^3.3.12":
   version: 3.3.16
   resolution: "nanoid@npm:3.3.16"
   bin:
     nanoid: bin/nanoid.cjs
   checksum: 10c0/bbf2dcffe22d2b62d16de2711752070b539c0f644c7916f823ad6521986b2078cbe524f2d6240f58c46e9141ea0c7b87a029e100c0f7f175228cacaf30e41bba
+  languageName: node
+  linkType: hard
+
+"nanoid@npm:^3.3.6":
+  version: 3.3.11
+  resolution: "nanoid@npm:3.3.11"
+  bin:
+    nanoid: bin/nanoid.cjs
+  checksum: 10c0/40e7f70b3d15f725ca072dfc4f74e81fcf1fbb02e491cf58ac0c79093adc9b0a73b152bcde57df4b79cd097e13023d7504acb38404a4da7bc1cd8e887b82fe0b
   languageName: node
   linkType: hard
 
@@ -6308,17 +6307,6 @@ __metadata:
   linkType: hard
 
 "postcss@npm:^8.4.47":
-  version: 8.5.4
-  resolution: "postcss@npm:8.5.4"
-  dependencies:
-    nanoid: "npm:^3.3.11"
-    picocolors: "npm:^1.1.1"
-    source-map-js: "npm:^1.2.1"
-  checksum: 10c0/0feff648614a834f7cd5396ea6b05b658ca0507e10a4eaad03b56c348f6aec93f42a885fc1b30522630c6a7e49ae53b38a061e3cba526f2d9857afbe095a22bb
-  languageName: node
-  linkType: hard
-
-"postcss@npm:^8.5.18":
   version: 8.5.18
   resolution: "postcss@npm:8.5.18"
   dependencies:
