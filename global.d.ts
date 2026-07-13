@@ -63,6 +63,10 @@ type SkillsProps = {
     skills: Array<Skill>;
 };
 
+type SocialsProps = {
+    socials: Array<string>;
+};
+
 type Technology = {
     image: string;
     name: string;

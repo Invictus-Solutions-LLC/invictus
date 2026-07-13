@@ -4,11 +4,8 @@ import { SocialIcon } from 'react-social-icons';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import socials from '@/constants/socials';
 
-type Props = {};
-
-function Overlay({ }: Props) {
+function Overlay({ socials }: SocialsProps) {
     const elementRef = useRef<HTMLDivElement>(null);
     const [open, setOpen] = useState(false);
 

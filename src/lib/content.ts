@@ -42,3 +42,7 @@ export function getProjectsContent(): ProjectsProps {
 export function getContactContent(): ContactProps {
     return loadContent<ContactProps>('contact.json');
 }
+
+export function getSocialsContent(): SocialsProps {
+    return { socials: loadContent<Array<string>>('socials.json') };
+}

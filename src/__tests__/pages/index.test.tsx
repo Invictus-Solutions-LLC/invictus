@@ -5,6 +5,7 @@ jest.mock('@/lib/content', () => ({
     getSkillsContent: jest.fn(() => ({ header: 'Skills', skills: [] })),
     getProjectsContent: jest.fn(() => ({ projects: [] })),
     getContactContent: jest.fn(() => ({ header: 'Contact', phone: '', email: '', headquarters: '' })),
+    getSocialsContent: jest.fn(() => ({ socials: [] })),
 }));
 
 import { getServerSideProps } from '@/pages/index';
@@ -15,6 +16,7 @@ import {
     getSkillsContent,
     getProjectsContent,
     getContactContent,
+    getSocialsContent,
 } from '@/lib/content';
 
 describe('Home getServerSideProps', () => {
@@ -27,6 +29,7 @@ describe('Home getServerSideProps', () => {
         expect(getSkillsContent).toHaveBeenCalled();
         expect(getProjectsContent).toHaveBeenCalled();
         expect(getContactContent).toHaveBeenCalled();
+        expect(getSocialsContent).toHaveBeenCalled();
 
         expect(result).toEqual({
             props: {
@@ -36,6 +39,7 @@ describe('Home getServerSideProps', () => {
                 skillsProps: { header: 'Skills', skills: [] },
                 projectsProps: { projects: [] },
                 contactProps: { header: 'Contact', phone: '', email: '', headquarters: '' },
+                socialsProps: { socials: [] },
             },
         });
     });

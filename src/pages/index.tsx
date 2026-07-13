@@ -6,6 +6,7 @@ import {
     getSkillsContent,
     getProjectsContent,
     getContactContent,
+    getSocialsContent,
 } from '@/lib/content';
 import Overlay from '@/components/Overlay';
 import Hero from '@/components/Hero';
@@ -23,9 +24,10 @@ type Props = {
     skillsProps: SkillsProps;
     projectsProps: ProjectsProps;
     contactProps: ContactProps;
+    socialsProps: SocialsProps;
 };
 
-export default function Home({ heroProps, aboutProps, experienceProps, skillsProps, projectsProps, contactProps }: Props) {
+export default function Home({ heroProps, aboutProps, experienceProps, skillsProps, projectsProps, contactProps, socialsProps }: Props) {
     return (
         <>
             <Head>
@@ -40,7 +42,9 @@ export default function Home({ heroProps, aboutProps, experienceProps, skillsPro
                 />
 
                 {/* overlay */}
-                <Overlay />
+                <Overlay
+                    {...socialsProps}
+                />
 
                 {/* hero */}
                 <section
@@ -123,6 +127,7 @@ export async function getServerSideProps() {
             skillsProps: getSkillsContent(),
             projectsProps: getProjectsContent(),
             contactProps: getContactContent(),
+            socialsProps: getSocialsContent(),
         },
     };
 }
