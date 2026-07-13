@@ -83,15 +83,23 @@ function ExperienceCard({ title, company, logo, start, end, technologies, descri
                 className='md:overflow-y-scroll text-center md:text-left px-0 md:px-10 scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
             >
                 <ul
-                    className='list-disc text-left text-sm md:text-lg space-y-4 ml-5'
+                    className='list-none text-left text-sm md:text-lg space-y-4'
                 >
                     {
                         description.map((note: string, index: number) => {
                             return (
                                 <li
                                     key={index}
+                                    className='flex'
                                 >
-                                    {note}
+                                    <span
+                                        className='text-[#FF0000]/70 mr-2 flex-shrink-0'
+                                    >
+                                        {'>'}
+                                    </span>
+                                    <span>
+                                        {note}
+                                    </span>
                                 </li>
                             );
                         })

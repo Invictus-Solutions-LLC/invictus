@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Skill from '@/components/Skill';
+import TerminalWindow from '@/components/TerminalWindow';
 
 function Skills({ header, skills }: SkillsProps) {
     return (
@@ -30,20 +31,25 @@ function Skills({ header, skills }: SkillsProps) {
                 </h3>
             </div>
 
-            <div
-                className='grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 mt-10 mx-auto'
+            <TerminalWindow
+                path='~/skills'
+                className='mt-10'
             >
-                {
-                    skills.map((skill, index) => {
-                        return (
-                            <Skill
-                                key={index}
-                                {...skill}
-                            />
-                        );
-                    })
-                }
-            </div>
+                <div
+                    className='grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 mx-auto'
+                >
+                    {
+                        skills.map((skill, index) => {
+                            return (
+                                <Skill
+                                    key={index}
+                                    {...skill}
+                                />
+                            );
+                        })
+                    }
+                </div>
+            </TerminalWindow>
         </motion.div>
     );
 }

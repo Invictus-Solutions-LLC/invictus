@@ -1,4 +1,12 @@
 import Head from 'next/head';
+import {
+    getHeroContent,
+    getAboutContent,
+    getExperienceContent,
+    getSkillsContent,
+    getProjectsContent,
+    getContactContent,
+} from '@/lib/content';
 import Overlay from '@/components/Overlay';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
@@ -26,6 +34,11 @@ export default function Home({ heroProps, aboutProps, experienceProps, skillsPro
             <div
                 className='bg-[rgb(36,36,36)] text-white w-screen h-screen snap-y snap-mandatory overflow-x-hidden overflow-y-scroll scroll-smooth z-0 scrollbar-thin scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
             >
+                {/* crt scanline overlay */}
+                <div
+                    className='scanlineOverlay'
+                />
+
                 {/* overlay */}
                 <Overlay />
 
@@ -102,27 +115,14 @@ export default function Home({ heroProps, aboutProps, experienceProps, skillsPro
 }
 
 export async function getServerSideProps() {
-    const heroResponse: Response = await fetch(`${process.env.API_URL}/hero`);
-    const heroProps: HeroProps = await heroResponse.json();
-    const aboutResponse: Response = await fetch(`${process.env.API_URL}/about`);
-    const aboutProps: AboutProps = await aboutResponse.json();
-    const experienceResponse: Response = await fetch(`${process.env.API_URL}/experience`);
-    const experienceProps: ExperienceProps = await experienceResponse.json();
-    const skillsResponse: Response = await fetch(`${process.env.API_URL}/skills`);
-    const skillsProps: SkillsProps = await skillsResponse.json();
-    const projectsResponse: Response = await fetch(`${process.env.API_URL}/projects`);
-    const projectsProps: ProjectsProps = await projectsResponse.json();
-    const contactResponse: Response = await fetch(`${process.env.API_URL}/contact`);
-    const contactProps: ContactProps = await contactResponse.json();
-
     return {
         props: {
-            heroProps: heroProps,
-            aboutProps: aboutProps,
-            experienceProps: experienceProps,
-            skillsProps: skillsProps,
-            projectsProps: projectsProps,
-            contactProps: contactProps,
+            heroProps: getHeroContent(),
+            aboutProps: getAboutContent(),
+            experienceProps: getExperienceContent(),
+            skillsProps: getSkillsContent(),
+            projectsProps: getProjectsContent(),
+            contactProps: getContactContent(),
         },
     };
 }

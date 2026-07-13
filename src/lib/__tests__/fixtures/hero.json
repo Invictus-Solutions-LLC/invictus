@@ -1,0 +1,6 @@
+{
+    "image": "/hero.png",
+    "prefix": "root@fixture:~# ",
+    "titles": ["Fixture Title"],
+    "words": ["Fixture word"]
+}

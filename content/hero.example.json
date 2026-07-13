@@ -1,0 +1,13 @@
+{
+    "image": "/hero.png",
+    "prefix": "root@invictus:~# ",
+    "titles": [
+        "Software Engineer",
+        "Ethical Hacker"
+    ],
+    "words": [
+        "Hi, I'm <Your Name>",
+        "./run.sh",
+        "PWN3D !!!"
+    ]
+}

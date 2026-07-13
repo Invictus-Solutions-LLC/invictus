@@ -1,0 +1,10 @@
+{
+    "projects": [
+        {
+            "name": "Example Project",
+            "image": "/logos/invictus.png",
+            "url": "https://github.com/example/example-project",
+            "description": "Replace with a description of a project you're proud of, what it does, and what you learned building it."
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "experiences": [
+        {
+            "title": "Software Engineer",
+            "company": "Example Company",
+            "logo": "/logos/hacker.svg",
+            "start": "MM/YYYY",
+            "end": "PRESENT",
+            "technologies": [
+                {
+                    "image": "/logos/python.svg",
+                    "name": "Python"
+                }
+            ],
+            "description": [
+                "Replace with a bullet describing an impactful piece of work.",
+                "Replace with another bullet, ideally with a measurable result."
+            ]
+        },
+        {
+            "title": "Software Developer Intern",
+            "company": "Example Company",
+            "logo": "/logos/hacker.svg",
+            "start": "MM/YYYY",
+            "end": "MM/YYYY",
+            "technologies": [
+                {
+                    "image": "/logos/git.svg",
+                    "name": "Git"
+                }
+            ],
+            "description": [
+                "Replace with a bullet describing what you built or learned."
+            ]
+        }
+    ]
+}

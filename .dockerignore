@@ -13,6 +13,11 @@ node_modules
 .env.production.local
 .next-env.d.ts
 
+# Real site content (PII) must never be baked into the image — it's bind-mounted
+# at deploy time. Only the placeholder *.example.json templates may be copied in.
+content/*.json
+!content/*.example.json
+
 # Ignore build artifacts
 out
 # public

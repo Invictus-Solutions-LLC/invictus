@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ExperienceCard from '@/components/ExperienceCard';
+import TerminalWindow from '@/components/TerminalWindow';
 
 function Experience({ experiences }: ExperienceProps) {
     return (
@@ -22,20 +23,25 @@ function Experience({ experiences }: ExperienceProps) {
                 Experience
             </h3>
 
-            <div
-                className='w-full flex space-x-5 overflow-x-scroll p-10 snap-x snap-mandatory scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
+            <TerminalWindow
+                path='~/experience'
+                className='w-full'
             >
-                {
-                    experiences.map((experience: Experience, index: number) => {
-                        return (
-                            <ExperienceCard
-                                key={index}
-                                {...experience}
-                            />
-                        );
-                    })
-                }
-            </div>
+                <div
+                    className='w-full flex space-x-5 overflow-x-scroll p-0 md:p-2 snap-x snap-mandatory scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
+                >
+                    {
+                        experiences.map((experience: Experience, index: number) => {
+                            return (
+                                <ExperienceCard
+                                    key={index}
+                                    {...experience}
+                                />
+                            );
+                        })
+                    }
+                </div>
+            </TerminalWindow>
         </motion.div>
     );
 }

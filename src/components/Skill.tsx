@@ -39,9 +39,9 @@ function Skill({ image, level, name }: Skill) {
                     className='flex items-center justify-center h-full'
                 >
                     <p
-                        className='text-3xl font-bold text-black opacity-100'
+                        className='font-mono text-2xl font-bold text-black opacity-100'
                     >
-                        {level}%
+                        {`// ${level}%`}
                     </p>
                 </div>
             </motion.div>

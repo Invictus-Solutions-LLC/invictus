@@ -61,28 +61,28 @@ function Hero({ image, prefix, titles, words }: HeroProps) {
                         href='#about'
                     >
                         <button className='heroButton'>
-                            About
+                            $ cd #about
                         </button>
                     </Link>
                     <Link
                         href='#experience'
                     >
                         <button className='heroButton'>
-                            Experience
+                            $ cd #experience
                         </button>
                     </Link>
                     <Link
                         href='#skills'
                     >
                         <button className='heroButton'>
-                            Skills
+                            $ cd #skills
                         </button>
                     </Link>
                     <Link
                         href='#projects'
                     >
                         <button className='heroButton'>
-                            Projects
+                            $ cd #projects
                         </button>
                     </Link>
                 </div>

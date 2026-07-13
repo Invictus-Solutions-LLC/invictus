@@ -2,19 +2,19 @@ version: "3.9"
 
 services:
   invictus:
-    image: invictus808/invictus:1.0.0
+    image: ghcr.io/invictus808/invictus:latest
     build:
       context: .
       dockerfile: Dockerfile
       target: production
     container_name: invictus
+    restart: unless-stopped
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
-      - API_URL=http://localhost:3000/api
     ports:
       - "3000:3000"
-    # volumes:
-    #   - /path/to/src:/path/to/dst
-    # depends_on:
-    #   - serviceName
+    volumes:
+      # Real content (name, contact info, job history) lives only on this host and
+      # is never baked into the image — populate it once from content/*.example.json.
+      - ./content:/app/content:ro

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import TerminalWindow from '@/components/TerminalWindow';
 
 function About({ header, image, text }: AboutProps) {
     return (
@@ -21,51 +22,55 @@ function About({ header, image, text }: AboutProps) {
                 About
             </h3>
 
-            <div
-                className='flex flex-col md:flex-row'
+            <TerminalWindow
+                path='~/about'
             >
-                <motion.img
-                    src={image}
-                    alt='about profile picture'
-                    initial={{
-                        x: -200,
-                        opacity: 0,
-                    }}
-                    whileInView={{
-                        x: 0,
-                        opacity: 1,
-                    }}
-                    viewport={{
-                        once: true,
-                    }}
-                    transition={{
-                        duration: 1.2,
-                    }}
-                    className='static m-auto flex-shrink-0 w-56 h-56 rounded-full object-cover md:rounded-lg md:w-64 md:h-96 lg:w-64 lg:h-96 xl:w-[500px] xl:h-[600px]'
-                />
-
                 <div
-                    className='static space-y-10 px-10 z-20'
+                    className='flex flex-col md:flex-row'
                 >
-                    <h4
-                        className='text-4xl font-semibold py-4'
+                    <motion.img
+                        src={image}
+                        alt='about profile picture'
+                        initial={{
+                            x: -200,
+                            opacity: 0,
+                        }}
+                        whileInView={{
+                            x: 0,
+                            opacity: 1,
+                        }}
+                        viewport={{
+                            once: true,
+                        }}
+                        transition={{
+                            duration: 1.2,
+                        }}
+                        className='static m-auto flex-shrink-0 w-56 h-56 rounded-full object-cover md:rounded-lg md:w-64 md:h-96 lg:w-64 lg:h-96 xl:w-[400px] xl:h-[480px]'
+                    />
+
+                    <div
+                        className='static space-y-10 px-0 md:px-10 pt-10 md:pt-0 z-20'
                     >
-                        {header}
-                    </h4>
-                    {
-                        text.map((paragraph: string, index: number) => {
-                            return (
-                                <p
-                                    key={index}
-                                    className='text-base md:text-left'
-                                >
-                                    {paragraph}
-                                </p>
-                            );
-                        })
-                    }
+                        <h4
+                            className='text-4xl font-semibold py-4'
+                        >
+                            {header}
+                        </h4>
+                        {
+                            text.map((paragraph: string, index: number) => {
+                                return (
+                                    <p
+                                        key={index}
+                                        className='text-base md:text-left'
+                                    >
+                                        {paragraph}
+                                    </p>
+                                );
+                            })
+                        }
+                    </div>
                 </div>
-            </div>
+            </TerminalWindow>
         </motion.div>
     );
 }

@@ -10,4 +10,31 @@
     .contactInput {
         @apply outline-none w-full rounded-sm border-b px-6 py-4 bg-slate-400/10 text-gray-500 border-[#242424] placeholder-gray-500 transition-all focus:border-[#FF0000]/40 focus:text-[#FF0000]/40 hover:border-[#FF0000]/40
     }
+
+    .terminalWindow {
+        @apply relative rounded-lg border border-[#333333] bg-[#1e1e1e]/70 shadow-glow overflow-hidden
+    }
+
+    .terminalTitlebar {
+        @apply flex items-center gap-2 border-b border-[#333333] bg-[#242424] px-4 py-2.5 text-xs text-gray-500
+    }
+
+    .terminalDot {
+        @apply h-3 w-3 rounded-full flex-shrink-0
+    }
+
+    .commentCaption {
+        @apply font-mono text-xs text-gray-500 before:content-['//_'] before:text-[#FF0000]/60
+    }
+
+    .scanlineOverlay {
+        @apply pointer-events-none fixed inset-0 z-10 opacity-[0.035];
+        background: repeating-linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.5) 0px,
+            rgba(255, 255, 255, 0.5) 1px,
+            transparent 1px,
+            transparent 3px
+        );
+    }
 }

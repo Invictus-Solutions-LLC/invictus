@@ -2,11 +2,16 @@ import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/solid';
+import TerminalWindow from '@/components/TerminalWindow';
+
+export function buildMailtoUrl(email: string, formData: ContactInputs): string {
+    return `mailto:${email}?subject=${formData.subject}&body=To whom it may concern,%0D%0A%0D%0AMy name is ${formData.name}.%0D%0A%0D%0A${formData.message}%0D%0A%0D%0A(${formData.email})`;
+}
 
 function Contact({ header, phone, email, headquarters }: ContactProps) {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<ContactInputs>();
+    const { register, handleSubmit, formState: { errors } } = useForm<ContactInputs>();
     const onSubmit: SubmitHandler<ContactInputs> = (formData) => {
-        window.location.href = `mailto:[REDACTED]?subject=${formData.subject}&body=To whom it may concern,%0D%0A%0D%0AMy name is ${formData.name}.%0D%0A%0D%0A${formData.message}%0D%0A%0D%0A(${formData.email})`;
+        window.location.href = buildMailtoUrl(email, formData);
     };
 
     return (
@@ -28,10 +33,14 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                 Contact
             </h3>
 
-            <div
-                className='static flex flex-col space-y-10 pt-5'
+            <TerminalWindow
+                path='~/contact'
+                className='max-w-2xl'
             >
-                <h4
+                <div
+                    className='static flex flex-col space-y-10'
+                >
+                    <h4
                     className='text-2xl md:text-4xl font-semibold text-center pt-0 md:pt-20'
                 >
                     <span
@@ -44,7 +53,7 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                 <div
                     className='space-y-10'
                 >
-                    {/* <div
+                    <div
                         className='flex items-center space-x-5 justify-center'
                     >
                         <PhoneIcon
@@ -55,7 +64,7 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                         >
                             {phone}
                         </p>
-                    </div> */}
+                    </div>
 
                     <div
                         className='flex items-center space-x-5 justify-center'
@@ -95,28 +104,58 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                             type='text'
                             className='contactInput'
                             placeholder='Name'
-                            {...register('name')}
+                            {...register('name', { required: 'Name is required.' })}
                         />
                         <input
                             type='email'
                             className='contactInput'
                             placeholder='Email'
-                            {...register('email')}
+                            {...register('email', {
+                                required: 'Email is required.',
+                                pattern: {
+                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                    message: 'Enter a valid email address.',
+                                },
+                            })}
                         />
                     </div>
+                    {
+                        (errors.name || errors.email) &&
+                        <p
+                            className='text-[#FF0000]/80 text-sm text-center'
+                        >
+                            {errors.name?.message || errors.email?.message}
+                        </p>
+                    }
 
                     <input
                         type='text'
                         className='contactInput'
                         placeholder='Subject'
-                        {...register('subject')}
+                        {...register('subject', { required: 'Subject is required.' })}
                     />
+                    {
+                        errors.subject &&
+                        <p
+                            className='text-[#FF0000]/80 text-sm text-center'
+                        >
+                            {errors.subject.message}
+                        </p>
+                    }
 
                     <textarea
                         className='contactInput'
                         placeholder='Message'
-                        {...register('message')}
+                        {...register('message', { required: 'Message is required.' })}
                     />
+                    {
+                        errors.message &&
+                        <p
+                            className='text-[#FF0000]/80 text-sm text-center'
+                        >
+                            {errors.message.message}
+                        </p>
+                    }
 
                     <button
                         type='submit'
@@ -125,7 +164,8 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                         Submit
                     </button>
                 </form>
-            </div>
+                </div>
+            </TerminalWindow>
         </motion.div>
     );
 }

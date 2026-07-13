@@ -129,8 +129,8 @@ function Overlay({ }: Props) {
                                         <SocialIcon
                                             key={index}
                                             url={social}
-                                            fgColor='gray'
-                                            bgColor='white'
+                                            fgColor='white'
+                                            bgColor='none'
                                         />
                                     );
                                 })
@@ -141,8 +141,8 @@ function Overlay({ }: Props) {
                             className='flex flex-row justify-center cursor-pointer'
                         >
                             <SocialIcon
-                                fgColor='gray'
-                                bgColor='white'
+                                fgColor='white'
+                                bgColor='none'
                                 onMouseUp={handleClick}
                             />
                         </div>

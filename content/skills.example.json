@@ -1,0 +1,25 @@
+{
+    "header": "Hover Over A Skill For Current Proficiency",
+    "skills": [
+        {
+            "image": "/logos/python.svg",
+            "level": 90,
+            "name": "Python"
+        },
+        {
+            "image": "/logos/javascript.svg",
+            "level": 60,
+            "name": "JavaScript"
+        },
+        {
+            "image": "/logos/git.svg",
+            "level": 50,
+            "name": "Git"
+        },
+        {
+            "image": "/logos/docker.svg",
+            "level": 40,
+            "name": "Docker"
+        }
+    ]
+}
