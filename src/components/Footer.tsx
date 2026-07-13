@@ -1,8 +1,8 @@
 import React from 'react';
 
-type Props = {};
+function Footer({ text }: FooterProps) {
+    const year = new Date().getFullYear();
 
-function Footer({ }: Props) {
     return (
         <div
             className='relative flex flex-row justify-between bg-black p-6 md:p-8 lg:p-10'
@@ -13,7 +13,7 @@ function Footer({ }: Props) {
                 <h1
                     className='font-bold text-gray-400'
                 >
-                    &copy; 2025 Invictus808. All Rights Reserved.
+                    {`© ${year} ${text}`}
                 </h1>
             </div>
         </div>

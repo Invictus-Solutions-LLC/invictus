@@ -12,6 +12,10 @@ services:
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
+      # Read from a .env file (or the host's shell env) next to this compose
+      # file — never hardcode the real key here, this file is committed.
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL:-onboarding@resend.dev}
     ports:
       - "3000:3000"
     volumes:

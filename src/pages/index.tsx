@@ -7,7 +7,9 @@ import {
     getProjectsContent,
     getContactContent,
     getSocialsContent,
+    getFooterContent,
 } from '@/lib/content';
+import MatrixRain from '@/components/MatrixRain';
 import Overlay from '@/components/Overlay';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
@@ -25,9 +27,10 @@ type Props = {
     projectsProps: ProjectsProps;
     contactProps: ContactProps;
     socialsProps: SocialsProps;
+    footerProps: FooterProps;
 };
 
-export default function Home({ heroProps, aboutProps, experienceProps, skillsProps, projectsProps, contactProps, socialsProps }: Props) {
+export default function Home({ heroProps, aboutProps, experienceProps, skillsProps, projectsProps, contactProps, socialsProps, footerProps }: Props) {
     return (
         <>
             <Head>
@@ -36,6 +39,9 @@ export default function Home({ heroProps, aboutProps, experienceProps, skillsPro
             <div
                 className='bg-[rgb(36,36,36)] text-white w-screen h-screen snap-y snap-mandatory overflow-x-hidden overflow-y-scroll scroll-smooth z-0 scrollbar-thin scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
             >
+                {/* matrix rain background */}
+                <MatrixRain />
+
                 {/* crt scanline overlay */}
                 <div
                     className='scanlineOverlay'
@@ -111,7 +117,9 @@ export default function Home({ heroProps, aboutProps, experienceProps, skillsPro
                     id='footer'
                     className='snap-start'
                 >
-                    <Footer />
+                    <Footer
+                        {...footerProps}
+                    />
                 </section>
             </div>
         </>
@@ -128,6 +136,7 @@ export async function getServerSideProps() {
             projectsProps: getProjectsContent(),
             contactProps: getContactContent(),
             socialsProps: getSocialsContent(),
+            footerProps: getFooterContent(),
         },
     };
 }

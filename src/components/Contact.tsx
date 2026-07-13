@@ -1,17 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/solid';
 import TerminalWindow from '@/components/TerminalWindow';
 
-export function buildMailtoUrl(email: string, formData: ContactInputs): string {
-    return `mailto:${email}?subject=${formData.subject}&body=To whom it may concern,%0D%0A%0D%0AMy name is ${formData.name}.%0D%0A%0D%0A${formData.message}%0D%0A%0D%0A(${formData.email})`;
-}
+type SubmitStatus = 'idle' | 'sending' | 'success' | 'error';
 
 function Contact({ header, phone, email, headquarters }: ContactProps) {
-    const { register, handleSubmit, formState: { errors } } = useForm<ContactInputs>();
-    const onSubmit: SubmitHandler<ContactInputs> = (formData) => {
-        window.location.href = buildMailtoUrl(email, formData);
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactInputs>();
+    const [status, setStatus] = useState<SubmitStatus>('idle');
+    const [statusMessage, setStatusMessage] = useState('');
+
+    const onSubmit: SubmitHandler<ContactInputs> = async (formData) => {
+        setStatus('sending');
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            const data: { message: string } = await response.json();
+
+            if (!response.ok) {
+                setStatus('error');
+                setStatusMessage(data.message);
+                return;
+            }
+
+            setStatus('success');
+            setStatusMessage(data.message);
+            reset();
+        }
+        catch {
+            setStatus('error');
+            setStatusMessage('Failed to send message. Please try again later.');
+        }
     };
 
     return (
@@ -157,11 +182,29 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                         </p>
                     }
 
+                    {
+                        status === 'success' &&
+                        <p
+                            className='text-terminal-green text-sm text-center'
+                        >
+                            {statusMessage}
+                        </p>
+                    }
+                    {
+                        status === 'error' &&
+                        <p
+                            className='text-[#FF0000]/80 text-sm text-center'
+                        >
+                            {statusMessage}
+                        </p>
+                    }
+
                     <button
                         type='submit'
-                        className='bg-[#FF0000] px-10 py-5 rounded-md text-black font-bold text-lg'
+                        disabled={status === 'sending'}
+                        className='bg-[#FF0000] px-10 py-5 rounded-md text-black font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed'
                     >
-                        Submit
+                        {status === 'sending' ? 'Sending...' : 'Submit'}
                     </button>
                 </form>
                 </div>

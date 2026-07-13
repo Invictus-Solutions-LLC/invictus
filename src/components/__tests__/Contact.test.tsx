@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Contact, { buildMailtoUrl } from '@/components/Contact';
+import Contact from '@/components/Contact';
 
 const contactProps: ContactProps = {
     header: "Let's Connect.",
@@ -9,7 +9,19 @@ const contactProps: ContactProps = {
     headquarters: 'City, State',
 };
 
+async function fillAndSubmit(user: ReturnType<typeof userEvent.setup>) {
+    await user.type(screen.getByPlaceholderText('Name'), 'Test User');
+    await user.type(screen.getByPlaceholderText('Email'), 'test@example.com');
+    await user.type(screen.getByPlaceholderText('Subject'), 'Hello');
+    await user.type(screen.getByPlaceholderText('Message'), 'Test message');
+    await user.click(screen.getByRole('button', { name: /submit/i }));
+}
+
 describe('Contact', () => {
+    beforeEach(() => {
+        global.fetch = jest.fn();
+    });
+
     it('shows validation errors when submitted empty', async () => {
         const user = userEvent.setup();
         render(<Contact {...contactProps} />);
@@ -17,34 +29,35 @@ describe('Contact', () => {
         await user.click(screen.getByRole('button', { name: /submit/i }));
 
         expect(await screen.findByText(/name is required/i)).toBeInTheDocument();
+        expect(global.fetch).not.toHaveBeenCalled();
     });
 
-    it('accepts a valid submission without validation errors', async () => {
+    it('POSTs to /api/contact and shows a success message', async () => {
+        (global.fetch as jest.Mock).mockResolvedValue({
+            ok: true,
+            json: async () => ({ message: 'Message sent successfully.' }),
+        });
         const user = userEvent.setup();
         render(<Contact {...contactProps} />);
 
-        await user.type(screen.getByPlaceholderText('Name'), 'Test User');
-        await user.type(screen.getByPlaceholderText('Email'), 'test@example.com');
-        await user.type(screen.getByPlaceholderText('Subject'), 'Hello');
-        await user.type(screen.getByPlaceholderText('Message'), 'Test message');
-        await user.click(screen.getByRole('button', { name: /submit/i }));
+        await fillAndSubmit(user);
 
-        expect(screen.queryByText(/is required/i)).not.toBeInTheDocument();
+        expect(await screen.findByText('Message sent successfully.')).toBeInTheDocument();
+        expect(global.fetch).toHaveBeenCalledWith('/api/contact', expect.objectContaining({
+            method: 'POST',
+        }));
     });
-});
 
-describe('buildMailtoUrl', () => {
-    // Regression test: the mailto link used to hardcode a literal email address
-    // instead of using the `email` prop passed into the component.
-    it('builds the mailto link from the given email, not a hardcoded address', () => {
-        const url = buildMailtoUrl(contactProps.email, {
-            name: 'Test User',
-            email: 'test@example.com',
-            subject: 'Hello',
-            message: 'Test message',
+    it('shows an error message when the API call fails', async () => {
+        (global.fetch as jest.Mock).mockResolvedValue({
+            ok: false,
+            json: async () => ({ message: 'Failed to send message. Please try again later.' }),
         });
+        const user = userEvent.setup();
+        render(<Contact {...contactProps} />);
 
-        expect(url).toContain(`mailto:${contactProps.email}`);
-        expect(url.indexOf(`mailto:${contactProps.email}`)).toBe(0);
+        await fillAndSubmit(user);
+
+        expect(await screen.findByText(/failed to send message/i)).toBeInTheDocument();
     });
 });

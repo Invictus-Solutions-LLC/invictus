@@ -74,7 +74,7 @@ function Projects({ projects }: ProjectsProps) {
                                         </h4>
 
                                         <p
-                                            className='text-md md:text-lg text-center md:text-left'
+                                            className='text-md md:text-lg text-center md:text-left max-h-[35vh] overflow-y-auto scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80 px-2'
                                         >
                                             {project.description}
                                         </p>

@@ -21,6 +21,17 @@ never part of the image, so the image is safe to keep public on GHCR.
    Edit each `content/*.json` file with your real data. Keep the files world-readable
    (`chmod 644 content/*.json`) so the container's non-root user can read them through the
    bind mount.
+4. Create a `.env` file next to `docker-compose.prod.yml` (gitignored, never committed) with
+   your Resend API key so the contact form can send email:
+
+   ```bash
+   echo "RESEND_API_KEY=re_your_real_key" > .env
+   # optional, defaults to Resend's shared sandbox sender:
+   echo "RESEND_FROM_EMAIL=contact@yourdomain.com" >> .env
+   ```
+
+   Docker Compose reads this file automatically. Without it, the site still works — only the
+   contact form's submit button will return an error instead of sending email.
 
 ## Deploy / update
 

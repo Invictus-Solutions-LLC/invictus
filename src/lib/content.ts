@@ -46,3 +46,7 @@ export function getContactContent(): ContactProps {
 export function getSocialsContent(): SocialsProps {
     return { socials: loadContent<Array<string>>('socials.json') };
 }
+
+export function getFooterContent(): FooterProps {
+    return loadContent<FooterProps>('footer.json');
+}

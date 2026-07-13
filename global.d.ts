@@ -36,6 +36,10 @@ type ExperienceProps = {
     experiences: Array<Experience>;
 };
 
+type FooterProps = {
+    text: string;
+};
+
 type HeroProps = {
     image: string;
     words: Array<string>;
