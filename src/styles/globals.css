@@ -12,7 +12,7 @@
     }
 
     .terminalWindow {
-        @apply relative rounded-lg border border-[#333333] bg-[#1e1e1e]/95 shadow-glow overflow-hidden
+        @apply relative flex flex-col rounded-lg border border-[#333333] bg-[#1e1e1e]/95 shadow-glow overflow-hidden
     }
 
     .terminalTitlebar {

@@ -50,23 +50,23 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
             transition={{
                 duration: 1.5,
             }}
-            className='relative flex flex-col overflow-hidden min-h-screen text-center md:text-left md:flex-row max-w-7xl px-10 pb-36 md:pb-5 mx-auto justify-evenly items-center'
+            className='relative flex flex-col overflow-hidden min-h-screen md:h-screen text-center md:text-left md:flex-row max-w-7xl px-10 pb-36 md:pb-5 mx-auto justify-evenly items-center'
         >
             <h3
-                className='static uppercase tracking-[20px] text-gray-500 text-2xl pt-16 md:pt-20 lg:pt-28 pb-4 md:pb-8 xl:pb-12 z-20'
+                className='static flex-shrink-0 uppercase tracking-[20px] text-gray-500 text-2xl pt-16 md:pt-20 lg:pt-28 pb-4 md:pb-8 xl:pb-12 z-20'
             >
                 Contact
             </h3>
 
             <TerminalWindow
                 path='~/contact'
-                className='max-w-2xl'
+                className='max-w-2xl w-full md:self-stretch'
             >
                 <div
-                    className='static flex flex-col space-y-10'
+                    className='static flex flex-col space-y-6'
                 >
                     <h4
-                    className='text-2xl md:text-4xl font-semibold text-center pt-0 md:pt-20'
+                    className='text-2xl md:text-4xl font-semibold text-center pt-0 md:pt-8'
                 >
                     <span
                         className='underline decoration-[#FF0000]/50'
@@ -76,7 +76,7 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                 </h4>
 
                 <div
-                    className='space-y-10'
+                    className='space-y-6'
                 >
                     <div
                         className='flex items-center space-x-5 justify-center'
@@ -129,12 +129,14 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                             type='text'
                             className='contactInput'
                             placeholder='Name'
+                            maxLength={100}
                             {...register('name', { required: 'Name is required.' })}
                         />
                         <input
                             type='email'
                             className='contactInput'
                             placeholder='Email'
+                            maxLength={254}
                             {...register('email', {
                                 required: 'Email is required.',
                                 pattern: {
@@ -157,6 +159,7 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                         type='text'
                         className='contactInput'
                         placeholder='Subject'
+                        maxLength={150}
                         {...register('subject', { required: 'Subject is required.' })}
                     />
                     {
@@ -171,6 +174,7 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                     <textarea
                         className='contactInput'
                         placeholder='Message'
+                        maxLength={5000}
                         {...register('message', { required: 'Message is required.' })}
                     />
                     {
@@ -202,7 +206,7 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                     <button
                         type='submit'
                         disabled={status === 'sending'}
-                        className='bg-[#FF0000] px-10 py-5 rounded-md text-black font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed'
+                        className='bg-[#FF0000] px-10 py-4 rounded-md text-black font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed'
                     >
                         {status === 'sending' ? 'Sending...' : 'Submit'}
                     </button>

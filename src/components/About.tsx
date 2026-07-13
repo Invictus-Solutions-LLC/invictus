@@ -14,16 +14,17 @@ function About({ header, image, text }: AboutProps) {
             transition={{
                 duration: 1.5,
             }}
-            className='relative flex flex-col overflow-hidden min-h-screen text-center max-w-7xl mx-auto px-10 pb-36 items-center'
+            className='relative flex flex-col overflow-hidden min-h-screen md:h-screen text-center max-w-7xl mx-auto px-10 pb-36 md:pb-5 items-center'
         >
             <h3
-                className='static uppercase tracking-[20px] text-gray-500 text-2xl pt-16 md:pt-20 lg:pt-28 pb-4 md:pb-8 xl:pb-12 z-20'
+                className='static flex-shrink-0 uppercase tracking-[20px] text-gray-500 text-2xl pt-16 md:pt-20 lg:pt-28 pb-4 md:pb-8 xl:pb-12 z-20'
             >
                 About
             </h3>
 
             <TerminalWindow
                 path='~/about'
+                className='w-full flex-1 min-h-0'
             >
                 <div
                     className='flex flex-col md:flex-row'

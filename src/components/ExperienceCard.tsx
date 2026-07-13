@@ -1,10 +1,15 @@
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useResetScrollOnLeave } from '@/hooks/useResetScrollOnLeave';
 
 function ExperienceCard({ title, company, logo, start, end, technologies, description }: Experience) {
+    const ref = useResetScrollOnLeave<HTMLElement>();
+
     return (
         <article
-            className='flex flex-col rounded-lg items-center space-y-1 md:space-y-2 flex-shrink-0 w-[300px] md:w-[600px] xl:w-[900px] h-[75vh] max-h-[600px] snap-center bg-[#292929] p-4 md:p-10 opacity-40 hover:opacity-100 cursor-pointer transition-opacity duration-200 overflow-hidden'
+            ref={ref}
+            className='flex flex-col rounded-lg items-center space-y-1 md:space-y-2 flex-shrink-0 w-[300px] md:w-[600px] xl:w-[900px] h-full snap-center bg-[#292929] p-4 md:p-10 opacity-40 hover:opacity-100 cursor-pointer transition-opacity duration-200 overflow-y-auto scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
         >
             <div
                 className='flex flex-row xl:flex-col w-full md:px-10 flex-shrink-0'
@@ -63,10 +68,12 @@ function ExperienceCard({ title, company, logo, start, end, technologies, descri
                     {
                         technologies.map((technology: Technology, index: number) => {
                             return (
-                                <img
+                                <Image
                                     key={index}
                                     src={technology.image}
                                     alt={technology.name}
+                                    width={40}
+                                    height={40}
                                     className='h-6 w-6 md:h-10 md:w-10 rounded-full'
                                 />
                             );
@@ -80,7 +87,7 @@ function ExperienceCard({ title, company, logo, start, end, technologies, descri
                 </p>
             </div>
             <div
-                className='flex-1 min-h-0 w-full overflow-y-auto text-center md:text-left px-0 md:px-10 scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
+                className='w-full text-center md:text-left px-0 md:px-10'
             >
                 <ul
                     className='list-none text-left text-sm md:text-lg space-y-4'
