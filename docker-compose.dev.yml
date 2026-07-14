@@ -11,6 +11,7 @@ services:
       - NEXT_TELEMETRY_DISABLED=1
       - RESEND_API_KEY=${RESEND_API_KEY}
       - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL:-onboarding@resend.dev}
+      - RESEND_TO_EMAIL=${RESEND_TO_EMAIL:-}
     ports:
       - "3000:3000"
     volumes:

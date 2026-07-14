@@ -37,15 +37,18 @@ function mockRequest(body: Partial<ContactInputs>, ip: string = uniqueIp()) {
 
 describe('/api/contact', () => {
     const originalApiKey = process.env.RESEND_API_KEY;
+    const originalToEmail = process.env.RESEND_TO_EMAIL;
     const validBody = { name: 'Test User', email: 'test@example.com', subject: 'Hi', message: 'Hello' };
 
     beforeEach(() => {
         mockSend.mockReset();
         process.env.RESEND_API_KEY = 're_test_key';
+        delete process.env.RESEND_TO_EMAIL;
     });
 
     afterAll(() => {
         process.env.RESEND_API_KEY = originalApiKey;
+        process.env.RESEND_TO_EMAIL = originalToEmail;
     });
 
     it('returns 405 on non-POST methods', async () => {
@@ -108,12 +111,35 @@ describe('/api/contact', () => {
         }));
     });
 
-    it('returns 502 when Resend reports an error', async () => {
-        mockSend.mockResolvedValue({ data: null, error: { message: 'bad request' } });
+    it('delivers to RESEND_TO_EMAIL when set, instead of the displayed contact email', async () => {
+        process.env.RESEND_TO_EMAIL = 'inbox@example.com';
+        mockSend.mockResolvedValue({ data: { id: '123' }, error: null });
+        const { req, res } = mockRequest(validBody);
+        await handler(req, res);
+
+        expect(res._getStatusCode()).toBe(200);
+        expect(mockSend).toHaveBeenCalledWith(expect.objectContaining({ to: 'inbox@example.com' }));
+    });
+
+    it('falls back to the displayed contact email when RESEND_TO_EMAIL is an empty string', async () => {
+        process.env.RESEND_TO_EMAIL = '';
+        mockSend.mockResolvedValue({ data: { id: '123' }, error: null });
+        const { req, res } = mockRequest(validBody);
+        await handler(req, res);
+
+        expect(mockSend).toHaveBeenCalledWith(expect.objectContaining({ to: 'owner@example.com' }));
+    });
+
+    it('returns 502 with a generic message (no provider details) when Resend reports an error', async () => {
+        const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+        mockSend.mockResolvedValue({ data: null, error: { name: 'validation_error', message: 'sandbox restriction' } });
         const { req, res } = mockRequest(validBody);
         await handler(req, res);
 
         expect(res._getStatusCode()).toBe(502);
+        expect(res._getJSONData().message).not.toMatch(/sandbox|validation/);
+        expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('validation_error'));
+        consoleSpy.mockRestore();
     });
 
     it('returns 429 with a Retry-After header once a single IP exceeds the rate limit', async () => {

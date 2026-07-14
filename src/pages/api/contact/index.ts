@@ -78,7 +78,11 @@ export default async function handler(
     try {
         const resend = new Resend(apiKey);
         const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev';
-        const { email: toEmail } = getContactContent();
+        // Delivery inbox can differ from the address displayed on the site —
+        // required with Resend's sandbox sender, which only delivers to the
+        // account owner's email.
+        // `||` not `??`: compose files pass this as an empty string when unset.
+        const toEmail = process.env.RESEND_TO_EMAIL || getContactContent().email;
 
         const { error } = await resend.emails.send({
             from: `Portfolio Contact Form <${fromEmail}>`,
@@ -89,12 +93,15 @@ export default async function handler(
         });
 
         if (error) {
+            // Server-side only — never leak provider details to the client.
+            console.error(`[contact] resend rejected send: ${error.name}: ${error.message}`);
             res.status(502).json({ message: 'Failed to send message. Please try again later.' });
             return;
         }
 
         res.status(200).json({ message: 'Message sent successfully.' });
-    } catch {
+    } catch (err) {
+        console.error('[contact] send failed:', err instanceof Error ? err.message : err);
         res.status(500).json({ message: 'Failed to send message. Please try again later.' });
     }
 }
