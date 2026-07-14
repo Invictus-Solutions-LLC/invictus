@@ -28,11 +28,9 @@ export default function App({ Component, pageProps }: AppProps) {
             return;
         }
         bannerLogged = true;
-        /* eslint-disable no-console */
         console.log(`%c${CONSOLE_BANNER}`, 'color: #FF0000; font-family: monospace;');
         console.log('%cguest@invictus:~$ whoami', 'color: #39FF88; font-family: monospace;');
         console.log('%ccurious. we like that. → /#contact', 'color: #9CA3AF; font-family: monospace;');
-        /* eslint-enable no-console */
     }, []);
 
     return (

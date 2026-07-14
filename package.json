@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:ci": "jest --ci --coverage"
@@ -29,6 +29,7 @@
     "typescript": "~5.8.3"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
