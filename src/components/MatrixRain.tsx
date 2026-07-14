@@ -67,10 +67,27 @@ function MatrixRain() {
             });
         };
 
-        const interval = setInterval(draw, FRAME_INTERVAL_MS);
+        // Pause the repaint loop while the tab is hidden — a background tab
+        // shouldn't spend battery animating pixels nobody can see.
+        let interval: ReturnType<typeof setInterval> | null = setInterval(draw, FRAME_INTERVAL_MS);
+
+        const handleVisibility = () => {
+            if (document.hidden) {
+                if (interval !== null) {
+                    clearInterval(interval);
+                    interval = null;
+                }
+            } else if (interval === null) {
+                interval = setInterval(draw, FRAME_INTERVAL_MS);
+            }
+        };
+        document.addEventListener('visibilitychange', handleVisibility);
 
         return () => {
-            clearInterval(interval);
+            if (interval !== null) {
+                clearInterval(interval);
+            }
+            document.removeEventListener('visibilitychange', handleVisibility);
             window.removeEventListener('resize', resize);
         };
     }, []);

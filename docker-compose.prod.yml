@@ -17,6 +17,9 @@ services:
       # Optional delivery-inbox override; empty means "deliver to the email
       # displayed on the site" (content/contact.json).
       - RESEND_TO_EMAIL=${RESEND_TO_EMAIL:-}
+      # Optional: tokens enabling the private /api/resume endpoint (see
+      # .env.example). Empty = endpoint disabled.
+      - RESUME_ACCESS_TOKENS=${RESUME_ACCESS_TOKENS:-}
     # No host port mapping — only reachable inside the compose network, via
     # nginx, which is the sole public-facing entrypoint.
     expose:

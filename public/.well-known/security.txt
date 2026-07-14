@@ -1,0 +1,7 @@
+# Security policy for this site (RFC 9116)
+# If you have found a vulnerability here, thank you for reporting it responsibly.
+
+Contact: https://invictus808.com/#contact
+Expires: 2027-07-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://invictus808.com/.well-known/security.txt
