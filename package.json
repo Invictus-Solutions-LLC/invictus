@@ -42,5 +42,22 @@
     "tailwind-scrollbar": "^3.1.0",
     "tailwindcss": "^3.4.19"
   },
+  "resolutions": {
+    "glob@^10.2.2": "^10.5.0",
+    "glob@^10.3.10": "^10.5.0",
+    "flatted@^3.2.9": "^3.4.2",
+    "minimatch@^3.1.2": "^3.1.5",
+    "minimatch@^9.0.4": "^9.0.9",
+    "picomatch@^2.0.4": "^2.3.2",
+    "picomatch@^2.2.1": "^2.3.2",
+    "picomatch@^2.3.1": "^2.3.2",
+    "picomatch@^4.0.2": "^4.0.5",
+    "tar@^7.4.3": "^7.5.20",
+    "brace-expansion@^1.1.7": "^1.1.16",
+    "brace-expansion@^2.0.1": "^2.1.2",
+    "postcss@8.4.31": "^8.5.10",
+    "postcss@^8.4.47": "^8.5.10",
+    "ip-address@^9.0.5": "^10.1.1"
+  },
   "packageManager": "yarn@4.9.2+sha512.1fc009bc09d13cfd0e19efa44cbfc2b9cf6ca61482725eb35bbc5e257e093ebf4130db6dfe15d604ff4b79efd8e1e8e99b25fa7d0a6197c9f9826358d4d65c3c"
 }

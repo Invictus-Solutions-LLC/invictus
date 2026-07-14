@@ -24,6 +24,9 @@ function Overlay({ socials }: SocialsProps) {
     }, []);
 
     const handleClick = (event: React.MouseEvent) => {
+        // Keep the activating click from reaching the document-level
+        // click-away listener, which would immediately close the menu again.
+        event.stopPropagation();
         setOpen(true);
     };
 
@@ -126,6 +129,8 @@ function Overlay({ socials }: SocialsProps) {
                                         <SocialIcon
                                             key={index}
                                             url={social}
+                                            target='_blank'
+                                            rel='noopener noreferrer'
                                             fgColor='white'
                                             bgColor='none'
                                         />
@@ -134,15 +139,18 @@ function Overlay({ socials }: SocialsProps) {
                             }
                         </motion.div>
                         :
-                        <div
+                        <button
+                            type='button'
+                            aria-label='Show social links'
+                            onClick={handleClick}
                             className='flex flex-row justify-center cursor-pointer'
                         >
                             <SocialIcon
+                                as='div'
                                 fgColor='white'
                                 bgColor='none'
-                                onMouseUp={handleClick}
                             />
-                        </div>
+                        </button>
                 }
             </footer>
         </>

@@ -9,6 +9,7 @@ import {
     getSocialsContent,
     getFooterContent,
 } from '@/lib/content';
+import BootSequence from '@/components/BootSequence';
 import MatrixRain from '@/components/MatrixRain';
 import Overlay from '@/components/Overlay';
 import Hero from '@/components/Hero';
@@ -35,10 +36,41 @@ export default function Home({ heroProps, aboutProps, experienceProps, skillsPro
         <>
             <Head>
                 <title>Invictus808</title>
+                <meta
+                    name='description'
+                    content='Invictus808 — software engineering portfolio. Experience, skills, and projects, served from a terminal near you.'
+                />
+                <meta
+                    name='theme-color'
+                    content='#242424'
+                />
+                <meta
+                    property='og:title'
+                    content='Invictus808'
+                />
+                <meta
+                    property='og:description'
+                    content='Invictus808 — software engineering portfolio. Experience, skills, and projects, served from a terminal near you.'
+                />
+                <meta
+                    property='og:type'
+                    content='website'
+                />
+                <meta
+                    property='og:image'
+                    content='/android-chrome-512x512.png'
+                />
+                <meta
+                    name='twitter:card'
+                    content='summary'
+                />
             </Head>
             <div
-                className='bg-[rgb(36,36,36)] text-white w-screen h-screen snap-y snap-mandatory overflow-x-hidden overflow-y-scroll scroll-smooth z-0 scrollbar-thin scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
+                className='bg-[rgb(36,36,36)] text-white w-screen h-screen snap-y snap-mandatory overflow-x-hidden overflow-y-scroll scroll-smooth z-0 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[#FF0000]/70 scrollbar-thumb-rounded-full'
             >
+                {/* one-time boot sequence intro */}
+                <BootSequence />
+
                 {/* matrix rain background */}
                 <MatrixRain />
 

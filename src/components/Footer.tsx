@@ -10,11 +10,11 @@ function Footer({ text }: FooterProps) {
             <div
                 className=''
             >
-                <h1
+                <p
                     className='font-bold text-gray-400'
                 >
                     {`© ${year} ${text}`}
-                </h1>
+                </p>
             </div>
         </div>
     );

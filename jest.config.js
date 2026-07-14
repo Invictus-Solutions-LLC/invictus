@@ -12,6 +12,16 @@ const customJestConfig = {
         '^@/(.*)$': '<rootDir>/src/$1',
     },
     testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
+    // Floor, not target — set below current coverage (~73% stmts / ~63% branch /
+    // ~56% funcs) so it catches regressions without failing routine bumps.
+    coverageThreshold: {
+        global: {
+            statements: 65,
+            branches: 55,
+            functions: 45,
+            lines: 65,
+        },
+    },
 };
 
 const nextJestConfig = createJestConfig(customJestConfig);

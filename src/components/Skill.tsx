@@ -4,13 +4,16 @@ import { motion } from 'framer-motion';
 function Skill({ image, level, name }: Skill) {
     return (
         <div
-            className='group relative flex cursor-pointer'
+            tabIndex={0}
+            role='img'
+            aria-label={`${name}: ${level}% proficiency`}
+            className='group relative flex cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#FF0000]/60 rounded-full'
         >
             <motion.img
                 src={image}
                 alt={name}
                 initial={{
-                    x: 100,
+                    x: 24,
                     opacity: 0,
                 }}
                 whileInView={{
@@ -20,12 +23,12 @@ function Skill({ image, level, name }: Skill) {
                 transition={{
                     duration: 1,
                 }}
-                className='rounded-full border border-gray-500 object-cover w-24 h-24 md:w-28 md:h-28 xl:w-32 xl:h-32 filter group-hover:grayscale transition duration-300 ease-in-out'
+                className='rounded-full border border-gray-500 object-cover w-full h-auto aspect-square max-w-32 filter group-hover:grayscale transition duration-300 ease-in-out'
             />
 
             <motion.div
                 initial={{
-                    x: 100,
+                    x: 24,
                 }}
                 whileInView={{
                     x: 0,
@@ -33,13 +36,13 @@ function Skill({ image, level, name }: Skill) {
                 transition={{
                     duration: 1,
                 }}
-                className='absolute opacity-0 group-hover:opacity-80 transition duration-300 ease-in-out group-hover:bg-white w-full h-full rounded-full z-0'
+                className='absolute opacity-0 group-hover:opacity-80 group-focus:opacity-80 transition duration-300 ease-in-out group-hover:bg-white group-focus:bg-white w-full h-full rounded-full z-0'
             >
                 <div
                     className='flex items-center justify-center h-full'
                 >
                     <p
-                        className='font-mono text-2xl font-bold text-black opacity-100'
+                        className='font-mono text-sm md:text-xl xl:text-2xl font-bold text-black opacity-100'
                     >
                         {`// ${level}%`}
                     </p>

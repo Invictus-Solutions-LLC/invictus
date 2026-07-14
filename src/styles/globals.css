@@ -8,7 +8,7 @@
     }
 
     .contactInput {
-        @apply outline-none w-full rounded-sm border-b px-6 py-4 bg-slate-400/10 text-gray-500 border-[#242424] placeholder-gray-500 transition-all focus:border-[#FF0000]/40 focus:text-[#FF0000]/40 hover:border-[#FF0000]/40
+        @apply outline-none w-full min-w-0 rounded-sm border-b px-4 md:px-6 py-4 bg-slate-400/10 text-gray-500 border-[#242424] placeholder-gray-500 transition-all focus:border-[#FF0000]/40 focus:text-[#FF0000]/40 hover:border-[#FF0000]/40
     }
 
     .terminalWindow {
@@ -25,6 +25,10 @@
 
     .commentCaption {
         @apply font-mono text-xs text-gray-500 before:content-['//_'] before:text-[#FF0000]/60
+    }
+
+    .terminalCursor {
+        @apply inline-block w-[0.55em] h-[1.05em] ml-1.5 align-middle bg-[#FF0000]/70 animate-cursor motion-reduce:animate-none
     }
 
     .scanlineOverlay {

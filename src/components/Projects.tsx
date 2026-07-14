@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import TerminalWindow from '@/components/TerminalWindow';
 import ProjectCard from '@/components/ProjectCard';
 import CardCarousel from '@/components/CardCarousel';
+import SectionPrompt from '@/components/SectionPrompt';
 
 function Projects({ projects }: ProjectsProps) {
     return (
@@ -18,11 +19,11 @@ function Projects({ projects }: ProjectsProps) {
             }}
             className='relative flex flex-col overflow-hidden min-h-screen md:h-screen text-center max-w-full mx-auto px-10 pb-36 md:pb-5 items-center'
         >
-            <h3
-                className='static flex-shrink-0 uppercase tracking-[20px] text-gray-500 text-2xl pt-16 md:pt-20 lg:pt-28 pb-4 md:pb-8 xl:pb-12 z-20'
-            >
-                Projects
-            </h3>
+            <SectionPrompt
+                label='Projects'
+                command='cd ./projects'
+                className='pt-16 md:pt-20 lg:pt-28 pb-4 md:pb-8 xl:pb-12'
+            />
 
             <TerminalWindow
                 path='~/projects'

@@ -3,6 +3,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/solid';
 import TerminalWindow from '@/components/TerminalWindow';
+import SectionPrompt from '@/components/SectionPrompt';
 
 type SubmitStatus = 'idle' | 'sending' | 'success' | 'error';
 
@@ -52,15 +53,15 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
             }}
             className='relative flex flex-col overflow-hidden min-h-screen md:h-screen text-center md:text-left md:flex-row max-w-7xl px-10 pb-36 md:pb-5 mx-auto justify-evenly items-center'
         >
-            <h3
-                className='static flex-shrink-0 uppercase tracking-[20px] text-gray-500 text-2xl pt-16 md:pt-20 lg:pt-28 pb-4 md:pb-8 xl:pb-12 z-20'
-            >
-                Contact
-            </h3>
+            <SectionPrompt
+                label='Contact'
+                command='cd ./contact'
+                className='pt-16 md:pt-20 lg:pt-28 pb-4 md:pb-8 xl:pb-12'
+            />
 
             <TerminalWindow
                 path='~/contact'
-                className='max-w-2xl w-full md:self-stretch'
+                className='max-w-2xl w-full mt-10 md:self-stretch'
             >
                 <div
                     className='static flex flex-col space-y-6'
@@ -85,7 +86,7 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                             className='text-[#FF0000] w-7 h-7 animate-pulse'
                         />
                         <p
-                            className='text-1xl md:text-2xl'
+                            className='text-base md:text-2xl min-w-0 [overflow-wrap:anywhere]'
                         >
                             {phone}
                         </p>
@@ -98,7 +99,7 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                             className='text-[#FF0000] w-7 h-7 animate-pulse'
                         />
                         <p
-                            className='text-1xl md:text-2xl'
+                            className='text-base md:text-2xl min-w-0 [overflow-wrap:anywhere]'
                         >
                             {email}
                         </p>
@@ -111,7 +112,7 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                             className='text-[#FF0000] w-7 h-7 animate-pulse'
                         />
                         <p
-                            className='text-1xl md:text-2xl'
+                            className='text-base md:text-2xl min-w-0 [overflow-wrap:anywhere]'
                         >
                             {headquarters}
                         </p>
@@ -120,10 +121,10 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
 
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className='flex flex-col space-y-2 w-screen md:w-fit mx-auto p-5'
+                    className='flex flex-col space-y-2 w-full md:w-fit mx-auto p-2 md:p-5'
                 >
                     <div
-                        className='flex space-x-2'
+                        className='flex flex-col gap-2 sm:flex-row'
                     >
                         <input
                             type='text'
@@ -187,19 +188,44 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                     }
 
                     {
+                        status === 'sending' &&
+                        <p
+                            role='status'
+                            className='text-gray-400 text-sm text-center'
+                        >
+                            <span
+                                className='text-[#FF0000]/70'
+                            >
+                                {'> '}
+                            </span>
+                            establishing uplink... transmitting
+                            <span
+                                className='terminalCursor'
+                            />
+                        </p>
+                    }
+                    {
                         status === 'success' &&
                         <p
+                            role='status'
                             className='text-terminal-green text-sm text-center'
                         >
-                            {statusMessage}
+                            {'✓ transmission complete :: '}
+                            <span>
+                                {statusMessage}
+                            </span>
                         </p>
                     }
                     {
                         status === 'error' &&
                         <p
+                            role='status'
                             className='text-[#FF0000]/80 text-sm text-center'
                         >
-                            {statusMessage}
+                            {'✗ transmission failed :: '}
+                            <span>
+                                {statusMessage}
+                            </span>
                         </p>
                     }
 
@@ -208,7 +234,7 @@ function Contact({ header, phone, email, headquarters }: ContactProps) {
                         disabled={status === 'sending'}
                         className='bg-[#FF0000] px-10 py-4 rounded-md text-black font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed'
                     >
-                        {status === 'sending' ? 'Sending...' : 'Submit'}
+                        {status === 'sending' ? './send.sh --wait' : 'Submit'}
                     </button>
                 </form>
                 </div>

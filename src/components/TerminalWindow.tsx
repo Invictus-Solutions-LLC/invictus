@@ -31,7 +31,7 @@ function TerminalWindow({ path, children, className = '' }: Props) {
             </div>
 
             <div
-                className='flex-1 min-h-0 overflow-y-auto p-6 md:p-10 scrollbar-thin scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
+                className='flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-6 md:p-10 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[#FF0000]/70 scrollbar-thumb-rounded-full'
             >
                 {children}
             </div>

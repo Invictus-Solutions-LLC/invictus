@@ -1,3 +1,19 @@
+// Everything is self-hosted (fonts via next/font, images/icons from /public,
+// inline styles required by framer-motion/styled-jsx). Production only — the
+// dev server needs eval and websockets for HMR/react-refresh.
+const contentSecurityPolicy = [
+    "default-src 'self'",
+    "script-src 'self'",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob:",
+    "font-src 'self'",
+    "connect-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'self'",
+].join('; ');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
@@ -13,6 +29,9 @@ const nextConfig = {
                     { key: 'X-Content-Type-Options', value: 'nosniff' },
                     { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
                     { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+                    ...(process.env.NODE_ENV === 'production'
+                        ? [{ key: 'Content-Security-Policy', value: contentSecurityPolicy }]
+                        : []),
                 ],
             },
         ];

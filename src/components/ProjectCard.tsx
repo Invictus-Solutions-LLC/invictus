@@ -8,10 +8,13 @@ function ProjectCard({ name, image, url, description }: Project) {
     return (
         <div
             ref={ref}
-            className='flex flex-col h-full flex-shrink-0 w-full snap-center space-y-5 items-center overflow-y-auto scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
+            className='flex flex-col h-full flex-shrink-0 w-full snap-center space-y-5 items-center overflow-y-auto scrollbar-thin scroll-smooth scrollbar-track-transparent scrollbar-thumb-[#FF0000]/70 scrollbar-thumb-rounded-full'
         >
             <a
                 href={url}
+                target='_blank'
+                rel='noopener noreferrer'
+                aria-label={`Open ${name} project`}
             >
                 <motion.img
                     src={image}

@@ -9,7 +9,7 @@ function ExperienceCard({ title, company, logo, start, end, technologies, descri
     return (
         <article
             ref={ref}
-            className='flex flex-col rounded-lg items-center space-y-1 md:space-y-2 flex-shrink-0 w-[300px] md:w-[600px] xl:w-[900px] h-full snap-center bg-[#292929] p-4 md:p-10 opacity-40 hover:opacity-100 cursor-pointer transition-opacity duration-200 overflow-y-auto scrollbar-thin scroll-smooth scrollbar-track-gray-400/20 scrollbar-thumb-[#FF0000]/80'
+            className='flex flex-col rounded-lg items-center space-y-1 md:space-y-2 flex-shrink-0 w-[300px] md:w-[600px] xl:w-[900px] h-full snap-center bg-[#292929] p-4 md:p-10 opacity-40 hover:opacity-100 cursor-pointer transition-opacity duration-200 overflow-y-auto scrollbar-thin scroll-smooth scrollbar-track-transparent scrollbar-thumb-[#FF0000]/70 scrollbar-thumb-rounded-full'
         >
             <div
                 className='flex flex-row xl:flex-col w-full md:px-10 flex-shrink-0'
