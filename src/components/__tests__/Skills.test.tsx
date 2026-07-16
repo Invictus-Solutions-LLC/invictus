@@ -17,4 +17,24 @@ describe('Skills', () => {
             expect(screen.getByAltText(skill.name)).toBeInTheDocument();
         });
     });
+
+    it('renders certifications as verifiable external links when provided', () => {
+        render(
+            <Skills
+                {...skillsProps}
+                certifications={[{ name: 'PNPT', image: '/logos/pnpt.png', url: 'https://example.com/cred' }]}
+            />
+        );
+
+        const link = screen.getByRole('link', { name: /PNPT.*verified credential/i });
+        expect(link).toHaveAttribute('href', 'https://example.com/cred');
+        expect(link).toHaveAttribute('target', '_blank');
+        expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+        expect(screen.getByAltText(/PNPT verified credential badge/i)).toBeInTheDocument();
+    });
+
+    it('omits the certifications block when none are provided', () => {
+        render(<Skills {...skillsProps} />);
+        expect(screen.queryByText('certifications')).not.toBeInTheDocument();
+    });
 });

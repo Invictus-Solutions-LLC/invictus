@@ -43,11 +43,14 @@ function ProjectCard({ name, image, url, description }: Project) {
                 <h4
                     className='text-2xl md:text-4xl font-semibold text-center'
                 >
-                    <span
-                        className='underline decoration-[#FF0000]/50'
+                    <a
+                        href={url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='underline decoration-[#FF0000]/50 hover:text-[#FF0000] transition-colors'
                     >
                         {name}
-                    </span>
+                    </a>
                 </h4>
 
                 <p
@@ -59,7 +62,14 @@ function ProjectCard({ name, image, url, description }: Project) {
                 <p
                     className='commentCaption text-center md:text-left'
                 >
-                    {`open ${url}`}
+                    <a
+                        href={url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='hover:text-[#FF0000] transition-colors'
+                    >
+                        {`open ${url}`}
+                    </a>
                 </p>
             </div>
         </div>

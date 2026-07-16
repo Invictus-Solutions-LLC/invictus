@@ -62,9 +62,16 @@ type Skill = Technology & {
     level: number;
 };
 
+type Certification = {
+    name: string;
+    image: string;
+    url: string;
+};
+
 type SkillsProps = {
     header: string;
     skills: Array<Skill>;
+    certifications?: Array<Certification>;
 };
 
 type SocialsProps = {

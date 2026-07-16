@@ -1,10 +1,11 @@
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Skill from '@/components/Skill';
 import TerminalWindow from '@/components/TerminalWindow';
 import SectionPrompt from '@/components/SectionPrompt';
 
-function Skills({ header, skills }: SkillsProps) {
+function Skills({ header, skills, certifications = [] }: SkillsProps) {
     return (
         <motion.div
             initial={{
@@ -30,6 +31,46 @@ function Skills({ header, skills }: SkillsProps) {
                 >
                     {header}
                 </p>
+
+                {
+                    certifications.length > 0 &&
+                    <div
+                        className='mt-8 md:mt-12'
+                    >
+                        <p
+                            className='commentCaption static tracking-[3px] text-sm pb-4'
+                        >
+                            certifications
+                        </p>
+                        <div
+                            className='flex flex-row flex-wrap gap-4 justify-center md:justify-start'
+                        >
+                            {
+                                certifications.map((certification: Certification, index: number) => {
+                                    return (
+                                        <a
+                                            key={index}
+                                            href={certification.url}
+                                            target='_blank'
+                                            rel='noopener noreferrer'
+                                            title={certification.name}
+                                            aria-label={`${certification.name} — view verified credential`}
+                                            className='block rounded-full transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF0000]/60'
+                                        >
+                                            <Image
+                                                src={certification.image}
+                                                alt={`${certification.name} verified credential badge`}
+                                                width={112}
+                                                height={112}
+                                                className='w-24 h-24 md:w-28 md:h-28 object-contain'
+                                            />
+                                        </a>
+                                    );
+                                })
+                            }
+                        </div>
+                    </div>
+                }
             </div>
 
             <TerminalWindow

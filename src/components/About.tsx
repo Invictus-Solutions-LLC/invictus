@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import TerminalWindow from '@/components/TerminalWindow';
 import SectionPrompt from '@/components/SectionPrompt';
+import RichText from '@/components/RichText';
 
 function About({ header, image, text }: AboutProps) {
     return (
@@ -66,7 +67,9 @@ function About({ header, image, text }: AboutProps) {
                                         key={index}
                                         className='text-[clamp(0.8125rem,2vh,1rem)] md:text-left'
                                     >
-                                        {paragraph}
+                                        <RichText
+                                            text={paragraph}
+                                        />
                                     </p>
                                 );
                             })

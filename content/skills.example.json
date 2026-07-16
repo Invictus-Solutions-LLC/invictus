@@ -21,5 +21,12 @@
             "level": 40,
             "name": "Docker"
         }
+    ],
+    "certifications": [
+        {
+            "name": "Example Certification",
+            "image": "/logos/hacker.svg",
+            "url": "https://www.credential.net/your-credential-id"
+        }
     ]
 }
