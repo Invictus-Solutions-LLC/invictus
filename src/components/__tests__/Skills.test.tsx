@@ -18,13 +18,15 @@ describe('Skills', () => {
         });
     });
 
-    it('renders certifications as verifiable external links when provided', () => {
+    it('renders certifications in a ~/certifications window as verifiable external links when provided', () => {
         render(
             <Skills
                 {...skillsProps}
                 certifications={[{ name: 'PNPT', image: '/logos/pnpt.png', url: 'https://example.com/cred' }]}
             />
         );
+
+        expect(screen.getByText('~/certifications')).toBeInTheDocument();
 
         const link = screen.getByRole('link', { name: /PNPT.*verified credential/i });
         expect(link).toHaveAttribute('href', 'https://example.com/cred');
@@ -33,8 +35,8 @@ describe('Skills', () => {
         expect(screen.getByAltText(/PNPT verified credential badge/i)).toBeInTheDocument();
     });
 
-    it('omits the certifications block when none are provided', () => {
+    it('omits the certs window when no certifications are provided', () => {
         render(<Skills {...skillsProps} />);
-        expect(screen.queryByText('certifications')).not.toBeInTheDocument();
+        expect(screen.queryByText('~/certifications')).not.toBeInTheDocument();
     });
 });

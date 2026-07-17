@@ -34,16 +34,12 @@ function Skills({ header, skills, certifications = [] }: SkillsProps) {
 
                 {
                     certifications.length > 0 &&
-                    <div
-                        className='mt-8 md:mt-12'
+                    <TerminalWindow
+                        path='~/certifications'
+                        className='mt-8 md:mt-12 w-fit mx-auto md:mx-0'
                     >
-                        <p
-                            className='commentCaption static tracking-[3px] text-sm pb-4'
-                        >
-                            certifications
-                        </p>
                         <div
-                            className='flex flex-row flex-wrap gap-4 justify-center md:justify-start'
+                            className='flex flex-row flex-wrap gap-4 justify-center'
                         >
                             {
                                 certifications.map((certification: Certification, index: number) => {
@@ -69,7 +65,7 @@ function Skills({ header, skills, certifications = [] }: SkillsProps) {
                                 })
                             }
                         </div>
-                    </div>
+                    </TerminalWindow>
                 }
             </div>
 
