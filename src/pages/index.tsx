@@ -66,7 +66,7 @@ export default function Home({ heroProps, aboutProps, experienceProps, skillsPro
                 />
             </Head>
             <div
-                className='bg-[rgb(36,36,36)] text-white w-screen h-screen snap-y snap-mandatory overflow-x-hidden overflow-y-scroll scroll-smooth z-0 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[#FF0000]/70 scrollbar-thumb-rounded-full'
+                className='bg-[rgb(36,36,36)] text-white w-full h-dvh snap-y snap-mandatory overflow-x-hidden overflow-y-scroll scroll-smooth z-0 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[#FF0000]/70 scrollbar-thumb-rounded-full'
             >
                 {/* one-time boot sequence intro */}
                 <BootSequence />

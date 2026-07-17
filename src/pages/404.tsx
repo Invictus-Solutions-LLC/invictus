@@ -9,7 +9,7 @@ export default function NotFound() {
                 <title>404 — no such file or directory</title>
             </Head>
             <div
-                className='bg-[rgb(36,36,36)] text-white w-screen h-screen flex items-center justify-center px-6 md:px-10'
+                className='bg-[rgb(36,36,36)] text-white w-full h-dvh flex items-center justify-center px-6 md:px-10'
             >
                 <TerminalWindow
                     path='~/404'

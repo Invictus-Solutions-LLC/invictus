@@ -16,7 +16,7 @@ function About({ header, image, text }: AboutProps) {
             transition={{
                 duration: 1.5,
             }}
-            className='relative flex flex-col overflow-hidden min-h-screen md:h-screen text-center max-w-7xl mx-auto px-10 pb-36 md:pb-5 items-center'
+            className='relative flex flex-col overflow-hidden min-h-dvh md:h-dvh text-center max-w-7xl mx-auto px-10 pb-36 md:pb-5 items-center'
         >
             <SectionPrompt
                 label='About'
@@ -38,13 +38,9 @@ function About({ header, image, text }: AboutProps) {
                             x: -40,
                             opacity: 0,
                         }}
-                        whileInView={{
+                        animate={{
                             x: 0,
                             opacity: 1,
-                        }}
-                        viewport={{
-                            once: true,
-                            amount: 0,
                         }}
                         transition={{
                             duration: 1.2,

@@ -17,7 +17,7 @@ function Projects({ projects }: ProjectsProps) {
             transition={{
                 duration: 1.5,
             }}
-            className='relative flex flex-col overflow-hidden min-h-screen md:h-screen text-center max-w-full mx-auto px-10 pb-36 md:pb-5 items-center'
+            className='relative flex flex-col overflow-hidden min-h-dvh md:h-dvh text-center max-w-full mx-auto px-10 pb-36 md:pb-5 items-center'
         >
             <SectionPrompt
                 label='Projects'

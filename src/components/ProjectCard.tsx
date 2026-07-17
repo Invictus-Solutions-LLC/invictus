@@ -23,17 +23,14 @@ function ProjectCard({ name, image, url, description }: Project) {
                         y: -100,
                         opacity: 0,
                     }}
-                    whileInView={{
+                    animate={{
                         y: 0,
                         opacity: 1,
                     }}
                     transition={{
                         duration: 1.2,
                     }}
-                    viewport={{
-                        once: true,
-                    }}
-                    className='w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64'
+                    className='w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 object-contain'
                 />
             </a>
 

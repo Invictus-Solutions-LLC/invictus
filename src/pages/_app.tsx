@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
+import Head from 'next/head'
 import { JetBrains_Mono } from 'next/font/google'
 import { MotionConfig } from 'framer-motion'
 
@@ -35,6 +36,14 @@ export default function App({ Component, pageProps }: AppProps) {
 
     return (
         <div className={`${jetbrainsMono.variable} font-mono`}>
+            <Head>
+                {/* viewport-fit=cover lets the background fill the full screen on
+                    notched iPhones — including the safe-area bars in landscape. */}
+                <meta
+                    name='viewport'
+                    content='width=device-width, initial-scale=1, viewport-fit=cover'
+                />
+            </Head>
             {/* Disables transform/slide animations (keeps opacity) for users with
                 prefers-reduced-motion, matching MatrixRain's static fallback. */}
             <MotionConfig reducedMotion='user'>

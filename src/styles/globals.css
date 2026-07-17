@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    /* The site's base color lives on html/body so it always fills the whole
+       screen — including mobile Safari's dynamic toolbar area and the notch /
+       home-indicator safe zones in landscape, where a 100vh-sized element
+       alone leaves gaps. Sizing uses dvh (dynamic viewport height) elsewhere
+       so full-screen sections track the actually-visible area on mobile. */
+    html,
+    body {
+        background-color: rgb(36, 36, 36);
+        min-height: 100dvh;
+    }
+}
+
 @layer components {
     .heroButton {
         @apply px-6 py-2 border border-[#242424] rounded-full uppercase text-xs tracking-widest text-gray-500 transition-all hover:border-[#FF0000]/40 hover:text-[#FF0000]/40

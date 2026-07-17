@@ -13,7 +13,7 @@ function Hero({ image, prefix, titles, words }: HeroProps) {
 
     return (
         <div
-            className='flex flex-col overflow-hidden h-screen space-y-8 items-center justify-center text-center'
+            className='flex flex-col overflow-hidden h-dvh space-y-8 items-center justify-center text-center'
         >
             <BackgroundCircles />
 

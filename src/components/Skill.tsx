@@ -16,7 +16,7 @@ function Skill({ image, level, name }: Skill) {
                     x: 24,
                     opacity: 0,
                 }}
-                whileInView={{
+                animate={{
                     x: 0,
                     opacity: 1,
                 }}
@@ -30,7 +30,7 @@ function Skill({ image, level, name }: Skill) {
                 initial={{
                     x: 24,
                 }}
-                whileInView={{
+                animate={{
                     x: 0,
                 }}
                 transition={{

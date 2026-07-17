@@ -17,7 +17,7 @@ function Experience({ experiences }: ExperienceProps) {
             transition={{
                 duration: 1.5,
             }}
-            className='relative flex flex-col overflow-hidden max-w-full min-h-screen md:h-screen text-left mx-auto px-10 pb-36 md:pb-5 items-center'
+            className='relative flex flex-col overflow-hidden max-w-full min-h-dvh md:h-dvh text-left mx-auto px-10 pb-36 md:pb-5 items-center'
         >
             <SectionPrompt
                 label='Experience'

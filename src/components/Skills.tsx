@@ -17,7 +17,7 @@ function Skills({ header, skills, certifications = [] }: SkillsProps) {
             transition={{
                 duration: 1.5,
             }}
-            className='relative flex flex-col overflow-hidden min-h-screen md:h-screen text-center md:text-left md:flex-row max-w-[2000px] px-10 pb-36 md:pb-5 mx-auto justify-evenly items-center'
+            className='relative flex flex-col overflow-hidden min-h-dvh md:h-dvh text-center md:text-left md:flex-row max-w-[2000px] px-10 pb-36 md:pb-5 mx-auto justify-evenly items-center'
         >
             <div>
                 <SectionPrompt

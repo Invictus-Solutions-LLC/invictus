@@ -21,15 +21,12 @@ function ExperienceCard({ title, company, logo, start, end, technologies, descri
                         y: -100,
                         opacity: 0,
                     }}
-                    whileInView={{
+                    animate={{
                         y: 0,
                         opacity: 1,
                     }}
                     transition={{
                         duration: 1.2,
-                    }}
-                    viewport={{
-                        once: true,
                     }}
                     className='rounded-full object-cover object-center w-14 h-14 md:w-32 md:h-32 xl:w-36 xl:h-36 xl:m-auto flex-shrink-0'
                 />
@@ -74,7 +71,7 @@ function ExperienceCard({ title, company, logo, start, end, technologies, descri
                                     alt={technology.name}
                                     width={40}
                                     height={40}
-                                    className='h-6 w-6 md:h-10 md:w-10 rounded-full'
+                                    className='h-6 w-6 md:h-10 md:w-10 rounded-full object-contain'
                                 />
                             );
                         })
