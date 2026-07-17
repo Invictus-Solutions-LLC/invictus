@@ -1,10 +1,9 @@
 services:
   invictus:
+    # Always the prebuilt image published to GHCR by CI — never built on the
+    # server (the build's yarn install is memory-hungry and OOM-kills small VMs).
+    # To build locally for testing, use `make docker-build` instead.
     image: ghcr.io/invictus808/invictus:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: production
     container_name: invictus
     restart: unless-stopped
     environment:

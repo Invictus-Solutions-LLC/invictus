@@ -6,12 +6,14 @@ YARN := yarn
 DC := docker compose
 COMPOSE_DEV := docker-compose.dev.yml
 COMPOSE_PROD := docker-compose.prod.yml
+COMPOSE_APP := docker-compose.app.yml
 
 .DEFAULT_GOAL := help
 
 .PHONY: help install content dev build start lint typecheck test test-ci audit verify \
         docker-dev-up docker-dev-down docker-build \
-        prod-up prod-down prod-pull prod-restart prod-logs clean clean-all
+        prod-up prod-down prod-pull prod-restart prod-logs \
+        app-up app-down app-pull app-restart app-logs clean clean-all
 
 help: ## Show this help
 	@echo "invictus — available make targets:"
@@ -77,8 +79,8 @@ docker-build: ## Build the production image locally (yarn install is memory-hung
 
 # ---- docker: production (run on the server; needs a .env — see DEPLOY.md) ----
 
-prod-up: ## Start the production stack detached (docker-compose.prod.yml)
-	$(DC) -f $(COMPOSE_PROD) up -d
+prod-up: ## Start the production stack detached (pulls the published image; never builds on the server)
+	$(DC) -f $(COMPOSE_PROD) up -d --no-build
 
 prod-down: ## Stop & remove the production stack
 	$(DC) -f $(COMPOSE_PROD) down
@@ -91,6 +93,23 @@ prod-restart: ## Restart just the app (picks up edited content/ without a new im
 
 prod-logs: ## Tail the production logs
 	$(DC) -f $(COMPOSE_PROD) logs -f
+
+# ---- docker: app-only (behind your existing host nginx — see DEPLOY.md) ----
+
+app-up: ## Start ONLY the app container on 127.0.0.1:3000 (for a host that already runs nginx)
+	$(DC) -f $(COMPOSE_APP) up -d --no-build
+
+app-down: ## Stop & remove the app-only container
+	$(DC) -f $(COMPOSE_APP) down
+
+app-pull: ## Pull the latest published image for the app-only deployment
+	$(DC) -f $(COMPOSE_APP) pull
+
+app-restart: ## Restart the app-only container (picks up edited content/ without a new image)
+	$(DC) -f $(COMPOSE_APP) restart invictus
+
+app-logs: ## Tail the app-only container logs
+	$(DC) -f $(COMPOSE_APP) logs -f
 
 # ---- cleanup ----
 
