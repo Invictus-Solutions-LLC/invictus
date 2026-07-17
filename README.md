@@ -36,21 +36,24 @@ yarn dev
 
 ## Common tasks (Makefile)
 
-A [`Makefile`](./Makefile) wraps the common workflows. Run `make help` to list every target:
+The [`Makefile`](./Makefile) is the single entry point for the whole lifecycle. Run `make help`
+for the full, grouped list. The essentials:
 
 ```bash
-make install    # install dependencies (immutable)
-make content    # seed content/*.json from templates (never overwrites your real files)
-make dev        # run the dev server
-make verify     # full local quality gate: lint + typecheck + tests + build
-make docker-build   # build the production image locally
-make prod-pull && make prod-up   # deploy on the server (pull prebuilt image + start the stack)
+make setup      # first-time local setup: install deps + seed content + create .env
+make dev        # run the dev server (hot reload)
+make verify     # full quality gate: lint + typecheck + tests + build
+make image      # build the production Docker image locally
+make deploy     # on the server: pull the published image + (re)start the app
 ```
+
+See [DEPLOY.md](./DEPLOY.md) for the full deploy flow (`make deploy` for app-behind-your-nginx,
+or `make stack-up` for the bundled nginx + certbot stack).
 
 ## Testing
 
 ```bash
-yarn test        # or: make test
+make test        # or: yarn test
 ```
 
 ## Production deployment (Docker)

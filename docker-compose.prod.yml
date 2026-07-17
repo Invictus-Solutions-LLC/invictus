@@ -1,8 +1,17 @@
+# Production compose — covers BOTH deployment topologies from one file:
+#
+#   * app-only (default): just the app on 127.0.0.1:3000, behind YOUR host nginx.
+#         make deploy          (or: docker compose -f docker-compose.prod.yml up -d --no-build)
+#
+#   * bundled stack: app + nginx + certbot, no host setup needed. The nginx and
+#     certbot services live behind the "bundled" profile so they only start here:
+#         make stack-up        (or: docker compose -f docker-compose.prod.yml --profile bundled up -d --no-build)
+#
+# See DEPLOY.md. The image is always the prebuilt one from GHCR — never built on
+# the server (the build's yarn install OOM-kills small VMs; use `make image`).
+
 services:
   invictus:
-    # Always the prebuilt image published to GHCR by CI — never built on the
-    # server (the build's yarn install is memory-hungry and OOM-kills small VMs).
-    # To build locally for testing, use `make docker-build` instead.
     image: ghcr.io/invictus808/invictus:latest
     container_name: invictus
     restart: unless-stopped
@@ -19,18 +28,20 @@ services:
       # Optional: tokens enabling the private /api/resume endpoint (see
       # .env.example). Empty = endpoint disabled.
       - RESUME_ACCESS_TOKENS=${RESUME_ACCESS_TOKENS:-}
-    # No host port mapping — only reachable inside the compose network, via
-    # nginx, which is the sole public-facing entrypoint.
-    expose:
-      - "3000"
+    # Bound to loopback: reachable from the host (its nginx) in app-only mode,
+    # and from the bundled nginx over the compose network. Never public directly.
+    ports:
+      - "127.0.0.1:3000:3000"
     volumes:
       # Real content (name, contact info, job history) lives only on this host and
       # is never baked into the image — populate it once from content/*.example.json.
       - ./content:/app/content:ro
 
+  # --- bundled stack only (activate with: --profile bundled) ---
   nginx:
     image: nginx:1.27-alpine
     container_name: invictus-nginx
+    profiles: ["bundled"]
     restart: unless-stopped
     depends_on:
       - invictus
@@ -54,6 +65,7 @@ services:
   certbot:
     image: certbot/certbot
     container_name: invictus-certbot
+    profiles: ["bundled"]
     restart: unless-stopped
     volumes:
       - certbot-www:/var/www/certbot

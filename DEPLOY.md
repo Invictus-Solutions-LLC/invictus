@@ -64,16 +64,21 @@ sidecar that keeps the Let's Encrypt certificate renewed automatically.
 
 ## Deploy / update
 
+For the bundled stack (app + nginx + certbot):
+
 ```bash
-docker compose -f docker-compose.prod.yml pull    # or: make prod-pull
-docker compose -f docker-compose.prod.yml up -d    # or: make prod-up
+make stack-pull    # docker compose -f docker-compose.prod.yml pull
+make stack-up      # docker compose -f docker-compose.prod.yml up -d --no-build
 ```
 
 To pick up new content without a new image, just edit the files in `content/` and restart:
 
 ```bash
-docker compose -f docker-compose.prod.yml restart invictus    # or: make prod-restart
+make stack-restart    # docker compose -f docker-compose.prod.yml restart invictus
 ```
+
+(If you run your own host nginx instead, see "Behind an existing host nginx" below — that uses
+`make deploy` / `make app-*` instead of `make stack-*`.)
 
 ### If `pull` fails with "unauthorized" / "denied"
 
@@ -88,12 +93,13 @@ echo "$GHCR_PAT" | docker login ghcr.io -u invictus808 --password-stdin
 ### Pull the image — don't build it on the server
 
 The commands above **pull** the prebuilt image from GHCR (published automatically by CI on every
-push to `main`). Do **not** run `docker build` / `make docker-build` on a small production host:
-the image build runs `yarn install`, which is memory-hungry, and on a low-RAM box (e.g. a 1 GB
-VM) it gets OOM-killed — you'll see the install step die with `Killed` and exit code `137`. Since
-the server only ever pulls, its RAM never matters for the build.
+push to `main`). Do **not** run `docker build` / `make image` on a small production host: the
+image build runs `yarn install`, which is memory-hungry, and on a low-RAM box (e.g. a 1 GB VM)
+it gets OOM-killed — you'll see the install step die with `Killed` and exit code `137`. The
+`make stack-up` / `make app-up` targets pass `--no-build` precisely so the server can only pull,
+never build.
 
-If you must build on a memory-constrained host anyway, add swap first:
+If you must build on a memory-constrained host anyway, add swap first (`make swap`, or manually):
 
 ```bash
 sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile
@@ -121,14 +127,14 @@ Internet -> host nginx (:80/:443, TLS) -> 127.0.0.1:3000 (app container)
 2. Start just the app — published on `127.0.0.1:3000`, reachable only from the host:
 
    ```bash
-   make app-pull && make app-up      # uses docker-compose.app.yml (no bundled nginx/certbot)
+   make deploy      # = app-pull + app-up (docker-compose.prod.yml, default profile — app only)
    ```
-3. Add a server block to your host nginx that proxies to it. A ready-to-edit template is at
-   [`nginx/host-invictus.conf.example`](nginx/host-invictus.conf.example):
+3. Install the host nginx server block that proxies to it (template:
+   [`nginx/host-invictus.conf.example`](nginx/host-invictus.conf.example)):
 
    ```bash
-   sudo cp nginx/host-invictus.conf.example /etc/nginx/conf.d/yourdomain.conf
-   # edit server_name, then:
+   make nginx-install   # copies the template to /etc/nginx/conf.d/invictus.conf
+   # then, as it prints: edit server_name, reload nginx, and run certbot:
    sudo nginx -t && sudo systemctl reload nginx
    sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com   # adds HTTPS + redirect
    ```
@@ -137,7 +143,7 @@ Internet -> host nginx (:80/:443, TLS) -> 127.0.0.1:3000 (app container)
    them (you'd get duplicates) — just add HSTS to the `:443` block certbot creates, per the note
    in the template.
 
-To update later: `make app-pull && make app-up`. For content-only edits: `make app-restart`.
+To update later: `make deploy`. For content-only edits: `make app-restart`.
 
 ## Health check
 
