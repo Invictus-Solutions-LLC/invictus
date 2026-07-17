@@ -34,10 +34,23 @@ yarn install
 yarn dev
 ```
 
+## Common tasks (Makefile)
+
+A [`Makefile`](./Makefile) wraps the common workflows. Run `make help` to list every target:
+
+```bash
+make install    # install dependencies (immutable)
+make content    # seed content/*.json from templates (never overwrites your real files)
+make dev        # run the dev server
+make verify     # full local quality gate: lint + typecheck + tests + build
+make docker-build   # build the production image locally
+make prod-pull && make prod-up   # deploy on the server (pull prebuilt image + start the stack)
+```
+
 ## Testing
 
 ```bash
-yarn test
+yarn test        # or: make test
 ```
 
 ## Production deployment (Docker)

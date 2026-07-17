@@ -48,14 +48,30 @@ sidecar that keeps the Let's Encrypt certificate renewed automatically.
 ## Deploy / update
 
 ```bash
-docker compose -f docker-compose.prod.yml pull
-docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml pull    # or: make prod-pull
+docker compose -f docker-compose.prod.yml up -d    # or: make prod-up
 ```
 
 To pick up new content without a new image, just edit the files in `content/` and restart:
 
 ```bash
-docker compose -f docker-compose.prod.yml restart invictus
+docker compose -f docker-compose.prod.yml restart invictus    # or: make prod-restart
+```
+
+### Pull the image — don't build it on the server
+
+The commands above **pull** the prebuilt image from GHCR (published automatically by CI on every
+push to `main`). Do **not** run `docker build` / `make docker-build` on a small production host:
+the image build runs `yarn install`, which is memory-hungry, and on a low-RAM box (e.g. a 1 GB
+VM) it gets OOM-killed — you'll see the install step die with `Killed` and exit code `137`. Since
+the server only ever pulls, its RAM never matters for the build.
+
+If you must build on a memory-constrained host anyway, add swap first:
+
+```bash
+sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile
+sudo mkswap /swapfile && sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```
 
 Certificate renewal is automatic (the `certbot` container checks twice a day and only actually
