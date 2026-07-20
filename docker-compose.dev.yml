@@ -1,6 +1,6 @@
 services:
   invictus:
-    image: invictus808/invictus:1.0.0-SNAPSHOT
+    image: invictus-solutions-llc/invictus:dev
     build:
       context: .
       dockerfile: Dockerfile

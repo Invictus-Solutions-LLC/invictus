@@ -12,7 +12,7 @@
 
 services:
   invictus:
-    image: ghcr.io/invictus808/invictus:latest
+    image: ghcr.io/invictus-solutions-llc/invictus:latest
     container_name: invictus
     restart: unless-stopped
     environment:

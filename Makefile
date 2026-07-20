@@ -7,7 +7,7 @@ DC := docker compose
 COMPOSE_DEV := docker-compose.dev.yml
 COMPOSE_PROD := docker-compose.prod.yml
 BUNDLED := --profile bundled
-IMAGE := ghcr.io/invictus808/invictus:latest
+IMAGE := ghcr.io/invictus-solutions-llc/invictus:latest
 
 .DEFAULT_GOAL := help
 

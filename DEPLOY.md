@@ -1,6 +1,6 @@
 # Deploying to a production server (Docker)
 
-The published image (`ghcr.io/invictus808/invictus:latest`, built by
+The published image (`ghcr.io/invictus-solutions-llc/invictus:latest`, built by
 [`.github/workflows/cd.yml`](.github/workflows/cd.yml) on every push to `main`) contains **no
 personal content**. All real content (name, contact info, job history, projects) lives only on
 the production host and is bind-mounted read-only into the container at deploy time — it's
@@ -83,11 +83,13 @@ make stack-restart    # docker compose -f docker-compose.prod.yml restart invict
 ### If `pull` fails with "unauthorized" / "denied"
 
 GHCR packages are **private by default even when the repo is public**. Either make the package
-public once (GitHub → your profile → Packages → `invictus` → Package settings → change visibility
-to Public), or authenticate on the server with a personal access token that has `read:packages`:
+public once (GitHub → the **Invictus-Solutions-LLC** org → Packages → `invictus` → Package
+settings → change visibility to Public), or authenticate on the server with a personal access
+token that has `read:packages` and access to the org's packages (use your own GitHub username,
+which must be a member of the org):
 
 ```bash
-echo "$GHCR_PAT" | docker login ghcr.io -u invictus808 --password-stdin
+echo "$GHCR_PAT" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
 ```
 
 ### Pull the image — don't build it on the server
