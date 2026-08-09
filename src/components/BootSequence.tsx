@@ -60,6 +60,12 @@ function BootSequence() {
         const reducedMotion = typeof window.matchMedia === 'function'
             && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+        // SSR renders the 'covering' placeholder (hides the hero from first paint);
+        // only here on the client can sessionStorage/matchMedia be read to pick boot
+        // vs reattach, so this single transition must happen in the effect — doing it
+        // during render would cause a hydration mismatch. The extra render is
+        // intentional and the overlay is visually identical across it.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPhase(mode);
 
         // finish() is reachable from the natural timer, a keydown, AND a

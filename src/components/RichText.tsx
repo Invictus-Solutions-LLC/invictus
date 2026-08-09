@@ -10,17 +10,18 @@ const LINK_PATTERN = /\[([^\]]+)\]\((https:\/\/[^)\s]+)\)/g;
 function RichText({ text }: { text: string }) {
     const nodes: Array<React.ReactNode> = [];
     let lastIndex = 0;
-    let match: RegExpExecArray | null;
 
-    LINK_PATTERN.lastIndex = 0;
-    while ((match = LINK_PATTERN.exec(text)) !== null) {
-        if (match.index > lastIndex) {
-            nodes.push(text.slice(lastIndex, match.index));
+    // matchAll clones the regex internally, so it never mutates LINK_PATTERN's
+    // lastIndex — safe to read module-level shared state during render.
+    for (const match of text.matchAll(LINK_PATTERN)) {
+        const index = match.index ?? 0;
+        if (index > lastIndex) {
+            nodes.push(text.slice(lastIndex, index));
         }
         const [, label, url] = match;
         nodes.push(
             <a
-                key={match.index}
+                key={index}
                 href={url}
                 target='_blank'
                 rel='noopener noreferrer'
@@ -29,7 +30,7 @@ function RichText({ text }: { text: string }) {
                 {label}
             </a>
         );
-        lastIndex = match.index + match[0].length;
+        lastIndex = index + match[0].length;
     }
 
     if (lastIndex < text.length) {

@@ -4,7 +4,11 @@ import path from 'path';
 const CONTENT_DIR = process.env.CONTENT_DIR ?? path.join(process.cwd(), 'content');
 
 function loadContent<T>(filename: string): T {
-    const filePath = path.join(CONTENT_DIR, filename);
+    // Content is read at request time from a directory that is bind-mounted on the
+    // production host (gitignored, never baked into the image — the PII-safe design).
+    // The turbopackIgnore hint stops Turbopack's build tracer from trying to bundle
+    // this dynamic path, which would otherwise pull the whole project into the output.
+    const filePath = path.join(/* turbopackIgnore: true */ CONTENT_DIR, filename);
 
     let raw: string;
     try {

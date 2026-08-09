@@ -1,16 +1,11 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { defineConfig, globalIgnores } from 'eslint/config';
-import { FlatCompat } from '@eslint/eslintrc';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
 
-// eslint-config-next 15.x ships legacy (eslintrc) configs only; FlatCompat is
-// the officially documented bridge until the config ships flat exports in 16.
-const compat = new FlatCompat({
-    baseDirectory: path.dirname(fileURLToPath(import.meta.url)),
-});
-
+// eslint-config-next 16 ships native flat config (an array), so it's spread
+// directly here — no FlatCompat bridge needed (that was only for the 15.x
+// eslintrc-only configs, and wrapping the now-flat export trips a circular ref).
 export default defineConfig([
     // Paths `next lint` used to ignore implicitly; plain `eslint .` does not.
     globalIgnores(['.next/**', 'out/**', 'build/**', 'coverage/**', 'next-env.d.ts']),
-    ...compat.extends('next/core-web-vitals'),
+    ...nextCoreWebVitals,
 ]);
