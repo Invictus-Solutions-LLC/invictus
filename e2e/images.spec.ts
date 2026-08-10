@@ -27,8 +27,11 @@ test.describe('images', () => {
         await page.waitForTimeout(1200);
 
         // Guard the guard: with zero images loaded the total is 0, which would
-        // satisfy the budget while the page was actually broken.
-        expect(transferred.length, 'actually observed image traffic').toBeGreaterThanOrEqual(10);
+        // satisfy the budget while the page was actually broken. Any non-zero
+        // traffic proves the page really loaded — the count itself must not be
+        // hard-coded, because content/*.json is user-supplied and CI runs with
+        // the much smaller placeholder set.
+        expect(transferred.length, 'actually observed image traffic').toBeGreaterThan(0);
 
         const totalMb = transferred.reduce((sum, r) => sum + r.bytes, 0) / 1024 / 1024;
         const worst = [...transferred].sort((a, b) => b.bytes - a.bytes).slice(0, 3)
