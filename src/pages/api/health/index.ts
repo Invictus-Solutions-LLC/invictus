@@ -8,10 +8,13 @@ export default function handler(
     req: NextApiRequest,
     res: NextApiResponse<HealthResponse | ErrorResponse>
 ) {
-    if (req.method === 'GET') {
-        res.status(200).json({ status: 'ok' });
+    // A wrong method is a client error, not a server fault — returning 500 here
+    // made uptime probes (which commonly use HEAD) report the service as down.
+    if (req.method !== 'GET') {
+        res.setHeader('Allow', 'GET');
+        res.status(405).json({ message: 'Invalid HTTP method.' });
+        return;
     }
-    else {
-        res.status(500).json({ message: 'Invalid HTTP method.' });
-    }
+
+    res.status(200).json({ status: 'ok' });
 }

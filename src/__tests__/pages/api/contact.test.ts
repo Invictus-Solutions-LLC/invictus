@@ -36,14 +36,22 @@ function mockRequest(body: Partial<ContactInputs>, ip: string = uniqueIp()) {
 }
 
 describe('/api/contact', () => {
+    // These requests model traffic arriving through nginx, which is the only
+    // context in which X-Forwarded-For is trusted (see src/lib/clientIp.ts).
+    const originalTrustProxy = process.env.TRUST_PROXY;
     const originalApiKey = process.env.RESEND_API_KEY;
     const originalToEmail = process.env.RESEND_TO_EMAIL;
     const validBody = { name: 'Test User', email: 'test@example.com', subject: 'Hi', message: 'Hello' };
 
     beforeEach(() => {
+        process.env.TRUST_PROXY = 'true';
         mockSend.mockReset();
         process.env.RESEND_API_KEY = 're_test_key';
         delete process.env.RESEND_TO_EMAIL;
+    });
+
+    afterEach(() => {
+        process.env.TRUST_PROXY = originalTrustProxy;
     });
 
     afterAll(() => {

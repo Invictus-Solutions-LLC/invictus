@@ -160,7 +160,7 @@ function BootSequence() {
                         >
                             reconnecting to session
                             <span
-                                className='text-[#FF0000]/80'
+                                className='text-terminal-red'
                             >
                                 {' invictus808'}
                             </span>

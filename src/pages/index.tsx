@@ -84,65 +84,76 @@ export default function Home({ heroProps, aboutProps, experienceProps, skillsPro
                     {...socialsProps}
                 />
 
-                {/* hero */}
-                <section
-                    id='hero'
-                    className='snap-start'
-                >
-                    <Hero
-                        {...heroProps}
-                    />
-                </section>
+                {/* Content landmark: the decorative layers (boot, matrix rain,
+                    scanlines) and the footer stay outside it. */}
+                <main>
+                    {/* hero */}
+                    <section
+                        id='hero'
+                        aria-label='Introduction'
+                        className='snap-start'
+                    >
+                        <Hero
+                            {...heroProps}
+                        />
+                    </section>
 
-                {/* about */}
-                <section
-                    id='about'
-                    className='snap-start'
-                >
-                    <About
-                        {...aboutProps}
-                    />
-                </section>
+                    {/* about */}
+                    <section
+                        id='about'
+                        aria-label='About'
+                        className='snap-start'
+                    >
+                        <About
+                            {...aboutProps}
+                        />
+                    </section>
 
-                {/* experience */}
-                <section
-                    id='experience'
-                    className='snap-start'
-                >
-                    <Experience
-                        {...experienceProps}
-                    />
-                </section>
+                    {/* experience */}
+                    <section
+                        id='experience'
+                        aria-label='Experience'
+                        className='snap-start'
+                    >
+                        <Experience
+                            {...experienceProps}
+                        />
+                    </section>
 
-                {/* skills */}
-                <section
-                    id='skills'
-                    className='snap-start'
-                >
-                    <Skills
-                        {...skillsProps}
-                    />
-                </section>
+                    {/* skills */}
+                    <section
+                        id='skills'
+                        aria-label='Skills'
+                        className='snap-start'
+                    >
+                        <Skills
+                            {...skillsProps}
+                        />
+                    </section>
 
-                {/* projects */}
-                <section
-                    id='projects'
-                    className='snap-start'
-                >
-                    <Projects
-                        {...projectsProps}
-                    />
-                </section>
+                    {/* projects */}
+                    <section
+                        id='projects'
+                        aria-label='Projects'
+                        className='snap-start'
+                    >
+                        <Projects
+                            {...projectsProps}
+                        />
+                    </section>
 
-                {/* contact */}
-                <section
-                    id='contact'
-                    className='snap-start'
-                >
-                    <Contact
-                        {...contactProps}
-                    />
-                </section>
+                    {/* contact */}
+                    <section
+                        id='contact'
+                        aria-label='Contact'
+                        className='snap-start'
+                    >
+                        <Contact
+                            {...contactProps}
+                        />
+                    </section>
+
+                </main>
 
                 {/* footer */}
                 <section

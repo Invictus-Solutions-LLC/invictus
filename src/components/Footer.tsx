@@ -32,14 +32,14 @@ function Footer({ text }: FooterProps) {
             className='relative flex flex-row items-center justify-between gap-x-4 bg-black px-3 md:px-5 py-3 text-xs md:text-sm overflow-x-auto whitespace-nowrap scrollbar-none'
         >
             <p
-                className='bg-[#FF0000]/80 text-black font-bold px-2 flex-shrink-0'
+                className='bg-[#FF0000] text-black font-bold px-2 flex-shrink-0'
             >
                 [invictus808]
             </p>
 
             <nav
                 aria-label='Section shortcuts'
-                className='hidden md:flex flex-row gap-x-3 text-gray-500'
+                className='hidden md:flex flex-row gap-x-3 text-gray-400'
             >
                 {
                     WINDOWS.map((window) => {
@@ -47,7 +47,7 @@ function Footer({ text }: FooterProps) {
                             <Link
                                 key={window.index}
                                 href={window.href}
-                                className='hover:text-[#FF0000] transition-colors'
+                                className='hover:text-terminal-red transition-colors'
                             >
                                 {`${window.index}:${window.name}`}
                             </Link>
@@ -61,7 +61,7 @@ function Footer({ text }: FooterProps) {
             >
                 {`© ${year} ${text} `}
                 <span
-                    className='text-[#FF0000]/80'
+                    className='text-terminal-red'
                 >
                     {time}
                 </span>

@@ -35,6 +35,10 @@ out
 __tests__
 test
 tests
+coverage
+e2e
+playwright-report
+test-results
 
 # Ignore linting and formatting files
 .eslintcache

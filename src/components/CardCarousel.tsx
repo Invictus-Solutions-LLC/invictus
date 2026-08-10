@@ -65,7 +65,7 @@ function CardCarousel({ children, rowClassName = '' }: Props) {
                 aria-label='Previous'
                 onClick={() => scrollByCard(-1)}
                 disabled={!canScrollLeft}
-                className='absolute left-1 md:left-2 top-1/2 -translate-y-1/2 z-10 rounded-full border border-[#333333] bg-[#1e1e1e]/90 p-1.5 md:p-2 text-gray-400 transition-colors hover:border-[#FF0000]/60 hover:text-[#FF0000] disabled:opacity-0 disabled:pointer-events-none'
+                className='absolute left-1 md:left-2 top-1/2 -translate-y-1/2 z-10 rounded-full border border-[#333333] bg-[#1e1e1e]/90 p-1.5 md:p-2 text-gray-400 transition-colors hover:border-[#FF0000]/60 hover:text-terminal-red disabled:opacity-0 disabled:pointer-events-none'
             >
                 <ChevronLeftIcon
                     className='w-4 h-4 md:w-5 md:h-5'
@@ -77,7 +77,7 @@ function CardCarousel({ children, rowClassName = '' }: Props) {
                 aria-label='Next'
                 onClick={() => scrollByCard(1)}
                 disabled={!canScrollRight}
-                className='absolute right-1 md:right-2 top-1/2 -translate-y-1/2 z-10 rounded-full border border-[#333333] bg-[#1e1e1e]/90 p-1.5 md:p-2 text-gray-400 transition-colors hover:border-[#FF0000]/60 hover:text-[#FF0000] disabled:opacity-0 disabled:pointer-events-none'
+                className='absolute right-1 md:right-2 top-1/2 -translate-y-1/2 z-10 rounded-full border border-[#333333] bg-[#1e1e1e]/90 p-1.5 md:p-2 text-gray-400 transition-colors hover:border-[#FF0000]/60 hover:text-terminal-red disabled:opacity-0 disabled:pointer-events-none'
             >
                 <ChevronRightIcon
                     className='w-4 h-4 md:w-5 md:h-5'

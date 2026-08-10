@@ -8,6 +8,11 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# Least privilege: CI only reads the checkout. Without this the workflow
+# inherits the repository default token scopes, which may be far broader.
+permissions:
+  contents: read
+
 env:
   YARN_ENABLE_IMMUTABLE_INSTALLS: 'true'
 
@@ -107,3 +112,42 @@ jobs:
           restore-keys: |
             nextjs-${{ runner.os }}-${{ hashFiles('yarn.lock') }}-
       - run: yarn build
+
+  # Browser-level guards for the things unit tests can't see: responsive layout
+  # geometry, WCAG contrast/landmarks/focus, image payload, and the live
+  # security headers and rate limiting. Runs against a production build.
+  e2e:
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test, audit]
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: corepack enable
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .yarn/cache
+          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: yarn-${{ runner.os }}-
+      - run: yarn install --immutable
+      - name: Seed placeholder content
+        run: |
+          for f in content/*.example.json; do
+            cp "$f" "${f/.example/}"
+          done
+      - name: Cache Playwright browsers
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+      - run: yarn playwright install --with-deps chromium
+      # playwright.config.ts builds and starts the app itself, with an empty
+      # RESEND_API_KEY so no suite can send real mail.
+      - run: yarn test:e2e
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

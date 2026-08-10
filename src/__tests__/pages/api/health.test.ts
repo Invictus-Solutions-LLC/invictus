@@ -12,11 +12,12 @@ describe('/api/health', () => {
         expect(res._getJSONData()).toEqual({ status: 'ok' });
     });
 
-    it('returns 500 on non-GET methods', () => {
+    it('returns 405 and advertises Allow on non-GET methods', () => {
         const { req, res } = createMocks<NextApiRequest, NextApiResponse>({ method: 'POST' });
 
         handler(req, res);
 
-        expect(res._getStatusCode()).toBe(500);
+        expect(res._getStatusCode()).toBe(405);
+        expect(res.getHeader('Allow')).toBe('GET');
     });
 });

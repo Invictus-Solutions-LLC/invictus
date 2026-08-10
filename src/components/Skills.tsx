@@ -5,6 +5,9 @@ import Skill from '@/components/Skill';
 import TerminalWindow from '@/components/TerminalWindow';
 import SectionPrompt from '@/components/SectionPrompt';
 
+// Counterpoint to Experience/Projects: the heading stays stacked on top at every
+// width, and from md the content beneath splits into certifications (narrow) and
+// the skills grid (fills the rest). Everything collapses to one column below md.
 function Skills({ header, skills, certifications = [] }: SkillsProps) {
     return (
         <motion.div
@@ -17,13 +20,15 @@ function Skills({ header, skills, certifications = [] }: SkillsProps) {
             transition={{
                 duration: 1.5,
             }}
-            className='relative flex flex-col overflow-hidden min-h-dvh md:h-dvh text-center md:text-left md:flex-row max-w-[2000px] px-10 pb-36 md:pb-5 mx-auto justify-evenly items-center'
+            className='relative flex flex-col overflow-hidden min-h-dvh md:h-dvh text-center max-w-[2000px] px-10 pt-16 md:pt-20 lg:pt-24 pb-36 md:pb-5 mx-auto items-center'
         >
-            <div>
+            <div
+                className='w-full flex-shrink-0'
+            >
                 <SectionPrompt
                     label='Skills'
                     command='ls ./skills'
-                    className='pt-16 md:pt-20 lg:pt-28 pb-4 md:pb-8 xl:pb-12'
+                    className='pb-3 md:pb-4'
                 />
 
                 <p
@@ -31,12 +36,16 @@ function Skills({ header, skills, certifications = [] }: SkillsProps) {
                 >
                     {header}
                 </p>
+            </div>
 
+            <div
+                className='w-full flex-1 min-h-0 flex flex-col md:flex-row items-center md:items-stretch gap-6 md:gap-8 mt-6 md:mt-8'
+            >
                 {
                     certifications.length > 0 &&
                     <TerminalWindow
                         path='~/certifications'
-                        className='mt-8 md:mt-12 w-fit mx-auto md:mx-0'
+                        className='w-fit flex-shrink-0 md:self-start'
                     >
                         <div
                             className='flex flex-row flex-wrap gap-4 justify-center'
@@ -51,7 +60,7 @@ function Skills({ header, skills, certifications = [] }: SkillsProps) {
                                             rel='noopener noreferrer'
                                             title={certification.name}
                                             aria-label={`${certification.name} — view verified credential`}
-                                            className='block rounded-full transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF0000]/60'
+                                            className='block rounded-full transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF0000]'
                                         >
                                             <Image
                                                 src={certification.image}
@@ -67,27 +76,27 @@ function Skills({ header, skills, certifications = [] }: SkillsProps) {
                         </div>
                     </TerminalWindow>
                 }
-            </div>
 
-            <TerminalWindow
-                path='~/skills'
-                className='mt-10 md:self-stretch'
-            >
-                <div
-                    className='grid w-full grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-5 mx-auto'
+                <TerminalWindow
+                    path='~/skills'
+                    className='w-full flex-1 min-h-0 min-w-0'
                 >
-                    {
-                        skills.map((skill, index) => {
-                            return (
-                                <Skill
-                                    key={index}
-                                    {...skill}
-                                />
-                            );
-                        })
-                    }
-                </div>
-            </TerminalWindow>
+                    <div
+                        className='grid w-full grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-5 mx-auto'
+                    >
+                        {
+                            skills.map((skill, index) => {
+                                return (
+                                    <Skill
+                                        key={index}
+                                        {...skill}
+                                    />
+                                );
+                            })
+                        }
+                    </div>
+                </TerminalWindow>
+            </div>
         </motion.div>
     );
 }

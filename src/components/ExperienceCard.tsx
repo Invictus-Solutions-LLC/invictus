@@ -1,22 +1,32 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import AnimatedImage from '@/components/AnimatedImage';
 import { useResetScrollOnLeave } from '@/hooks/useResetScrollOnLeave';
 
+// The card scrolls its own overflowing content but holds no focusable children,
+// so without tabIndex that content is unreachable by keyboard in Firefox and
+// Safari — only Chromium auto-focuses such scrollers. focus:opacity-100 mirrors
+// the hover reveal so a focused card isn't left dimmed at 40%.
 function ExperienceCard({ title, company, logo, start, end, technologies, description }: Experience) {
     const ref = useResetScrollOnLeave<HTMLElement>();
 
     return (
         <article
             ref={ref}
-            className='flex flex-col rounded-lg items-center space-y-1 md:space-y-2 flex-shrink-0 w-[300px] md:w-[600px] xl:w-[900px] h-full snap-center bg-[#292929] p-4 md:p-10 opacity-40 hover:opacity-100 cursor-pointer transition-opacity duration-200 overflow-y-auto scrollbar-thin scroll-smooth scrollbar-track-transparent scrollbar-thumb-[#FF0000]/70 scrollbar-thumb-rounded-full'
+            tabIndex={0}
+            aria-label={`${title}, ${company}`}
+            className='flex flex-col rounded-lg items-center space-y-1 md:space-y-2 flex-shrink-0 w-[300px] md:w-[600px] xl:w-[900px] h-full snap-center bg-[#292929] p-4 md:p-10 opacity-40 hover:opacity-100 focus:opacity-100 focus-within:opacity-100 cursor-pointer transition-opacity duration-200 overflow-y-auto outline-none focus-visible:ring-2 focus-visible:ring-[#FF0000] scrollbar-thin scroll-smooth scrollbar-track-transparent scrollbar-thumb-[#FF0000]/70 scrollbar-thumb-rounded-full'
         >
             <div
                 className='flex flex-row xl:flex-col w-full md:px-10 flex-shrink-0'
             >
-                <motion.img
+                <AnimatedImage
                     src={logo}
                     alt={company}
+                    width={288}
+                    height={288}
+                    sizes={'(min-width: 1280px) 144px, (min-width: 768px) 128px, 56px'}
                     initial={{
                         y: -100,
                         opacity: 0,
@@ -34,11 +44,11 @@ function ExperienceCard({ title, company, logo, start, end, technologies, descri
                 <div
                     className='flex flex-col text-left md:m-auto xl:m-0 ml-2 md:ml-4 min-w-0'
                 >
-                    <h4
+                    <h3
                         className='text-base md:text-4xl font-light my-auto pb-1 md:mt-0 md:pb-0'
                     >
                         {title}
-                    </h4>
+                    </h3>
                     <p
                         className='text-base md:text-2xl font-bold hidden md:inline mt-1'
                     >
@@ -97,7 +107,7 @@ function ExperienceCard({ title, company, logo, start, end, technologies, descri
                                     className='flex'
                                 >
                                     <span
-                                        className='text-[#FF0000]/70 mr-2 flex-shrink-0'
+                                        className='text-terminal-red mr-2 flex-shrink-0'
                                     >
                                         {'>'}
                                     </span>

@@ -45,6 +45,13 @@ sidecar that keeps the Let's Encrypt certificate renewed automatically.
    # Generate with: openssl rand -hex 24
    RESUME_ACCESS_TOKENS=
 
+   # --- Reverse proxy (leave as-is for either topology below) ---
+   # nginx fronts the app in both documented setups, so the rate limiter can
+   # read the real client IP from the last X-Forwarded-For hop. Set to false
+   # only if you expose the container directly — otherwise callers could forge
+   # the header and give themselves a fresh rate-limit bucket per request.
+   TRUST_PROXY=true
+
    # --- nginx + Let's Encrypt TLS (required) ---
    DOMAIN=yourdomain.com
    LETSENCRYPT_EMAIL=you@yourdomain.com

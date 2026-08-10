@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { Resend } from 'resend';
 import { getContactContent } from '@/lib/content';
 import { RateLimiter } from '@/lib/rateLimit';
+import { getClientIp } from '@/lib/clientIp';
 
 type ContactApiResponse = {
     message: string;
@@ -38,20 +39,12 @@ function isValidSubmission(body: Partial<ContactInputs>): body is ContactInputs 
     );
 }
 
-function getClientIp(req: NextApiRequest): string {
-    const forwardedFor = req.headers['x-forwarded-for'];
-    const firstForwarded = Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor;
-    if (firstForwarded) {
-        return firstForwarded.split(',')[0].trim();
-    }
-    return req.socket.remoteAddress ?? 'unknown';
-}
-
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<ContactApiResponse>
 ) {
     if (req.method !== 'POST') {
+        res.setHeader('Allow', 'POST');
         res.status(405).json({ message: 'Invalid HTTP method.' });
         return;
     }

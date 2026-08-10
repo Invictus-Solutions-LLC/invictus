@@ -13,7 +13,7 @@ IMAGE := ghcr.io/invictus-solutions-llc/invictus:latest
 
 .PHONY: help setup install content env \
         dev dev-docker dev-docker-down \
-        verify lint typecheck test test-ci audit \
+        verify lint typecheck test test-ci audit e2e \
         build image \
         deploy app-up app-down app-pull app-restart app-logs nginx-install \
         stack-up stack-down stack-pull stack-restart stack-logs \
@@ -72,6 +72,10 @@ test-ci: ## Run tests with coverage (matches CI)
 
 audit: ## Fail on high/critical dependency advisories (matches CI)
 	$(YARN) npm audit --recursive --severity high
+
+e2e: ## Browser checks: layout, a11y, image payload, live security headers (~5 min)
+	$(YARN) playwright install chromium
+	$(YARN) test:e2e
 
 ##@ Build
 build: ## Production build (local, no Docker)

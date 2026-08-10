@@ -1,6 +1,7 @@
 # Example server block for running invictus behind your OWN host nginx.
 #
-# The app container (docker-compose.app.yml) listens on 127.0.0.1:3000; this
+# The app container (docker-compose.prod.yml, default profile) listens on
+# 127.0.0.1:3000; this
 # proxies your domain to it. Replace invictus808.com with your domain.
 #
 # Install:

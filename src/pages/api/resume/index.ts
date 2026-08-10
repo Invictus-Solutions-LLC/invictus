@@ -7,21 +7,13 @@ import {
     getSkillsContent,
 } from '@/lib/content';
 import { RateLimiter } from '@/lib/rateLimit';
+import { getClientIp } from '@/lib/clientIp';
 
 // Strict budget: legit use is a recruiter fetching once, so a low ceiling
 // mostly exists to make token guessing impractical.
 const rateLimiter = new RateLimiter({ windowMs: 5 * 60 * 1000, max: 10 });
 
 const WRAP_COLUMN = 78;
-
-function getClientIp(req: NextApiRequest): string {
-    const forwardedFor = req.headers['x-forwarded-for'];
-    const firstForwarded = Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor;
-    if (firstForwarded) {
-        return firstForwarded.split(',')[0].trim();
-    }
-    return req.socket.remoteAddress ?? 'unknown';
-}
 
 // Constant-time equality via digest comparison — token lengths may differ,
 // and timingSafeEqual requires equal-length inputs.
@@ -109,6 +101,7 @@ export default function handler(
     res: NextApiResponse<string | ErrorResponse>
 ) {
     if (req.method !== 'GET') {
+        res.setHeader('Allow', 'GET');
         res.status(405).json({ message: 'Invalid HTTP method.' });
         return;
     }

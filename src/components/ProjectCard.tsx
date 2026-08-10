@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import AnimatedImage from '@/components/AnimatedImage';
 import { useResetScrollOnLeave } from '@/hooks/useResetScrollOnLeave';
 
 function ProjectCard({ name, image, url, description }: Project) {
@@ -16,9 +17,12 @@ function ProjectCard({ name, image, url, description }: Project) {
                 rel='noopener noreferrer'
                 aria-label={`Open ${name} project`}
             >
-                <motion.img
+                <AnimatedImage
                     src={image}
                     alt={name}
+                    width={512}
+                    height={512}
+                    sizes={'(min-width: 1024px) 256px, (min-width: 768px) 192px, 128px'}
                     initial={{
                         y: -100,
                         opacity: 0,
@@ -37,18 +41,18 @@ function ProjectCard({ name, image, url, description }: Project) {
             <div
                 className='relative w-full space-y-4 px-0 md:px-10 max-w-6xl'
             >
-                <h4
+                <h3
                     className='text-2xl md:text-4xl font-semibold text-center'
                 >
                     <a
                         href={url}
                         target='_blank'
                         rel='noopener noreferrer'
-                        className='underline decoration-[#FF0000]/50 hover:text-[#FF0000] transition-colors'
+                        className='underline decoration-terminal-red/50 hover:text-terminal-red transition-colors'
                     >
                         {name}
                     </a>
-                </h4>
+                </h3>
 
                 <p
                     className='text-md md:text-lg text-center md:text-left px-2'
@@ -63,7 +67,7 @@ function ProjectCard({ name, image, url, description }: Project) {
                         href={url}
                         target='_blank'
                         rel='noopener noreferrer'
-                        className='hover:text-[#FF0000] transition-colors'
+                        className='hover:text-terminal-red transition-colors'
                     >
                         {`open ${url}`}
                     </a>

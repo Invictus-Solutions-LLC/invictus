@@ -50,10 +50,18 @@ function mockRequest(options: { key?: string; bearer?: string; method?: string; 
 }
 
 describe('/api/resume', () => {
+    // Requests model traffic arriving through nginx, the only context in
+    // which X-Forwarded-For is trusted (see src/lib/clientIp.ts).
+    const originalTrustProxy = process.env.TRUST_PROXY;
     const originalTokens = process.env.RESUME_ACCESS_TOKENS;
 
     beforeEach(() => {
+        process.env.TRUST_PROXY = 'true';
         process.env.RESUME_ACCESS_TOKENS = 'valid-token-one, valid-token-two';
+    });
+
+    afterEach(() => {
+        process.env.TRUST_PROXY = originalTrustProxy;
     });
 
     afterAll(() => {

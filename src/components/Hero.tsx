@@ -32,12 +32,12 @@ function Hero({ image, prefix, titles, words }: HeroProps) {
                 {
                     titles.map((title: string, index: number) => {
                         return (
-                            <h2
+                            <p
                                 key={index}
-                                className='text-sm uppercase text-gray-500 pb-2 tracking-[10px] md:tracking-[15px]'
+                                className='text-sm uppercase text-gray-400 pb-2 tracking-[10px] md:tracking-[15px]'
                             >
                                 {'// ' + title}
-                            </h2>
+                            </p>
                         );
                     })
                 }

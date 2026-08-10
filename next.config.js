@@ -17,6 +17,9 @@ const contentSecurityPolicy = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
+    // Don't advertise the framework in every response; it only helps someone
+    // fingerprinting the stack to pick version-specific exploits.
+    poweredByHeader: false,
     images: {
         // Next 16 requires every quality used by <Image> to be declared;
         // 75 is the default, 100 is used by the hero portrait.

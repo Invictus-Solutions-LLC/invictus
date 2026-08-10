@@ -28,6 +28,10 @@ services:
       # Optional: tokens enabling the private /api/resume endpoint (see
       # .env.example). Empty = endpoint disabled.
       - RESUME_ACCESS_TOKENS=${RESUME_ACCESS_TOKENS:-}
+      # nginx always fronts the app in this topology, so X-Forwarded-For's last
+      # hop is trustworthy and the rate limiter can key off the real client IP.
+      # Set to false if you ever expose the container directly.
+      - TRUST_PROXY=${TRUST_PROXY:-true}
     # Bound to loopback: reachable from the host (its nginx) in app-only mode,
     # and from the bundled nginx over the compose network. Never public directly.
     ports:

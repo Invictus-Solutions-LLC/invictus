@@ -25,7 +25,7 @@ function RichText({ text }: { text: string }) {
                 href={url}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='underline decoration-[#FF0000]/50 hover:text-[#FF0000] transition-colors'
+                className='underline decoration-terminal-red/50 hover:text-terminal-red transition-colors'
             >
                 {label}
             </a>

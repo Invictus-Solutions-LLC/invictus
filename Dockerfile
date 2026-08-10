@@ -2,10 +2,11 @@
 # pull official base image
 FROM node:22-slim AS development
 
-# install system dependencies
-RUN apt-get update \
-    && apt-get clean \
-    && useradd -ms /bin/bash development \
+# create the unprivileged user and activate the pinned yarn. No apt packages
+# are installed, so `apt-get update` is deliberately absent: it would leave
+# ~19 MB of package index in /var/lib/apt/lists (which `apt-get clean` does
+# NOT remove) in every stage, including the shipped production image.
+RUN useradd -ms /bin/bash development \
     && corepack enable \
     && corepack prepare yarn@4.9.2 --activate
 
@@ -36,10 +37,11 @@ CMD ["yarn", "dev"]
 # pull official base image
 FROM node:22-slim AS dependencies
 
-# install system dependencies
-RUN apt-get update \
-    && apt-get clean \
-    && useradd -ms /bin/bash dependencies \
+# create the unprivileged user and activate the pinned yarn. No apt packages
+# are installed, so `apt-get update` is deliberately absent: it would leave
+# ~19 MB of package index in /var/lib/apt/lists (which `apt-get clean` does
+# NOT remove) in every stage, including the shipped production image.
+RUN useradd -ms /bin/bash dependencies \
     && corepack enable \
     && corepack prepare yarn@4.9.2 --activate
 
@@ -62,10 +64,11 @@ RUN yarn install --immutable
 # stage 1: builder
 FROM node:22-slim AS builder
 
-# install system dependencies
-RUN apt-get update \
-    && apt-get clean \
-    && useradd -ms /bin/bash builder \
+# create the unprivileged user and activate the pinned yarn. No apt packages
+# are installed, so `apt-get update` is deliberately absent: it would leave
+# ~19 MB of package index in /var/lib/apt/lists (which `apt-get clean` does
+# NOT remove) in every stage, including the shipped production image.
+RUN useradd -ms /bin/bash builder \
     && corepack enable \
     && corepack prepare yarn@4.9.2 --activate
 
@@ -95,10 +98,11 @@ RUN yarn build \
 # stage 2: production
 FROM node:22-slim AS production
 
-# install system dependencies
-RUN apt-get update \
-    && apt-get clean \
-    && useradd -ms /bin/bash invictus \
+# create the unprivileged user and activate the pinned yarn. No apt packages
+# are installed, so `apt-get update` is deliberately absent: it would leave
+# ~19 MB of package index in /var/lib/apt/lists (which `apt-get clean` does
+# NOT remove) in every stage, including the shipped production image.
+RUN useradd -ms /bin/bash invictus \
     && corepack enable \
     && corepack prepare yarn@4.9.2 --activate
 

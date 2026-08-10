@@ -43,6 +43,7 @@ for the full, grouped list. The essentials:
 make setup      # first-time local setup: install deps + seed content + create .env
 make dev        # run the dev server (hot reload)
 make verify     # full quality gate: lint + typecheck + tests + build
+make e2e        # browser checks: layout, a11y, image payload, security headers
 make image      # build the production Docker image locally
 make deploy     # on the server: pull the published image + (re)start the app
 ```
@@ -53,8 +54,15 @@ or `make stack-up` for the bundled nginx + certbot stack).
 ## Testing
 
 ```bash
-make test        # or: yarn test
+make test        # unit tests (Jest)
+make e2e         # browser tests (Playwright, against a production build)
 ```
+
+`make e2e` builds and starts the app itself, then asserts the things unit tests
+can't see: responsive layout geometry across five viewports, WCAG contrast /
+landmarks / heading order / focus indicators / reflow at 320px, the image payload
+budget, and the live security headers, method handling and rate limiting. CI runs
+the same suite on every pull request.
 
 ## Production deployment (Docker)
 
