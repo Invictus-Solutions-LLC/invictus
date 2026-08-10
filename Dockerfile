@@ -1,6 +1,6 @@
 # stage alpha: development
 # pull official base image
-FROM node:22-slim AS development
+FROM node:26-slim AS development
 
 # create the unprivileged user and activate the pinned yarn. No apt packages
 # are installed, so `apt-get update` is deliberately absent: it would leave
@@ -35,7 +35,7 @@ CMD ["yarn", "dev"]
 
 # stage 0: dependencies
 # pull official base image
-FROM node:22-slim AS dependencies
+FROM node:26-slim AS dependencies
 
 # create the unprivileged user and activate the pinned yarn. No apt packages
 # are installed, so `apt-get update` is deliberately absent: it would leave
@@ -62,7 +62,7 @@ RUN yarn install --immutable
 
 
 # stage 1: builder
-FROM node:22-slim AS builder
+FROM node:26-slim AS builder
 
 # create the unprivileged user and activate the pinned yarn. No apt packages
 # are installed, so `apt-get update` is deliberately absent: it would leave
@@ -96,7 +96,7 @@ RUN yarn build \
 
 
 # stage 2: production
-FROM node:22-slim AS production
+FROM node:26-slim AS production
 
 # create the unprivileged user and activate the pinned yarn. No apt packages
 # are installed, so `apt-get update` is deliberately absent: it would leave
