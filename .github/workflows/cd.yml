@@ -40,7 +40,7 @@ jobs:
 
       # Content is never part of the build context or the image (see .dockerignore) —
       # it's bind-mounted at deploy time, so this build needs no secrets at all.
-      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+      - uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: .
           target: production
