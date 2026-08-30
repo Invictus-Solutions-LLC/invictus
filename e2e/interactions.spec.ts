@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { gotoHome, showSection, useTheme } from './helpers';
+import fs from 'fs';
+import path from 'path';
 
 test.describe('command palette', () => {
     test('opens with the keyboard shortcut and closes with Escape', async ({ page }) => {
@@ -119,11 +121,32 @@ test.describe('project cards', () => {
         await gotoHome(page);
         await showSection(page, 'work');
 
+        // No collapsing widget: the description is the pitch, not a footnote.
         await expect(page.locator('#work details')).toHaveCount(0);
 
-        const body = page.locator('#work article p').nth(1);
-        await expect(body).toBeVisible();
-        expect((await body.textContent())!.length).toBeGreaterThan(120);
+        // Checked against the content the server is actually rendering, so this
+        // holds for the real files and for the placeholder set CI seeds. An
+        // earlier version asserted on `.nth(1)` and a 120-character floor, which
+        // silently required a second project with a long description — true of
+        // the real content, false of the single-project example.
+        // Resolved exactly the way src/lib/content.ts resolves it, so the test
+        // and the server can never read different files.
+        const contentDir = process.env.CONTENT_DIR ?? path.join(process.cwd(), 'content');
+        const { projects } = JSON.parse(
+            fs.readFileSync(path.join(contentDir, 'projects.json'), 'utf-8'),
+        ) as { projects: Array<{ description: string }> };
+
+        expect(projects.length).toBeGreaterThan(0);
+
+        const bodies = page.locator('#work article p');
+        await expect(bodies).toHaveCount(projects.length);
+
+        for (const [index, project] of projects.entries()) {
+            const body = bodies.nth(index);
+            await expect(body).toBeVisible();
+            // Rendered whole — never summarised, never clipped to an ellipsis.
+            await expect(body).toHaveText(project.description);
+        }
     });
 
     // Regression guard: the artwork used to sit small in the middle of its
