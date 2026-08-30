@@ -10,18 +10,19 @@ const customJestConfig = {
     testEnvironment: 'jest-environment-jsdom',
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
+        '^@config/(.*)$': '<rootDir>/config/$1',
     },
     // e2e/ runs under Playwright, which has its own incompatible globals.
     testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/', '<rootDir>/e2e/'],
-    // Floor, not target — kept a few points under current coverage (81% stmts /
-    // 73% branch / 71% funcs / 81% lines) so it catches a real regression
+    // Floor, not target — kept a few points under current coverage (91% stmts /
+    // 80% branch / 88% funcs / 92% lines) so it catches a real regression
     // instead of sitting so far below that coverage could halve unnoticed.
     coverageThreshold: {
         global: {
-            statements: 78,
-            branches: 70,
-            functions: 67,
-            lines: 78,
+            statements: 87,
+            branches: 76,
+            functions: 84,
+            lines: 88,
         },
     },
 };

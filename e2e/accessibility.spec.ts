@@ -1,25 +1,35 @@
 import { test, expect } from '@playwright/test';
-import { skipBootSequence, showSection, contrastRatio, parseRgb, requiredContrast, PAGE_BG } from './helpers';
+import { contrastRatio, gotoHome, parseRgb, requiredContrast, sampleText, showSection, useTheme } from './helpers';
+
+const TEXT_TARGETS = [
+    { selector: 'h1', name: 'hero heading' },
+    { selector: '#work h2', name: 'section heading' },
+    { selector: '#work p', name: 'section intro' },
+    { selector: '#work article h3', name: 'card heading' },
+    { selector: '#work article p', name: 'card body' },
+    { selector: '#skills .chip', name: 'skill chip' },
+    { selector: '#process p', name: 'process step body' },
+    { selector: 'header .nav-link', name: 'nav link' },
+    { selector: 'footer p', name: 'footer copyright' },
+];
 
 test.describe('accessibility', () => {
-    test('exposes the expected landmarks and named regions', async ({ page }) => {
-        await page.goto('/');
-        await skipBootSequence(page);
-        const landmarks = await page.evaluate(() => ({
-            main: document.querySelectorAll('main, [role=main]').length,
-            contentinfo: document.querySelectorAll('footer, [role=contentinfo]').length,
-            banner: document.querySelectorAll('header, [role=banner]').length,
-            namedSections: [...document.querySelectorAll('section')].filter((s) => s.getAttribute('aria-label')).length,
-        }));
-        expect(landmarks.main).toBe(1);
-        expect(landmarks.contentinfo).toBeGreaterThanOrEqual(1);
-        expect(landmarks.banner).toBeGreaterThanOrEqual(1);
-        expect(landmarks.namedSections).toBeGreaterThanOrEqual(6);
+    test('exposes the expected landmarks and a skip link', async ({ page }) => {
+        await gotoHome(page);
+
+        await expect(page.locator('main')).toHaveCount(1);
+        await expect(page.locator('header')).toHaveCount(1);
+        await expect(page.locator('footer')).toHaveCount(1);
+        await expect(page.getByRole('link', { name: /skip to content/i })).toHaveCount(1);
+
+        const namedSections = await page.evaluate(() =>
+            [...document.querySelectorAll('section')]
+                .filter((s) => s.getAttribute('aria-label') || s.getAttribute('aria-labelledby')).length);
+        expect(namedSections).toBeGreaterThanOrEqual(7);
     });
 
     test('has one h1 first and no heading-level skips', async ({ page }) => {
-        await page.goto('/');
-        await skipBootSequence(page);
+        await gotoHome(page);
         const levels = await page.evaluate(() =>
             [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].map((h) => Number(h.tagName[1])));
 
@@ -30,44 +40,39 @@ test.describe('accessibility', () => {
         }
     });
 
-    // Muted text used to sit at 3.21:1 and the typed-in form text at 1.36:1.
-    test('meets WCAG AA contrast for body, form and chrome text', async ({ page }) => {
-        await page.goto('/');
-        await skipBootSequence(page);
-        await showSection(page, 'contact');
+    // Both palettes, because they are genuinely different colour systems rather
+    // than one inverted: cyan is 9.9:1 on the dark page but only 1.8:1 on white,
+    // so light mode has to substitute a deeper accent.
+    for (const theme of ['dark', 'light'] as const) {
+        test(`meets WCAG AA contrast in the ${theme} theme`, async ({ page }) => {
+            await useTheme(page, theme);
+            await gotoHome(page);
+            await showSection(page, 'work');
+            await showSection(page, 'skills');
+            await showSection(page, 'process');
 
-        const samples = await page.evaluate(() => {
-            const pick = (selector: string, name: string) => {
-                const el = document.querySelector(selector);
-                if (!el) return null;
-                const cs = getComputedStyle(el);
-                return { name, colour: cs.color, size: parseFloat(cs.fontSize), weight: parseInt(cs.fontWeight, 10) || 400 };
-            };
-            return [
-                pick('#experience h2', 'section heading'),
-                pick('#skills p', 'caption'),
-                pick('#contact input', 'form input text'),
-                pick('.terminalTitlebar span:last-child', 'terminal path label'),
-            ].filter((s): s is NonNullable<typeof s> => s !== null);
+            const samples = await sampleText(page, TEXT_TARGETS);
+            expect(samples.length).toBeGreaterThanOrEqual(TEXT_TARGETS.length - 1);
+
+            for (const sample of samples) {
+                const ratio = contrastRatio(parseRgb(sample.colour), parseRgb(sample.background));
+                expect(
+                    ratio,
+                    `${theme}: ${sample.name} (${sample.colour} on ${sample.background})`
+                ).toBeGreaterThanOrEqual(requiredContrast(sample.size, sample.weight));
+            }
         });
-
-        expect(samples.length).toBeGreaterThan(0);
-        for (const sample of samples) {
-            const ratio = contrastRatio(parseRgb(sample.colour), PAGE_BG);
-            expect(ratio, `${sample.name} contrast`).toBeGreaterThanOrEqual(requiredContrast(sample.size, sample.weight));
-        }
-    });
+    }
 
     test('labels every contact field and announces validation errors', async ({ page }) => {
-        await page.goto('/');
-        await skipBootSequence(page);
+        await gotoHome(page);
         await showSection(page, 'contact');
 
         for (const label of ['Name', 'Email', 'Subject', 'Message']) {
             await expect(page.getByLabel(label, { exact: true })).toHaveCount(1);
         }
 
-        await page.getByRole('button', { name: /submit/i }).click();
+        await page.getByRole('button', { name: /send message/i }).click();
         await expect(page.locator('#contact [aria-invalid="true"]')).toHaveCount(4);
         await expect(page.locator('#contact [role="alert"]')).toHaveCount(4);
 
@@ -77,51 +82,75 @@ test.describe('accessibility', () => {
     });
 
     test('shows a focus indicator on every keyboard stop', async ({ page }) => {
-        await page.goto('/');
-        await skipBootSequence(page);
+        await gotoHome(page);
         await page.mouse.click(5, 5);
 
         const seen = new Map<string, boolean>();
-        for (let i = 0; i < 90; i++) {
+        for (let i = 0; i < 120; i++) {
             await page.keyboard.press('Tab');
-            // .contactInput transitions its ring in over 150ms.
-            await page.waitForTimeout(300);
+            await page.waitForTimeout(120);
             const stop = await page.evaluate(() => {
                 const el = document.activeElement;
-                if (!el || el === document.body) return null;
+                if (!el || el === document.body) {
+                    return null;
+                }
                 const cs = getComputedStyle(el);
                 const outline = cs.outlineStyle !== 'none'
                     && parseFloat(cs.outlineWidth) > 0
                     && !/rgba\(0,\s*0,\s*0,\s*0\)|transparent/.test(cs.outlineColor);
-                const ring = cs.boxShadow !== 'none' && /rgb\(255,\s*0,\s*0\)/.test(cs.boxShadow);
+                // The global :focus-visible rule paints a 2px ring as box-shadow.
+                const ring = cs.boxShadow !== 'none' && /rgb/.test(cs.boxShadow);
+                // A ring on something invisible is not a focus indicator. Scroll
+                // reveal keeps content in the DOM at opacity 0, so the focused
+                // element has to actually be on screen.
+                let node: Element | null = el;
+                let opacity = 1;
+                while (node && node !== document.body) {
+                    const value = parseFloat(getComputedStyle(node).opacity);
+                    if (!Number.isNaN(value)) {
+                        opacity = Math.min(opacity, value);
+                    }
+                    node = node.parentElement;
+                }
                 const name = el.id || el.getAttribute('aria-label') || el.textContent?.trim().slice(0, 24) || '';
-                return { key: `${el.tagName}|${name}`, hasIndicator: outline || ring };
+                return { key: `${el.tagName}|${name}`, hasIndicator: (outline || ring) && opacity > 0.9 };
             });
-            if (!stop) continue;
+            if (!stop) {
+                continue;
+            }
             seen.set(stop.key, (seen.get(stop.key) ?? false) || stop.hasIndicator);
         }
 
         const missing = [...seen.entries()].filter(([, ok]) => !ok).map(([key]) => key);
         expect(seen.size, 'reached some tab stops').toBeGreaterThan(10);
-        expect(missing, 'every tab stop has a visible focus indicator').toEqual([]);
+        expect(missing, 'every tab stop is visible and has a focus indicator').toEqual([]);
+    });
+
+    // The ambient contours, the swell divider and every hover transition are all
+    // meant to stop dead for anyone whose OS asks for less movement.
+    test('honours prefers-reduced-motion for the ambient layer', async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await gotoHome(page);
+
+        const animated = await page.evaluate(() =>
+            [...document.querySelectorAll('*')]
+                .filter((el) => getComputedStyle(el).animationName !== 'none')
+                .map((el) => el.className.toString().slice(0, 40)));
+
+        expect(animated).toEqual([]);
     });
 
     // WCAG 1.4.10: usable at 320px with no horizontal scrolling.
     for (const width of [320, 280]) {
         test(`reflows at ${width}px without horizontal scroll`, async ({ page }) => {
             await page.setViewportSize({ width, height: 700 });
-            await page.goto('/');
-            await skipBootSequence(page);
-            const result = await page.evaluate(() => {
-                const doc = document.documentElement;
-                const scroller = document.querySelector('.snap-y') as HTMLElement;
-                scroller.scrollLeft = 9999;
-                const panned = scroller.scrollLeft;
-                scroller.scrollLeft = 0;
-                return { scrollWidth: doc.scrollWidth, clientWidth: doc.clientWidth, panned };
-            });
+            await gotoHome(page);
+
+            const result = await page.evaluate(() => ({
+                scrollWidth: document.documentElement.scrollWidth,
+                clientWidth: document.documentElement.clientWidth,
+            }));
             expect(result.scrollWidth).toBeLessThanOrEqual(result.clientWidth + 1);
-            expect(result.panned).toBe(0);
         });
     }
 });

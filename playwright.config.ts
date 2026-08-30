@@ -30,9 +30,15 @@ export default defineConfig({
         reuseExistingServer: !process.env.CI,
         timeout: 300_000,
         env: {
-            // Never let a suite send real mail, and make the rate limiter read
-            // X-Forwarded-For the way it does behind nginx in production.
+            // Never let a suite send real mail or spend money on a real model
+            // call. Both are cleared rather than assumed absent: .env is loaded
+            // by the server under test, so a developer who has configured either
+            // key locally would otherwise have the suite reach a live provider —
+            // silently, on every run. Clearing them also makes the unconfigured
+            // path (403/503 fallbacks) the deterministic thing under test.
             RESEND_API_KEY: '',
+            ANTHROPIC_API_KEY: '',
+            // Rate limiter reads X-Forwarded-For the way it does behind nginx.
             TRUST_PROXY: 'true',
             NEXT_TELEMETRY_DISABLED: '1',
         },

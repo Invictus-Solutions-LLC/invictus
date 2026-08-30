@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { skipBootSequence, showSection } from './helpers';
+import { gotoHome, showSection } from './helpers';
 
-const SECTIONS = ['about', 'experience', 'skills', 'projects', 'contact'];
+const SECTIONS = ['hero', 'work', 'experience', 'skills', 'lab', 'process', 'contact'];
 
 // A raw <img> once shipped the 11.8 MB source portrait to fill a 160px box,
 // putting a full page view at 15.78 MB. This budget is the regression guard.
@@ -21,8 +21,7 @@ test.describe('images', () => {
             transferred.push({ url: new URL(response.url()).pathname, bytes });
         });
 
-        await page.goto('/');
-        await skipBootSequence(page);
+        await gotoHome(page);
         for (const id of SECTIONS) await showSection(page, id);
         await page.waitForTimeout(1200);
 
@@ -40,8 +39,7 @@ test.describe('images', () => {
     });
 
     test('renders every image, deferring only what is off-screen', async ({ page }) => {
-        await page.goto('/');
-        await skipBootSequence(page);
+        await gotoHome(page);
         for (const id of SECTIONS) await showSection(page, id);
         await page.waitForTimeout(1200);
 
@@ -62,12 +60,11 @@ test.describe('images', () => {
     });
 
     test('routes raster images through the optimiser but never SVG', async ({ page }) => {
-        await page.goto('/');
-        await skipBootSequence(page);
-        await showSection(page, 'projects');
+        await gotoHome(page);
+        await showSection(page, 'work');
 
         const sources = await page.evaluate(() =>
-            [...document.querySelectorAll<HTMLImageElement>('#projects img')]
+            [...document.querySelectorAll<HTMLImageElement>('#work img')]
                 .filter((img) => img.naturalWidth > 0)
                 .map((img) => img.currentSrc || img.src));
 
@@ -81,12 +78,11 @@ test.describe('images', () => {
     });
 
     test('requests a resolution that matches the rendered box', async ({ page }) => {
-        await page.goto('/');
-        await skipBootSequence(page);
-        await showSection(page, 'about');
+        await gotoHome(page);
+        await showSection(page, 'hero');
 
         const portrait = await page.evaluate(() => {
-            const img = document.querySelector('#about img') as HTMLImageElement | null;
+            const img = document.querySelector('#hero img') as HTMLImageElement | null;
             if (!img) return null;
             return {
                 boxWidth: Math.round(img.getBoundingClientRect().width),
