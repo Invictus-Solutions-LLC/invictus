@@ -31,6 +31,14 @@ const nextConfig = {
     // enforces the intersection — so a second, slightly-different copy silently
     // subtracts from this one. nginx adds only HSTS, which needs to know TLS
     // was terminated. See src/__tests__/nginxTemplate.test.ts.
+    // RFC 9116 puts the file at /.well-known/security.txt, but a pages/ folder
+    // starting with a dot is not routable, so the page lives at /security.txt
+    // and the well-known path rewrites onto it. Both URLs serve the same bytes.
+    async rewrites() {
+        return [
+            { source: '/.well-known/security.txt', destination: '/security.txt' },
+        ];
+    },
     async headers() {
         return [
             {
