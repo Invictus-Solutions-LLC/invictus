@@ -18,7 +18,6 @@ const FALLBACK_PLACEHOLDER = 'Ask a question, or jump to a section…';
 
 type Answer = {
     answer: string;
-    sources: Array<string>;
     sectionId: string | null;
 };
 
