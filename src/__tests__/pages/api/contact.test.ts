@@ -157,6 +157,35 @@ describe('/api/contact', () => {
         consoleSpy.mockRestore();
     });
 
+    // A per-caller limit cannot stop a distributed flood, and every submission
+    // that gets through spends real mail quota and lands in a real inbox. The
+    // deployment-wide ceiling is what bounds that.
+    //
+    // Loaded in isolation so it gets its own limiter state: the ceiling is
+    // module-level, so exhausting the shared one would make every other test in
+    // this file depend on declaration order.
+    it('stops a distributed flood in which every caller is under the per-IP limit', async () => {
+        jest.resetModules();
+        const isolated = require('@/pages/api/contact/index').default;
+        mockSend.mockResolvedValue({ data: { id: '123' }, error: null });
+
+        let limited: number | null = null;
+        for (let attempt = 1; attempt <= 60 && limited === null; attempt += 1) {
+            // A fresh address every time, used once — the per-caller limiter can
+            // never be the thing that rejects any of these.
+            const { req, res } = mockRequest(validBody, uniqueIp());
+            await isolated(req, res);
+            if (res._getStatusCode() === 429) {
+                limited = attempt;
+                expect(res.getHeader('Retry-After')).toBeDefined();
+            }
+        }
+
+        expect(limited).not.toBeNull();
+        // Well above any plausible legitimate volume, and far below unbounded.
+        expect(limited).toBe(31);
+    });
+
     it('returns 429 with a Retry-After header once a single IP exceeds the rate limit', async () => {
         mockSend.mockResolvedValue({ data: { id: '123' }, error: null });
         const ip = uniqueIp();

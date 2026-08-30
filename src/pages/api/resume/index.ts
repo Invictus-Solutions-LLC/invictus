@@ -8,7 +8,7 @@ import {
     getSkillsContent,
 } from '@/lib/content';
 import { RateLimiter } from '@/lib/rateLimit';
-import { getClientIp } from '@/lib/clientIp';
+import { rateLimitKey } from '@/lib/clientIp';
 
 // Strict budget: legit use is a recruiter fetching once, so a low ceiling
 // mostly exists to make token guessing impractical.
@@ -129,7 +129,7 @@ export default function handler(
         return;
     }
 
-    const { allowed, retryAfterSeconds } = rateLimiter.check(getClientIp(req));
+    const { allowed, retryAfterSeconds } = rateLimiter.check(rateLimitKey(req));
     if (!allowed) {
         res.setHeader('Retry-After', String(retryAfterSeconds));
         res.status(429).json({ message: 'Too many requests. Please try again later.' });

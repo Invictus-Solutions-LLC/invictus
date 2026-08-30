@@ -18,10 +18,36 @@
 #
 #   add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
 
+# Proxy-level rate limit for the API routes. The app has its own per-route
+# limiters; this is the cheaper first line that sheds abusive traffic before it
+# reaches Node. The bundled nginx (nginx/nginx.conf) defines this zone already —
+# on your own host nginx you must add the zone yourself, in the `http { }` block
+# of /etc/nginx/nginx.conf, because limit_req_zone is not valid inside a server
+# block:
+#
+#   limit_req_zone $binary_remote_addr zone=api:10m rate=30r/m;
+#   limit_req_status 429;
+#
+# Leave the zone out and nginx refuses to start, with the somewhat opaque
+# `[emerg] zero size shared memory zone "api"`. Comment out the limit_req line
+# below instead if you would rather rely on the app's own limiters alone.
+
 server {
     listen 80;
     listen [::]:80;
     server_name invictus808.com www.invictus808.com;
+
+    # burst absorbs a legitimate quick double-submit; nodelay rejects the rest
+    # immediately rather than queueing them.
+    location /api/ {
+        limit_req zone=api burst=10 nodelay;
+
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
 
     location / {
         proxy_pass http://127.0.0.1:3000;

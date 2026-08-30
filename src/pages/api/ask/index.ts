@@ -12,7 +12,7 @@ import {
     getSkillsContent,
 } from '@/lib/content';
 import { RateLimiter } from '@/lib/rateLimit';
-import { getClientIp } from '@/lib/clientIp';
+import { rateLimitKey } from '@/lib/clientIp';
 
 type AskResponse = {
     answer: string;
@@ -196,7 +196,7 @@ export default async function handler(
     // Cheapest checks first, and input is validated before configuration is
     // consulted — a malformed request should never learn whether this
     // deployment has answering switched on.
-    const caller = perCallerLimiter.check(getClientIp(req));
+    const caller = perCallerLimiter.check(rateLimitKey(req));
     if (!caller.allowed) {
         res.setHeader('Retry-After', String(caller.retryAfterSeconds));
         res.status(429).json({ message: 'Too many questions. Please try again later.' });

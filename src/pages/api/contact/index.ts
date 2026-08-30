@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { Resend } from 'resend';
 import { getContactContent } from '@/lib/content';
 import { RateLimiter } from '@/lib/rateLimit';
-import { getClientIp } from '@/lib/clientIp';
+import { rateLimitKey } from '@/lib/clientIp';
 
 type ContactApiResponse = {
     message: string;
@@ -22,6 +22,13 @@ const MESSAGE_MAX_LENGTH = 5000;
 // in-memory limiter is sufficient and avoids adding a Redis dependency just
 // for a low-traffic contact form.
 const rateLimiter = new RateLimiter({ windowMs: 10 * 60 * 1000, max: 5 });
+
+// A per-caller limit alone cannot stop distributed abuse, and every submission
+// that gets through spends real mail quota and lands in a real inbox. This is
+// the same shape of ceiling /api/ask uses to protect its token spend: one
+// bucket for the whole deployment, well above any plausible legitimate volume
+// for a portfolio contact form.
+const globalLimiter = new RateLimiter({ windowMs: 60 * 60 * 1000, max: 30 });
 
 function isValidSubmission(body: Partial<ContactInputs>): body is ContactInputs {
     return Boolean(
@@ -56,9 +63,16 @@ export default async function handler(
         return;
     }
 
-    const { allowed, retryAfterSeconds } = rateLimiter.check(getClientIp(req));
-    if (!allowed) {
-        res.setHeader('Retry-After', String(retryAfterSeconds));
+    const caller = rateLimiter.check(rateLimitKey(req));
+    if (!caller.allowed) {
+        res.setHeader('Retry-After', String(caller.retryAfterSeconds));
+        res.status(429).json({ message: 'Too many requests. Please try again later.' });
+        return;
+    }
+
+    const overall = globalLimiter.check('global');
+    if (!overall.allowed) {
+        res.setHeader('Retry-After', String(overall.retryAfterSeconds));
         res.status(429).json({ message: 'Too many requests. Please try again later.' });
         return;
     }
