@@ -1,4 +1,9 @@
 jest.mock('@/lib/content', () => ({
+    getSeoContent: jest.fn(() => ({
+        name: 'Ada Lovelace', shortName: 'Ada', title: 'Ada Lovelace — Engineer',
+        description: 'A description.', url: 'https://example.com',
+        image: '/og.jpg', imageAlt: 'Ada Lovelace',
+    })),
     getAboutContent: jest.fn(() => ({
         header: 'About me',
         image: '/about.png',
@@ -9,8 +14,10 @@ jest.mock('@/lib/content', () => ({
         phone: '+1-555-0100',
         email: 'owner@example.com',
         headquarters: 'Testville',
+        status: { sending: 'establishing uplink… transmitting', success: 'transmission complete', error: 'transmission failed' },
     })),
     getExperienceContent: jest.fn(() => ({
+        header: 'Experience', intro: '',
         experiences: [{
             title: 'Engineer',
             company: 'Example Corp',
@@ -23,7 +30,10 @@ jest.mock('@/lib/content', () => ({
     })),
     getSkillsContent: jest.fn(() => ({
         header: 'Skills',
-        skills: [{ name: 'Python', level: 90, image: '/logos/python.svg' }],
+        intro: '',
+        categories: [{ id: 'languages', label: 'Languages' }],
+        skills: [{ name: 'Python', category: 'languages', image: '/logos/python.svg' }],
+        certifications: [{ name: 'PNPT', image: '', url: 'https://example.com/cred' }],
     })),
 }));
 
@@ -105,7 +115,15 @@ describe('/api/resume', () => {
         expect(body).toContain('owner@example.com');
         expect(body).toContain('Engineer — Example Corp');
         expect(body).toContain('Built the test suite.');
-        expect(body).toContain('Python (90%)');
+        // Skills are grouped by what they're for; the self-assessed
+        // percentages that used to sit here told a reader nothing actionable.
+        expect(body).toContain('Languages: Python');
+        expect(body).not.toMatch(/\d+%/);
+        expect(body).toContain('PNPT');
+        // The site URL comes from content — it used to be a hardcoded domain
+        // baked into the bundle.
+        expect(body).toContain('https://example.com');
+        expect(body).not.toContain('invictus808');
     });
 
     it('serves the resume for a valid Authorization: Bearer token', async () => {

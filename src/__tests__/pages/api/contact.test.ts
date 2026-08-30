@@ -12,6 +12,7 @@ jest.mock('@/lib/content', () => ({
         phone: '',
         email: 'owner@example.com',
         headquarters: '',
+        status: { sending: 'establishing uplink… transmitting', success: 'transmission complete', error: 'transmission failed' },
     })),
 }));
 
@@ -99,12 +100,18 @@ describe('/api/contact', () => {
         expect(mockSend).not.toHaveBeenCalled();
     });
 
-    it('returns 500 when RESEND_API_KEY is not configured', async () => {
+    // The visitor is told the send failed, never why. Whether this deployment
+    // has an email key configured is not a fact a contact form should hand out.
+    it('returns 500 when RESEND_API_KEY is not configured, disclosing nothing', async () => {
         delete process.env.RESEND_API_KEY;
         const { req, res } = mockRequest(validBody);
         await handler(req, res);
         expect(res._getStatusCode()).toBe(500);
         expect(mockSend).not.toHaveBeenCalled();
+
+        const { message } = res._getJSONData();
+        expect(message).toBe('Failed to send message. Please try again later.');
+        expect(message).not.toMatch(/configur|RESEND|api[ _-]?key|server/i);
     });
 
     it('sends the email via Resend and returns 200 on success', async () => {

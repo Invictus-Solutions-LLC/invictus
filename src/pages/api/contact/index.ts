@@ -39,6 +39,13 @@ function isValidSubmission(body: Partial<ContactInputs>): body is ContactInputs 
     );
 }
 
+// The longest field is capped at 5,000 characters, so a legitimate submission
+// cannot approach Next's default 1 MB body limit. Rejecting at the parser keeps
+// junk from being read into memory before validation sees it.
+export const config = {
+    api: { bodyParser: { sizeLimit: '64kb' } },
+};
+
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<ContactApiResponse>
@@ -64,7 +71,12 @@ export default async function handler(
 
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
-        res.status(500).json({ message: 'Email sending is not configured on this server.' });
+        // A missing key is a broken deployment, not a feature the visitor can
+        // opt into — unlike /api/ask, where 503 is a designed signal the palette
+        // degrades around. So it reads as an ordinary send failure and the real
+        // reason goes to the logs, where the operator will actually see it.
+        console.error('[contact] RESEND_API_KEY is not set — cannot send');
+        res.status(500).json({ message: 'Failed to send message. Please try again later.' });
         return;
     }
 

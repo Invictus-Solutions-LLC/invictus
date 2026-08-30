@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import crypto from 'crypto';
 import {
     getAboutContent,
+    getSeoContent,
     getContactContent,
     getExperienceContent,
     getSkillsContent,
@@ -59,7 +60,8 @@ function buildResume(): string {
     const about = getAboutContent();
     const contact = getContactContent();
     const { experiences } = getExperienceContent();
-    const { skills } = getSkillsContent();
+    const { skills, categories, certifications } = getSkillsContent();
+    const { url } = getSeoContent();
 
     const parts: Array<string> = [];
 
@@ -88,9 +90,30 @@ function buildResume(): string {
     });
 
     parts.push(heading('SKILLS'));
-    parts.push(wrap(skills.map((skill) => `${skill.name} (${skill.level}%)`).join(', '), '  '));
-    parts.push('');
-    parts.push(`  generated ${new Date().toISOString().slice(0, 10)} — https://invictus808.com`);
+    // Grouped by what each skill is for. Self-assessed percentages used to live
+    // here; they told a reader nothing they could act on.
+    categories.forEach((category) => {
+        const members = skills
+            .filter((skill) => skill.category === category.id)
+            .map((skill) => skill.name);
+        if (members.length > 0) {
+            parts.push(wrap(`${category.label}: ${members.join(', ')}`, '  '));
+        }
+    });
+    const ungrouped = skills.filter((skill) => !categories.some((category) => category.id === skill.category));
+    if (ungrouped.length > 0) {
+        parts.push(wrap(`Other: ${ungrouped.map((skill) => skill.name).join(', ')}`, '  '));
+    }
+    if (certifications && certifications.length > 0) {
+        parts.push(heading('CERTIFICATIONS'));
+        certifications.forEach((certification) => {
+            parts.push(wrap(`* ${certification.name}`, '  '));
+            parts.push(`      ${certification.url}`);
+        });
+        parts.push('');
+    }
+
+    parts.push(`  generated ${new Date().toISOString().slice(0, 10)} — ${url}`);
     parts.push('');
 
     return parts.join('\n');
