@@ -5,6 +5,11 @@
         "allowJs": true,
         "skipLibCheck": true,
         "strict": true,
+        // Array and record access yields `T | undefined`. Turned on after an
+        // IPv6 parsing bug this codebase shipped and tests, not types, caught:
+        // the boundaries of indexed reads are exactly where that class of bug
+        // lives, and several of them here handle attacker-influenced input.
+        "noUncheckedIndexedAccess": true,
         "forceConsistentCasingInFileNames": true,
         "noEmit": true,
         "esModuleInterop": true,

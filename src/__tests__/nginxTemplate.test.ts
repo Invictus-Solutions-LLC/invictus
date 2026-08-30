@@ -9,7 +9,7 @@ const template = fs.readFileSync(
 );
 
 const addedByNginx = [...template.matchAll(/^\s*add_header\s+([A-Za-z-]+)/gm)]
-    .map((m) => { return m[1].toLowerCase(); });
+    .map((m) => { return (m[1] ?? '').toLowerCase(); });
 
 describe('nginx template', () => {
     // nginx's add_header APPENDS to a proxied response instead of replacing,

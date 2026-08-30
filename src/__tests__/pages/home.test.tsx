@@ -112,8 +112,8 @@ describe('Home page', () => {
         render(<Home {...props} />);
 
         expect(screen.getByRole('heading', { level: 1, name: props.heroProps.headline })).toBeInTheDocument();
-        expect(screen.getByText(props.aboutProps.text[0])).toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: props.projectsProps.projects[0].name })).toBeInTheDocument();
+        expect(screen.getByText(props.aboutProps.text[0] ?? '')).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: props.projectsProps.projects[0]?.name ?? '' })).toBeInTheDocument();
         expect(screen.getByRole('heading', { name: props.skillsProps.header })).toBeInTheDocument();
         expect(screen.getByRole('heading', { name: props.labProps.header })).toBeInTheDocument();
         expect(screen.getByRole('heading', { name: props.processProps.header })).toBeInTheDocument();

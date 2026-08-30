@@ -40,6 +40,9 @@ export function useTypedPlaceholder(examples: Array<string>, active: boolean): s
         const tick = () => {
             const state = position.current;
             const full = examples[state.index % examples.length];
+            if (full === undefined) {
+                return;
+            }
 
             if (state.deleting) {
                 state.chars = Math.max(state.chars - 1, 0);

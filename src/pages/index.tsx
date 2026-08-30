@@ -286,6 +286,10 @@ function withVariantBootLine(boot: BootProps): BootProps {
     }
 
     const chosen = extras[Math.floor(Math.random() * extras.length)];
+    if (!chosen) {
+        return { lines: boot.lines };
+    }
+
     const lines = [...boot.lines];
     lines.splice(Math.max(0, lines.length - 1), 0, chosen);
 

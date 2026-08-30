@@ -221,8 +221,13 @@ function CommandPalette({ onClose, commands, examples, messages, terminal }: Pro
                 return;
             }
 
-            const first = focusable[0];
+            const [first] = focusable;
             const last = focusable[focusable.length - 1];
+            if (!first || !last) {
+                event.preventDefault();
+                return;
+            }
+
             const current = document.activeElement;
             const inside = current instanceof HTMLElement && dialogRef.current?.contains(current);
 

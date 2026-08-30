@@ -27,7 +27,7 @@ describe('Lab', () => {
 
     // A lone entry in a three-column grid reads as a gap rather than a card.
     it('does not stretch a single entry across a three-column grid', () => {
-        const { container } = render(<Lab {...labProps} entries={[labProps.entries[0]]} />);
+        const { container } = render(<Lab {...labProps} entries={labProps.entries.slice(0, 1)} />);
 
         const grid = container.querySelector('.grid');
         expect(grid?.className).not.toMatch(/grid-cols-3/);

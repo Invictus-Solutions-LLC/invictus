@@ -85,9 +85,9 @@ function expand(address: string): Array<string> | null {
 function toBucket(address: string): string {
     // Node reports an IPv4 peer as ::ffff:203.0.113.9 on a dual-stack socket.
     // That caller is on IPv4 and must be keyed as such, not collapsed to a /64.
-    const mapped = /^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i.exec(address);
-    if (mapped) {
-        return mapped[1];
+    const [, mappedIpv4] = /^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i.exec(address) ?? [];
+    if (mappedIpv4) {
+        return mappedIpv4;
     }
 
     if (!address.includes(':')) {
@@ -95,7 +95,8 @@ function toBucket(address: string): string {
     }
 
     // A scope id (fe80::1%eth0) is local to the host and not part of identity.
-    const hextets = expand(address.split('%')[0]);
+    const [withoutScope] = address.split('%');
+    const hextets = withoutScope ? expand(withoutScope) : null;
 
     return hextets ? `${hextets.slice(0, 4).join(':')}::/64` : address;
 }

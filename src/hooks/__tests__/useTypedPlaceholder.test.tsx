@@ -2,6 +2,9 @@ import { renderHook, act } from '@testing-library/react';
 import { useTypedPlaceholder } from '@/hooks/useTypedPlaceholder';
 
 const EXAMPLES = ['do you know Python?', 'tell me about FloOps'];
+// Defaulted rather than asserted: if the fixture ever shrinks, the assertions
+// below fail on an empty string instead of throwing on undefined.
+const [FIRST_EXAMPLE = '', SECOND_EXAMPLE = ''] = EXAMPLES;
 
 function setReducedMotion(reduced: boolean) {
     (window.matchMedia as unknown as jest.Mock).mockImplementation((query: string) => ({
@@ -40,13 +43,13 @@ describe('useTypedPlaceholder', () => {
 
         // Past the opening hold, part-way through deleting the first example.
         act(() => { jest.advanceTimersByTime(2000); });
-        expect(result.current.length).toBeLessThan(EXAMPLES[0].length);
-        expect(EXAMPLES[0].startsWith(result.current)).toBe(true);
+        expect(result.current.length).toBeLessThan(FIRST_EXAMPLE.length);
+        expect(FIRST_EXAMPLE.startsWith(result.current)).toBe(true);
 
         // Deleted, paused, and now typing the second one in.
         act(() => { jest.advanceTimersByTime(1200); });
         expect(result.current.length).toBeGreaterThan(0);
-        expect(EXAMPLES[1].startsWith(result.current)).toBe(true);
+        expect(SECOND_EXAMPLE.startsWith(result.current)).toBe(true);
     });
 
     // Once someone types, their own text takes over and the animation has no

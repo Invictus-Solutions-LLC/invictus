@@ -24,7 +24,7 @@ function absolute(url: string, path: string): string {
 // "Honolulu, Hawai'i" -> locality + region. Anything without a comma is treated
 // as the locality alone rather than guessed at.
 function postalAddress(headquarters: string): Record<string, string> {
-    const [locality, region] = headquarters.split(',').map((part) => part.trim());
+    const [locality = headquarters.trim(), region] = headquarters.split(',').map((part) => part.trim());
     return {
         '@type': 'PostalAddress',
         addressLocality: locality,

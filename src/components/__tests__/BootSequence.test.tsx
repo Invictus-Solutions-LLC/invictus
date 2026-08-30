@@ -39,8 +39,16 @@ const overlay = () => document.getElementById('boot-sequence');
 // The boot lines are space-aligned; Testing Library collapses whitespace by
 // default, so matching them needs the raw text.
 const raw = { normalizer: (text: string) => text };
-const line = (text: string) => screen.getByText(text, raw);
-const noLine = (text: string) => screen.queryByText(text, raw);
+// Guard here rather than at each call site: an out-of-range fixture index is a
+// broken test, and it should say so instead of searching the DOM for undefined.
+function requireLine(text: string | undefined): string {
+    if (text === undefined) {
+        throw new Error('BOOT_LINES has no line at that index');
+    }
+    return text;
+}
+const line = (text: string | undefined) => screen.getByText(requireLine(text), raw);
+const noLine = (text: string | undefined) => screen.queryByText(requireLine(text), raw);
 
 describe('BootSequence', () => {
     beforeEach(() => {
