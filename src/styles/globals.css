@@ -3,58 +3,229 @@
 @tailwind utilities;
 
 @layer base {
-    /* The site's base color lives on html/body so it always fills the whole
-       screen — including mobile Safari's dynamic toolbar area and the notch /
-       home-indicator safe zones in landscape, where a 100vh-sized element
-       alone leaves gaps. Sizing uses dvh (dynamic viewport height) elsewhere
-       so full-screen sections track the actually-visible area on mobile. */
+    /* Dark is the default: the theme script on <html> always resolves to an
+       explicit `dark` or `light` class before first paint, so these values are
+       what a no-JS visitor gets. Every foreground/background pair here is
+       verified against WCAG AA — see e2e/accessibility.spec.ts. */
+    :root,
+    :root.dark {
+        --color-bg: 7 26 34;             /* deep water   #071A22 */
+        --color-surface: 12 37 48;       /* surface      #0C2530 */
+        --color-line: 23 56 74;          /* reef line    #17384A */
+        --color-fg: 230 244 246;         /* #E6F4F6 — 15.8:1 on bg */
+        --color-muted: 143 179 188;      /* #8FB3BC —  7.9:1 on bg */
+        --color-accent: 34 211 238;      /* shallows     #22D3EE —  9.9:1 */
+        --color-accent-soft: 125 232 240;/* foam         #7DE8F0 */
+        --color-accent-ink: 6 32 40;     /* text on an accent fill — 9.3:1 */
+        --color-warm: 255 155 90;        /* sunset       #FF9B5A —  8.6:1 */
+
+        --color-shell: 242 248 249;      /* shell white  #F2F8F9 */
+        --color-shell-fg: 8 34 44;       /* #08222C — 15.3:1 on shell */
+        --color-shell-muted: 74 107 117; /* #4A6B75 —  5.4:1 on shell */
+        --color-shell-line: 220 234 236;
+        --color-shell-accent: 14 108 128;/* #0E6C80 —  5.6:1 on shell */
+
+        --shadow-card: 0 10px 30px rgb(0 0 0 / 0.30);
+        --shadow-card-hover: 0 22px 48px rgb(0 0 0 / 0.44);
+        color-scheme: dark;
+    }
+
+    /* Cyan cannot simply invert: #22D3EE is 1.8:1 on white, far under the 4.5:1
+       floor. Light mode drops the accent to a deeper ocean tone for anything
+       carrying text, and softens the card shadows, which read as grime on a
+       pale background at dark-mode strength. */
+    /* The shell-white cards are the design: paper floating on water. In dark
+       that reads at 16.6:1. Light mode originally put #FFFFFF cards on a
+       #F7FBFC page — 1.04:1, which made them vanish — so the page carries a
+       deeper sea-glass tint here, with a firmer card edge and shadow to match.
+       Darkening the page pushed the sunset accent under 4.5:1, so it deepens
+       with it. */
+    :root.light {
+        --color-bg: 237 244 246;         /* #EDF4F6 — 1.11:1 under a white card */
+        --color-surface: 255 255 255;
+        --color-line: 194 214 220;       /* #C2D6DC — a visible edge, not a hint */
+        --color-fg: 8 34 44;             /* #08222C — 14.8:1 on bg */
+        --color-muted: 74 107 117;       /* #4A6B75 —  5.2:1 on bg */
+        --color-accent: 14 108 128;      /* #0E6C80 —  5.4:1 on bg */
+        --color-accent-soft: 11 88 105;
+        --color-accent-ink: 255 255 255; /* text on an accent fill — 6.0:1 */
+        --color-warm: 168 74 22;         /* #A84A16 —  5.2:1 on bg */
+
+        --color-shell: 255 255 255;
+        --color-shell-fg: 8 34 44;
+        --color-shell-muted: 74 107 117;
+        --color-shell-line: 194 214 220;
+        --color-shell-accent: 14 108 128;
+
+        --shadow-card: 0 4px 14px rgb(8 34 44 / 0.10);
+        --shadow-card-hover: 0 14px 32px rgb(8 34 44 / 0.16);
+        color-scheme: light;
+    }
+
+    /* The base colour lives on html/body so it always fills the whole screen —
+       including mobile Safari's dynamic toolbar area and the notch / home
+       indicator safe zones in landscape, where a viewport-sized element alone
+       leaves gaps. */
     html,
     body {
-        background-color: rgb(36, 36, 36);
+        @apply bg-bg text-fg;
         min-height: 100dvh;
+    }
+
+    /* Anchor navigation lands under the sticky header without this. */
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 5.5rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+    }
+
+    /* Scroll-reveal. The hidden state is scoped to `.js` so a visitor without
+       JavaScript gets the content outright rather than a page of invisible
+       sections waiting for a script that never runs. */
+    .js .reveal {
+        opacity: 0;
+        transform: translateY(16px);
+        transition: opacity 0.55s cubic-bezier(.2, .7, .3, 1),
+                    transform 0.55s cubic-bezier(.2, .7, .3, 1);
+    }
+
+    .js .reveal.is-revealed {
+        opacity: 1;
+        transform: none;
+    }
+
+    /* Revealed because something inside took focus: skip the fade entirely so
+       the keyboard user sees what they are on immediately. */
+    .js .reveal.reveal-instant {
+        transition: none;
+    }
+
+    /* Asked for less movement: the content is simply there. */
+    @media (prefers-reduced-motion: reduce) {
+        .js .reveal {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+
+    /* One consistent keyboard indicator across every interactive element,
+       instead of each component inventing its own (WCAG 2.4.7). */
+    :focus-visible {
+        @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-bg;
     }
 }
 
 @layer components {
-    .heroButton {
-        @apply px-6 py-2 border border-[#242424] rounded-full uppercase text-xs tracking-widest text-gray-400 transition-all hover:border-[#FF0000]/40 hover:text-terminal-red
+    /* Shell-white card: paper floating on water. Hover lifts it, deepens the
+       shadow and warms the border toward the accent. */
+    .card {
+        @apply bg-shell text-shell-fg border border-shell-line rounded-2xl
+               transition duration-200 ease-shore;
+        box-shadow: var(--shadow-card);
     }
 
-    /* The focus-visible ring matches the one on the submit button, cert links and
-       skill tiles — a 1px border tint alone is not a discernible focus indicator
-       for keyboard users (WCAG 2.4.7). */
+    .card-interactive {
+        @apply hover:-translate-y-1 hover:border-accent-soft
+               motion-reduce:transform-none motion-reduce:transition-none;
+    }
+
+    .card-interactive:hover {
+        box-shadow: var(--shadow-card-hover);
+    }
+
+    /* Screenshots scale inside a clipped frame so the card itself never moves. */
+    .card-shot {
+        @apply overflow-hidden;
+    }
+
+    .card-shot > * {
+        @apply transition-transform duration-500 ease-shore
+               motion-reduce:transform-none motion-reduce:transition-none;
+    }
+
+    .group:hover .card-shot > * {
+        @apply scale-[1.05];
+    }
+
+    .card-arrow {
+        @apply inline-block transition-transform duration-200 ease-shore
+               motion-reduce:transform-none motion-reduce:transition-none;
+    }
+
+    .group:hover .card-arrow {
+        @apply translate-x-1.5;
+    }
+
+    /* Skill chips: small enough that a 2px lift is the whole affordance. */
+    .chip {
+        @apply inline-flex items-center gap-1.5 font-mono text-xs rounded-md
+               border border-shell-line px-2 py-1.5
+               text-shell-muted transition duration-150
+               hover:-translate-y-0.5 hover:border-shell-accent hover:text-shell-accent
+               motion-reduce:transform-none motion-reduce:transition-none;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center rounded-xl bg-accent px-6 py-3
+               text-sm font-semibold text-accent-ink transition duration-200 ease-shore
+               hover:-translate-y-0.5 hover:brightness-[1.07]
+               motion-reduce:transform-none motion-reduce:transition-none;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center rounded-xl border border-line px-6 py-3
+               text-sm font-medium text-fg transition duration-200 ease-shore
+               hover:-translate-y-0.5 hover:border-accent
+               motion-reduce:transform-none motion-reduce:transition-none;
+    }
+
+    /* Nav underline sweeps out from the left — cheap, conventional, and it says
+       exactly which word you are on. */
+    .nav-link {
+        @apply relative text-sm text-muted transition-colors duration-200 hover:text-fg;
+    }
+
+    .nav-link::after {
+        @apply absolute left-0 -bottom-1.5 h-px w-0 bg-accent transition-all duration-200 ease-shore
+               motion-reduce:transition-none;
+        content: '';
+    }
+
+    .nav-link:hover::after {
+        @apply w-full;
+    }
+
+    .eyebrow {
+        @apply font-mono text-xs uppercase tracking-[0.2em];
+    }
+
+    /* Sits at the end of the contact form's "transmitting" line. bg-current so
+       it inherits whichever status colour the line is using, and the blink is
+       cut for anyone who asked for less motion. */
+    .terminal-cursor {
+        @apply ml-1 inline-block h-[1.05em] w-[0.5em] translate-y-[0.15em] bg-current
+               animate-caret motion-reduce:animate-none;
+    }
+
     .contactInput {
-        @apply outline-none w-full min-w-0 rounded-sm border-b px-4 md:px-6 py-4 bg-slate-400/10 text-gray-400 border-[#242424] placeholder-gray-400 transition-all focus:border-[#FF0000]/40 hover:border-[#FF0000]/40 focus-visible:ring-2 focus-visible:ring-[#FF0000] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1e1e1e]
+        @apply w-full min-w-0 rounded-lg border border-line bg-surface px-4 py-3
+               text-fg placeholder-muted outline-none transition-colors duration-200
+               hover:border-accent focus:border-accent;
     }
 
-    .terminalWindow {
-        @apply relative flex flex-col rounded-lg border border-[#333333] bg-[#1e1e1e]/95 shadow-glow overflow-hidden
+    /* Timeline steps get colour-only feedback: they are not clickable, so they
+       must not behave as if they were. */
+    .process-step {
+        @apply border-t-2 border-line pt-5 transition-colors duration-200;
     }
 
-    .terminalTitlebar {
-        @apply flex items-center gap-2 border-b border-[#333333] bg-[#242424] px-4 py-2.5 text-xs text-gray-400
-    }
-
-    .terminalDot {
-        @apply h-3 w-3 rounded-full flex-shrink-0
-    }
-
-    .commentCaption {
-        @apply font-mono text-xs text-gray-400 before:content-['//_'] before:text-terminal-red
-    }
-
-    .terminalCursor {
-        @apply inline-block w-[0.55em] h-[1.05em] ml-1.5 align-middle bg-terminal-red animate-cursor motion-reduce:animate-none
-    }
-
-    .scanlineOverlay {
-        @apply pointer-events-none fixed inset-0 z-10 opacity-[0.035];
-        background: repeating-linear-gradient(
-            to bottom,
-            rgba(255, 255, 255, 0.5) 0px,
-            rgba(255, 255, 255, 0.5) 1px,
-            transparent 1px,
-            transparent 3px
-        );
+    .process-step:hover {
+        @apply border-accent;
     }
 }

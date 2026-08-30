@@ -1,33 +1,36 @@
-// Everything is self-hosted (fonts via next/font, images/icons from /public,
-// inline styles required by framer-motion/styled-jsx). Production only — the
-// dev server needs eval and websockets for HMR/react-refresh.
-const contentSecurityPolicy = [
-    "default-src 'self'",
-    "script-src 'self'",
-    "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob:",
-    "font-src 'self'",
-    "connect-src 'self'",
-    "object-src 'none'",
-    "base-uri 'self'",
-    "form-action 'self'",
-    "frame-ancestors 'self'",
-].join('; ');
+const { contentSecurityPolicy } = require('./config/csp');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
+    // Emits .next/standalone with only the files the server actually needs,
+    // traced from the import graph. The alternative is shipping the whole
+    // node_modules — 379 MB, of which Next itself is 294 MB.
+    output: 'standalone',
+    // content/ is gitignored personal data, bind-mounted read-only at deploy
+    // time — it must never be traced into the bundle. Declared here rather than
+    // left to an opt-out comment on every fs call in src/lib/content.ts,
+    // because one missed call silently puts PII back in the published image.
+    // The Dockerfile still deletes and asserts: this is the cause, that is the
+    // backstop, and a backstop that never fires is the point.
+    outputFileTracingExcludes: {
+        '*': ['content/**'],
+    },
+    // .env is deliberately NOT listed above: the standalone build copies it in
+    // a separate step that this option does not reach (verified — adding it
+    // changes nothing). Secrets are kept out of the image by .dockerignore
+    // excluding it from the build context and the Dockerfile deleting and
+    // asserting on it, both of which are checked on every build.
     // Don't advertise the framework in every response; it only helps someone
     // fingerprinting the stack to pick version-specific exploits.
     poweredByHeader: false,
-    images: {
-        // Next 16 requires every quality used by <Image> to be declared;
-        // 75 is the default, 100 is used by the hero portrait.
-        qualities: [75, 100],
-    },
-    // Defense in depth: nginx (see nginx/templates/invictus.conf.template) sets
-    // these in the documented Docker deploy, but the app sets them too in case
-    // it's ever run directly or behind a different proxy.
+    // The app is the single source of truth for these. The nginx in front of it
+    // (nginx/templates/invictus.conf.template) deliberately does NOT repeat
+    // them: nginx's add_header appends to a proxied response rather than
+    // replacing it, and a browser given two Content-Security-Policy headers
+    // enforces the intersection — so a second, slightly-different copy silently
+    // subtracts from this one. nginx adds only HSTS, which needs to know TLS
+    // was terminated. See src/__tests__/nginxTemplate.test.ts.
     async headers() {
         return [
             {
@@ -46,4 +49,4 @@ const nextConfig = {
     },
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;
