@@ -2,11 +2,11 @@ import { render, screen } from '@testing-library/react';
 import ServerError from '@/pages/500';
 
 describe('500 page', () => {
-    it('renders the terminal-styled error and a link home', () => {
+    it('explains what happened and offers a way home', () => {
         render(<ServerError />);
 
-        expect(screen.getByText(/segmentation fault/)).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: 'cd ~' })).toHaveAttribute('href', '/');
+        expect(screen.getByRole('heading', { level: 1, name: /something broke/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /back to the start/i })).toHaveAttribute('href', '/');
     });
 
     // The cause belongs in the server log, never in the response — a stack trace

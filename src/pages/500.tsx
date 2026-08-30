@@ -1,76 +1,44 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import TerminalWindow from '@/components/TerminalWindow';
+import Logo from '@/components/Logo';
+import SwellDivider from '@/components/SwellDivider';
 
 // Next's stock 500 is an unstyled white page, which is jarring against the rest
-// of the site. This mirrors 404.tsx so a server error still looks like the
-// terminal. It deliberately says nothing about the cause — the detail belongs in
-// the server log, not in the response.
+// of the site. This mirrors 404.tsx so a server error still looks like the site.
+// It deliberately says nothing about the cause — that detail belongs in the
+// server log, not in the response, where it would be free reconnaissance.
 export default function ServerError() {
     return (
         <>
             <Head>
                 <title>500 — internal server error</title>
             </Head>
-            <div
-                className='bg-[rgb(36,36,36)] text-white w-full h-dvh flex items-center justify-center px-6 md:px-10'
-            >
-                <TerminalWindow
-                    path='~/500'
-                    className='w-full max-w-2xl'
-                >
-                    <div
-                        className='space-y-3 text-left text-sm md:text-base'
+            <main className='flex min-h-dvh w-full items-center justify-center px-6 py-16 md:px-10'>
+                <div className='w-full max-w-xl text-center'>
+                    <Logo className='mx-auto h-8 w-8 text-fg' />
+
+                    <p className='eyebrow mt-8 text-warm'>
+                        500
+                    </p>
+
+                    <h1 className='mt-3 text-3xl font-semibold tracking-tight md:text-4xl'>
+                        Something broke on my end.
+                    </h1>
+
+                    <p className='mt-4 text-base leading-relaxed text-muted'>
+                        The server hit an error handling that request. It has been logged, and it wasn&apos;t your fault.
+                    </p>
+
+                    <SwellDivider className='mt-8' />
+
+                    <Link
+                        href='/'
+                        className='btn-primary mt-8'
                     >
-                        <p
-                            className='text-gray-400'
-                        >
-                            <span
-                                className='text-terminal-red'
-                            >
-                                guest@invictus
-                            </span>
-                            :~$ ./serve.sh
-                        </p>
-
-                        <p>
-                            segmentation fault (core dumped)
-                            <span
-                                className='text-gray-400'
-                            >
-                                {' (500)'}
-                            </span>
-                        </p>
-
-                        <p
-                            className='text-gray-400'
-                        >
-                            the server hit an error handling that request. it has been logged.
-                        </p>
-
-                        <p
-                            className='text-gray-400'
-                        >
-                            <span
-                                className='text-terminal-red'
-                            >
-                                guest@invictus
-                            </span>
-                            :~${' '}
-                            <Link
-                                href='/'
-                                className='underline decoration-terminal-red/50 hover:text-terminal-red transition-colors'
-                            >
-                                cd ~
-                            </Link>
-                            <span
-                                className='terminalCursor'
-                                aria-hidden='true'
-                            />
-                        </p>
-                    </div>
-                </TerminalWindow>
-            </div>
+                        Back to the start
+                    </Link>
+                </div>
+            </main>
         </>
     );
 }

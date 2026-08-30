@@ -2,10 +2,10 @@ import { render, screen } from '@testing-library/react';
 import NotFound from '@/pages/404';
 
 describe('404 page', () => {
-    it('renders the bash-style error and a link home', () => {
+    it('explains what happened and offers a way home', () => {
         render(<NotFound />);
 
-        expect(screen.getByText(/No such file or directory/)).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: 'cd ~' })).toHaveAttribute('href', '/');
+        expect(screen.getByRole('heading', { level: 1, name: /drifted off the map/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /back to the start/i })).toHaveAttribute('href', '/');
     });
 });
