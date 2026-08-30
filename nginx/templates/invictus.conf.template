@@ -30,14 +30,25 @@ server {
     ssl_session_cache shared:SSL:10m;
     ssl_session_timeout 1d;
 
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    # HSTS is the ONE security header set here rather than in the app: it may
+    # only be sent over TLS, and the app cannot tell whether this proxy
+    # terminated HTTPS or is serving plain HTTP behind something else.
     add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
-    # Mirrors the app's production CSP (next.config.js) so the policy holds
-    # even if a future upstream misconfiguration drops it. Keep in sync.
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'" always;
+
+    # Every other security header — including the Content-Security-Policy —
+    # comes from the app (next.config.js) and passes straight through, exactly
+    # as host-invictus.conf.example already documents for the other deploy path.
+    #
+    # Do NOT re-add them here. nginx's add_header APPENDS to a proxied
+    # response rather than replacing, so a second CSP is not a safety net: the
+    # browser enforces the INTERSECTION of both policies. This block used to
+    # send `script-src 'self'`, which silently subtracted the sha256 hash that
+    # allows the pre-paint theme script — leaving the theme to resolve only
+    # after hydration (a flash of the wrong palette on every load) and the `js`
+    # class never set, which disables every scroll reveal on the site.
+    #
+    # The app's hash is derived from the same THEME_SCRIPT constant the document
+    # renders, so it cannot drift. A copy pasted here always can.
 
     location /.well-known/acme-challenge/ {
         root /var/www/certbot;

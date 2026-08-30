@@ -13,6 +13,10 @@ services:
       - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL:-onboarding@resend.dev}
       - RESEND_TO_EMAIL=${RESEND_TO_EMAIL:-}
       - RESUME_ACCESS_TOKENS=${RESUME_ACCESS_TOKENS:-}
+      # Optional: enables /api/ask. Empty means the ⌘K palette stays a plain
+      # navigator, which is the intended fallback.
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ANTHROPIC_MODEL=${ANTHROPIC_MODEL:-}
     ports:
       - "3000:3000"
     volumes:

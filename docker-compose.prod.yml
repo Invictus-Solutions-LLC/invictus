@@ -28,6 +28,11 @@ services:
       # Optional: tokens enabling the private /api/resume endpoint (see
       # .env.example). Empty = endpoint disabled.
       - RESUME_ACCESS_TOKENS=${RESUME_ACCESS_TOKENS:-}
+      # Optional: enables the ⌘K palette's grounded answering (/api/ask). Empty
+      # means the palette still works as a fast navigator — it degrades rather
+      # than breaking. ANTHROPIC_MODEL overrides the default model.
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ANTHROPIC_MODEL=${ANTHROPIC_MODEL:-}
       # nginx always fronts the app in this topology, so X-Forwarded-For's last
       # hop is trustworthy and the rate limiter can key off the real client IP.
       # Set to false if you ever expose the container directly.
@@ -39,6 +44,10 @@ services:
     volumes:
       # Real content (name, contact info, job history) lives only on this host and
       # is never baked into the image — populate it once from content/*.example.json.
+      #
+      # The container runs as uid 1001, so this directory must be traversable
+      # (o+x) and its files readable (o+r) by that user, or every page 500s:
+      #   chmod 755 ./content && chmod 644 ./content/*.json
       - ./content:/app/content:ro
 
   # --- bundled stack only (activate with: --profile bundled) ---

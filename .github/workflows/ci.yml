@@ -5,8 +5,13 @@ on:
   workflow_call:
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # Keyed by the calling workflow as well as the ref: a reusable workflow shares
+  # its caller's ref, so CI-from-CD and CI-from-a-PR would otherwise collide.
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  # Superseding a pull-request push is the point. Superseding a CD run is not —
+  # cd.yml deliberately sets cancel-in-progress:false, and cancelling the CI it
+  # called would fail the very deploy that setting exists to protect.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 # Least privilege: CI only reads the checkout. Without this the workflow
 # inherits the repository default token scopes, which may be far broader.
@@ -19,8 +24,13 @@ env:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          # Nothing here pushes; don't leave a usable token in .git/config
+          # for every later step in the job to pick up.
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
@@ -35,8 +45,13 @@ jobs:
 
   typecheck:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          # Nothing here pushes; don't leave a usable token in .git/config
+          # for every later step in the job to pick up.
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
@@ -51,8 +66,13 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          # Nothing here pushes; don't leave a usable token in .git/config
+          # for every later step in the job to pick up.
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
@@ -67,8 +87,13 @@ jobs:
 
   audit:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          # Nothing here pushes; don't leave a usable token in .git/config
+          # for every later step in the job to pick up.
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
@@ -85,9 +110,14 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: [lint, typecheck, test, audit]
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          # Nothing here pushes; don't leave a usable token in .git/config
+          # for every later step in the job to pick up.
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
@@ -118,9 +148,14 @@ jobs:
   # security headers and rate limiting. Runs against a production build.
   e2e:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: [lint, typecheck, test, audit]
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          # Nothing here pushes; don't leave a usable token in .git/config
+          # for every later step in the job to pick up.
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22

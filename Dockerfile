@@ -89,9 +89,10 @@ USER builder
 COPY --chown=builder:builder --from=dependencies /app/node_modules/ /app/node_modules/
 COPY --chown=builder:builder ./ /app/
 
-# build application, prune devDependencies down to production-only, and cleanup
+# build the application. No dependency pruning step: the standalone output
+# traces exactly the modules the server imports, so the full node_modules tree
+# is never copied forward.
 RUN yarn build \
-    && yarn workspaces focus --production \
     && yarn cache clean
 
 
@@ -106,9 +107,12 @@ RUN useradd -ms /bin/bash invictus \
     && corepack enable \
     && corepack prepare yarn@4.9.2 --activate
 
-# set environment variables
+# set environment variables. HOSTNAME matters: the standalone server binds to
+# localhost by default, which is unreachable from outside the container.
 ENV NODE_ENV="production" \
-    NEXT_TELEMETRY_DISABLED=1
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=3000 \
+    HOSTNAME="0.0.0.0"
 
 # set working directory
 WORKDIR /app/
@@ -119,12 +123,24 @@ RUN chown invictus:invictus /app/
 # run as non-root user
 USER invictus
 
-# add configurations, dependencies lists, modules, and application
-COPY --chown=invictus:invictus --from=builder /app/next.config.js /app/
-COPY --chown=invictus:invictus --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/
-COPY --chown=invictus:invictus --from=builder /app/node_modules/ /app/node_modules/
+# the traced server, its minimal node_modules and next.config.js, all emitted
+# by the standalone build. Static assets and public/ are not traced, so they
+# are copied separately.
+COPY --chown=invictus:invictus --from=builder /app/.next/standalone/ /app/
+COPY --chown=invictus:invictus --from=builder /app/.next/static/ /app/.next/static/
 COPY --chown=invictus:invictus --from=builder /app/public/ /app/public/
-COPY --chown=invictus:invictus --from=builder /app/.next/ /app/.next/
+
+# Three independent things now keep content and secrets out of this image:
+# .dockerignore excludes them from the build context, next.config.js excludes
+# content/ from the file tracer, and this deletes anything that still slipped
+# through. A missing bind mount has to fail loudly rather than silently serve
+# example data as though it were real.
+#
+# The assertions are the point. If a future Next traces differently and these
+# paths move, the build fails here instead of quietly shipping content again.
+RUN rm -rf /app/content /app/.env \
+    && test ! -e /app/content \
+    && test ! -e /app/.env
 
 # expose port
 EXPOSE 3000
@@ -133,5 +149,6 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000/api/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
 
-# run application
-CMD ["yarn", "start"]
+# run application. The standalone bundle ships its own server entrypoint; there
+# is no yarn or Next CLI in this image.
+CMD ["node", "server.js"]
