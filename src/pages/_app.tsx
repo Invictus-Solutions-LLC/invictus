@@ -40,6 +40,25 @@ export default function App({ Component, pageProps }: AppProps) {
         console.log('%cguest@invictus:~$ whoami', 'color: #7DE8F0; font-family: monospace;');
         console.log('%ccurious. we like that. → /#contact', 'color: #8FB3BC; font-family: monospace;');
         console.log('%cor press ⌘K and just ask me.', 'color: #FF9B5A; font-family: monospace;');
+
+        // Whatever timezone the visitor is in, this is the one I am in.
+        // Wrapped because a locale/timezone the runtime does not know throws,
+        // and a console flourish must never break the page.
+        try {
+            const honolulu = new Date().toLocaleTimeString('en-US', {
+                timeZone: 'Pacific/Honolulu',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+            });
+            console.log(
+                `%cit is ${honolulu} in Honolulu right now.`,
+                'color: #8FB3BC; font-family: monospace;',
+            );
+        }
+        catch {
+            // No local time, no message. Nothing else depends on it.
+        }
     }, []);
 
     return (

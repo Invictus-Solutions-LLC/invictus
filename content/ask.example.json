@@ -11,5 +11,13 @@
         "throttled": "That is a lot of questions in a short time — try again in a few minutes.",
         "unavailable": "Answering is unavailable right now — the list below still works.",
         "noMatch": "Nothing matches that."
+    },
+    "terminal": {
+        "sudo": "nice try. you are not in the sudoers file. this incident has been reported.",
+        "whoami": "guest. but you can press Escape and read the page like everyone else.",
+        "ls": "work  experience  skills  lab  process  contact",
+        "rm -rf /": "permission denied. you are a guest here, and the reef is fragile.",
+        "help": "there is no man page. ask a real question and I will answer it from my own notes.",
+        "exit": "there is no shell to leave. Escape closes this, though."
     }
 }

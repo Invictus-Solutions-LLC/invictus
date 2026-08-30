@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/router';
 import { useTypedPlaceholder } from '@/hooks/useTypedPlaceholder';
+import { useTypewriter } from '@/hooks/useTypewriter';
 
 export type PaletteCommand = {
     id: string;
@@ -32,6 +33,9 @@ type Props = {
     // What the palette says back. Structural labels stay in the markup; these
     // are sentences addressed to the visitor, so they are the owner's to word.
     messages: AskMessages;
+    // Canned replies to shell commands, for the visitors who try typing one
+    // into a security engineer's search box.
+    terminal: Record<string, string>;
 };
 
 // A question is anything that isn't obviously a nav keyword. Two or more words,
@@ -83,7 +87,7 @@ function matches(command: PaletteCommand, query: string): boolean {
 
 // Mounted only while open (see index.tsx), so every opening starts clean
 // without an effect reaching in to reset four pieces of state.
-function CommandPalette({ onClose, commands, examples, messages }: Props) {
+function CommandPalette({ onClose, commands, examples, messages, terminal }: Props) {
     const router = useRouter();
     const inputRef = useRef<HTMLInputElement>(null);
     const dialogRef = useRef<HTMLDivElement>(null);
@@ -91,6 +95,14 @@ function CommandPalette({ onClose, commands, examples, messages }: Props) {
     const [activeState, setActiveState] = useState({ query: '', index: 0 });
     const [askState, setAskState] = useState<AskState>('idle');
     const [answer, setAnswer] = useState<Answer | null>(null);
+
+    // A typed shell command, matched case-insensitively on the whole query so
+    // "sudo" answers but "do you know sudo?" is still a real question.
+    const command = query.trim().toLowerCase();
+    const terminalReply = Object.prototype.hasOwnProperty.call(terminal, command)
+        ? terminal[command]
+        : null;
+    const { typed, done: typedOut } = useTypewriter(terminalReply ?? '');
 
     // Server-rendered as the Windows/Linux hint, corrected on hydration.
     const shortcut = useSyncExternalStore(
@@ -127,7 +139,11 @@ function CommandPalette({ onClose, commands, examples, messages }: Props) {
 
     // Offered whenever the query reads like a question, and also when nothing
     // matched — that second case is the one that saves a dead end.
-    const canAsk = query.trim().length > 2 && (looksLikeQuestion(query) || results.length === 0);
+    // A recognised shell command is already answered, so it must not also offer
+    // to spend a real model call on itself.
+    const canAsk = !terminalReply
+        && query.trim().length > 2
+        && (looksLikeQuestion(query) || results.length === 0);
     const options = canAsk ? ['ask', ...results.map((result) => result.id)] : results.map((result) => result.id);
 
     useEffect(() => {
@@ -488,7 +504,30 @@ function CommandPalette({ onClose, commands, examples, messages }: Props) {
                         }
 
                         {
-                            results.length === 0 && !canAsk &&
+                            /* The reply types itself out, which is the whole
+                               joke — but only the finished string is exposed to
+                               assistive tech. Animating text inside this list
+                               would make a screen reader announce it once per
+                               character. Reduced motion gets it instantly. */
+                            terminalReply &&
+                            <li className='px-4 py-6'>
+                                <p className='font-mono text-sm text-accent'>
+                                    <span aria-hidden='true'>
+                                        {`$ ${command}`}
+                                    </span>
+                                </p>
+                                <p className='mt-2 font-mono text-sm text-fg/90'>
+                                    <span aria-hidden='true'>
+                                        {typed}
+                                        {!typedOut && <span className='terminal-cursor' />}
+                                    </span>
+                                    <span className='sr-only'>{terminalReply}</span>
+                                </p>
+                            </li>
+                        }
+
+                        {
+                            !terminalReply && results.length === 0 && !canAsk &&
                             <li className='px-4 py-6 text-center text-sm text-muted'>
                                 {messages.noMatch}
                             </li>

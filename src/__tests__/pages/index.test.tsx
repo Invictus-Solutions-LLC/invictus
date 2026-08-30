@@ -16,7 +16,7 @@ jest.mock('@/lib/content', () => ({
     getSocialsContent: jest.fn(() => ({ socials: [] })),
     getFooterContent: jest.fn(() => ({ text: 'Example Inc. All Rights Reserved.' })),
     getBootContent: jest.fn(() => ({ lines: ['[  OK  ] started test.service'] })),
-    getAskContent: jest.fn(() => ({ triggerLabel: 'Ask anything', examples: ['do you know Python?'], messages: { asking: 'Reading…', throttled: 'Too many questions — wait a few minutes.', unavailable: 'Unavailable right now.', noMatch: 'Nothing matches that.' } })),
+    getAskContent: jest.fn(() => ({ triggerLabel: 'Ask anything', examples: ['do you know Python?'], messages: { asking: 'Reading…', throttled: 'Too many questions — wait a few minutes.', unavailable: 'Unavailable right now.', noMatch: 'Nothing matches that.' }, terminal: { sudo: 'nice try.', ls: 'work  experience  skills' } })),
     getSeoContent: jest.fn(() => ({
         name: 'Example Person', shortName: 'Example', title: 'Example — Engineer',
         description: 'A description.', url: 'https://example.com',

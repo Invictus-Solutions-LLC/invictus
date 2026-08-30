@@ -14,6 +14,10 @@ function toRobots(url: string): string {
         '',
         `Sitemap: ${origin}/sitemap.xml`,
         '',
+        // For the humans who read robots.txt, which is most of the ones who
+        // open it at all.
+        '# Hey. There is a /humans.txt too.',
+        '',
     ].join('\n');
 }
 

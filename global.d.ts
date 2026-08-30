@@ -7,6 +7,9 @@ type AboutProps = {
 // owner curates, so it is editable without a rebuild like everything else.
 type BootProps = {
     lines: Array<string>;
+    // Optional pool of alternate kernel lines. One is spliced into the log per
+    // page load, so the sequence is never quite the same twice.
+    extras?: Array<string>;
 };
 
 // The example questions the ⌘K placeholder cycles through. They teach the one
@@ -27,6 +30,9 @@ type AskProps = {
     triggerLabel: string;
     examples: Array<string>;
     messages: AskMessages;
+    // Canned replies to shell commands typed into the palette. Free-form: the
+    // keys are whatever commands the owner wants to answer.
+    terminal: Record<string, string>;
 };
 
 type CallToAction = {

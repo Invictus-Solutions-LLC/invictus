@@ -48,8 +48,8 @@ What each file drives:
 | `lab.json` | "What I'm digging into now" — in-progress work; leave `entries` empty to hide the section |
 | `contact.json` | Contact details, the closing invitation (`cta`) and the header button's `linkLabel` |
 | `socials.json`, `footer.json` | Footer links and copyright |
-| `boot.json` | Lines used by the intro sequence |
-| `ask.json` | The ⌘K button label, the example questions its placeholder cycles through, and the messages it says back (`messages`) |
+| `boot.json` | Lines used by the intro sequence; an optional `extras` array supplies alternates, one of which is mixed in per load |
+| `ask.json` | The ⌘K button label, the example questions its placeholder cycles through, the messages it says back (`messages`), and `terminal` — canned replies to shell commands typed into the palette |
 | `seo.json` | Site identity and search metadata — page title, meta description, canonical URL, share-card image, and the name used in the footer wordmark and the schema.org markup (`shortName` names the installable web app instead) |
 
 ### Search and share metadata

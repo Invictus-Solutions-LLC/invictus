@@ -239,11 +239,21 @@ export function getSocialsContent(): SocialsProps {
 }
 
 export function getBootContent(): BootProps {
-    return loadContent<BootProps>('boot.json', { lines: { items: 'string' } });
+    const boot = loadContent<BootProps>('boot.json', { lines: { items: 'string' } });
+
+    // `extras` is optional: a boot.json without it is valid and simply never
+    // varies. Validated by hand rather than through the schema, which has no
+    // way to express an optional key.
+    if (boot.extras !== undefined
+        && (!Array.isArray(boot.extras) || boot.extras.some((line) => typeof line !== 'string'))) {
+        throw new Error('Content file "boot.json" has "extras" but it is not an array of strings.');
+    }
+
+    return boot;
 }
 
 export function getAskContent(): AskProps {
-    return loadContent<AskProps>('ask.json', {
+    const ask = loadContent<AskProps>('ask.json', {
         triggerLabel: 'string',
         examples: { items: 'string' },
         messages: {
@@ -255,6 +265,22 @@ export function getAskContent(): AskProps {
             },
         },
     });
+
+    // `terminal` is a free-form map of command to reply, which the schema
+    // language here cannot express — it only knows fixed field sets. Checked by
+    // hand so a malformed one still fails loudly at load rather than rendering
+    // "undefined" at a visitor.
+    const { terminal } = ask;
+    const valid = terminal !== null
+        && typeof terminal === 'object'
+        && !Array.isArray(terminal)
+        && Object.values(terminal).every((reply) => { return typeof reply === 'string'; });
+
+    if (!valid) {
+        throw new Error('Content file "ask.json" needs "terminal" to be an object of command → reply strings.');
+    }
+
+    return ask;
 }
 
 export function getSeoContent(): SeoProps {

@@ -72,7 +72,7 @@ const props = {
         imageAlt: 'Blaise Aranador — Software Engineer',
     },
     bootProps: { lines: ['[  OK  ] started test.service'] },
-    askProps: { triggerLabel: 'Ask anything', examples: ['do you know Kubernetes?', 'tell me about FloOps'], messages: { asking: 'Reading…', throttled: 'Too many questions — wait a few minutes.', unavailable: 'Unavailable right now.', noMatch: 'Nothing matches that.' } },
+    askProps: { triggerLabel: 'Ask anything', examples: ['do you know Kubernetes?', 'tell me about FloOps'], messages: { asking: 'Reading…', throttled: 'Too many questions — wait a few minutes.', unavailable: 'Unavailable right now.', noMatch: 'Nothing matches that.' }, terminal: { sudo: 'nice try.', ls: 'work  experience  skills' } },
     personSchema: '{"@context":"https://schema.org","@type":"Person","name":"Blaise Aranador"}',
 };
 

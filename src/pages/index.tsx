@@ -266,10 +266,32 @@ export default function Home({
                     commands={commands}
                     examples={askProps.examples}
                     messages={askProps.messages}
+                    terminal={askProps.terminal}
                 />
             }
         </>
     );
+}
+
+// Splices one of boot.json's alternate lines into the log, just before the
+// last one so the sequence still ends the way it always does.
+//
+// Chosen here, on the server, and passed down as an ordinary prop: picking at
+// render time would run on both the server and the client and could disagree,
+// which is a hydration mismatch rather than an easter egg.
+function withVariantBootLine(boot: BootProps): BootProps {
+    const extras = boot.extras ?? [];
+    if (extras.length === 0 || boot.lines.length === 0) {
+        return { lines: boot.lines };
+    }
+
+    const chosen = extras[Math.floor(Math.random() * extras.length)];
+    const lines = [...boot.lines];
+    lines.splice(Math.max(0, lines.length - 1), 0, chosen);
+
+    // `extras` itself is deliberately not forwarded: the client only needs the
+    // log it is going to print.
+    return { lines };
 }
 
 export async function getServerSideProps() {
@@ -296,7 +318,7 @@ export async function getServerSideProps() {
             footerProps: getFooterContent(),
             seoProps: seo,
             askProps: getAskContent(),
-            bootProps: getBootContent(),
+            bootProps: withVariantBootLine(getBootContent()),
             personSchema: buildPersonSchema({
                 seo,
                 portrait: hero.image,

@@ -6,5 +6,12 @@
         "[  OK  ] started portfolio.service",
         "[  OK  ] reached target graphical interface",
         "[    0.842013] incoming connection from guest... accepted"
+    ],
+    "extras": [
+        "[    0.451188] calibrating trade winds... ok",
+        "[    0.463902] reef scan complete — 0 threats, 4 honu",
+        "[    0.470551] caffeine.service: active (running)",
+        "[    0.488210] checking tee times... 1 conflict resolved",
+        "[    0.492774] warning: golf handicap not yet optimised"
     ]
 }

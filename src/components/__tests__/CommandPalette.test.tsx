@@ -15,11 +15,12 @@ const commands: Array<PaletteCommand> = [
 ];
 
 const examples = ['do you know Python?', 'tell me about FloOps'];
+const terminal = { sudo: 'nice try. you are not in the sudoers file.', ls: 'work  experience  skills' };
 const messages: AskMessages = { asking: 'Reading…', throttled: 'Too many questions — wait a few minutes.', unavailable: 'Unavailable right now.', noMatch: 'Nothing matches that.' };
 
 function setup(withExamples: Array<string> = examples) {
     const onClose = jest.fn();
-    render(<CommandPalette onClose={onClose} commands={commands} examples={withExamples} messages={messages} />);
+    render(<CommandPalette onClose={onClose} commands={commands} examples={withExamples} messages={messages} terminal={terminal} />);
     return { onClose };
 }
 
@@ -88,6 +89,62 @@ describe('CommandPalette', () => {
         await user.keyboard('{Escape}');
 
         expect(onClose).toHaveBeenCalled();
+    });
+
+    // Typing a shell command into a security engineer's search box is a thing
+    // people try. Answering costs nothing and rewards exactly that curiosity.
+    it('answers a shell command instead of saying nothing matched', async () => {
+        const user = userEvent.setup();
+        setup();
+
+        await user.type(screen.getByRole('combobox'), 'sudo');
+
+        expect(await screen.findByText(/not in the sudoers file/)).toBeInTheDocument();
+        expect(screen.queryByText('Nothing matches that.')).not.toBeInTheDocument();
+    });
+
+    // Answering a command AND offering to ask the model about it would spend a
+    // real API call on a joke the palette has already told.
+    it('does not offer to ask the model about a command it already answered', async () => {
+        const user = userEvent.setup();
+        setup();
+
+        await user.type(screen.getByRole('combobox'), 'sudo');
+
+        expect(await screen.findByText(/not in the sudoers file/)).toBeInTheDocument();
+        expect(screen.queryByRole('option', { name: /ask/i })).not.toBeInTheDocument();
+    });
+
+    it('matches a command regardless of case or surrounding space', async () => {
+        const user = userEvent.setup();
+        setup();
+
+        await user.type(screen.getByRole('combobox'), '  SUDO  ');
+
+        expect(await screen.findByText(/not in the sudoers file/)).toBeInTheDocument();
+    });
+
+    // The animation is decoration; the sentence is the content. A screen reader
+    // must get the finished string once, not one announcement per character.
+    it('exposes the whole reply to assistive technology at once', async () => {
+        const user = userEvent.setup();
+        setup();
+
+        await user.type(screen.getByRole('combobox'), 'sudo');
+
+        const spoken = await screen.findByText('nice try. you are not in the sudoers file.');
+        expect(spoken).toHaveClass('sr-only');
+    });
+
+    // A real question that merely contains a command word is still a question.
+    it('does not hijack a question that happens to mention a command', async () => {
+        const user = userEvent.setup();
+        setup();
+
+        await user.type(screen.getByRole('combobox'), 'do you know sudo?');
+
+        expect(screen.queryByText(/not in the sudoers file/)).not.toBeInTheDocument();
+        expect(screen.getByRole('option', { name: /ask/i })).toBeInTheDocument();
     });
 
     it('offers to ask when the query reads like a question', async () => {
