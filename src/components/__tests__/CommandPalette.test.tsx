@@ -156,7 +156,11 @@ describe('CommandPalette', () => {
         expect(screen.getByRole('option', { name: /ask:/i })).toBeInTheDocument();
     });
 
-    it('answers from the endpoint and shows which files it used', async () => {
+    // The endpoint still asks the model to cite which notes it used, because
+    // having to name a source keeps it inside the corpus. That citation is a
+    // grounding device for the server, not provenance for the visitor — showing
+    // a reader "skills.json" tells them nothing they can act on.
+    it('answers from the endpoint without showing which files it used', async () => {
         jest.spyOn(global, 'fetch').mockResolvedValue({
             ok: true,
             json: async () => ({
@@ -173,7 +177,26 @@ describe('CommandPalette', () => {
         await user.keyboard('{Enter}');
 
         expect(await screen.findByText(/used Kubernetes/)).toBeInTheDocument();
-        expect(screen.getByText('skills.json')).toBeInTheDocument();
+        expect(screen.queryByText('skills.json')).not.toBeInTheDocument();
+        expect(screen.queryByText(/based on/i)).not.toBeInTheDocument();
+    });
+
+    // The answer types itself out like the shell replies do, but a live region
+    // must still hand a screen reader the finished sentence exactly once.
+    it('exposes the whole answer to assistive technology at once', async () => {
+        jest.spyOn(global, 'fetch').mockResolvedValue({
+            ok: true,
+            json: async () => ({ answer: 'He has, on several projects.', sources: [], sectionId: null }),
+        } as Response);
+
+        const user = userEvent.setup();
+        setup();
+
+        await user.type(screen.getByRole('combobox'), 'do you know kubernetes?');
+        await user.keyboard('{Enter}');
+
+        const spoken = await screen.findByText('He has, on several projects.');
+        expect(spoken).toHaveClass('sr-only');
     });
 
     // The model is asked which section answers the question; that answer has to

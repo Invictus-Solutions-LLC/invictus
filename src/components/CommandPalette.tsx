@@ -103,6 +103,11 @@ function CommandPalette({ onClose, commands, examples, messages, terminal }: Pro
         ? terminal[command]
         : null;
     const { typed, done: typedOut } = useTypewriter(terminalReply ?? '');
+    // Answers type out for the same reason the shell replies do. Called
+    // unconditionally, as hooks must be — an empty string simply never runs.
+    const { typed: typedAnswer, done: answerDone } = useTypewriter(
+        askState === 'answered' ? answer?.answer ?? '' : '',
+    );
 
     // Server-rendered as the Windows/Linux hint, corrected on hydration.
     const shortcut = useSyncExternalStore(
@@ -367,8 +372,16 @@ function CommandPalette({ onClose, commands, examples, messages, terminal }: Pro
                                     <p className='eyebrow mb-2 text-accent'>
                                         Answer
                                     </p>
+                                    {/* Typed to the eye, delivered whole to a
+                                        screen reader: this is a live region, and
+                                        animating text inside one announces it
+                                        again on every character. */}
                                     <p className='text-sm leading-relaxed text-fg/90'>
-                                        {answer.answer}
+                                        <span aria-hidden='true'>
+                                            {typedAnswer}
+                                            {!answerDone && <span className='terminal-cursor' />}
+                                        </span>
+                                        <span className='sr-only'>{answer.answer}</span>
                                     </p>
                                     {
                                         answer.sectionId &&
@@ -390,26 +403,6 @@ function CommandPalette({ onClose, commands, examples, messages, terminal }: Pro
                                         </button>
                                     }
 
-                                    {
-                                        answer.sources.length > 0 &&
-                                        <p className='mt-3 flex flex-wrap items-center gap-2'>
-                                            <span className='font-mono text-[10px] text-muted'>
-                                                based on
-                                            </span>
-                                            {
-                                                answer.sources.map((source: string) => {
-                                                    return (
-                                                        <span
-                                                            key={source}
-                                                            className='rounded border border-line px-2 py-0.5 font-mono text-[10px] text-muted'
-                                                        >
-                                                            {source}
-                                                        </span>
-                                                    );
-                                                })
-                                            }
-                                        </p>
-                                    }
                                 </div>
                             }
                         </div>
