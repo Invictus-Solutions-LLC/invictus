@@ -1,0 +1,15 @@
+{
+    "triggerLabel": "Ask anything",
+    "examples": [
+        "do you know <a skill you have>?",
+        "what did you do at <a company you worked for>?",
+        "tell me about <one of your projects>",
+        "can you build me <the kind of thing you take on>?"
+    ],
+    "messages": {
+        "asking": "Reading my own notes…",
+        "throttled": "That is a lot of questions in a short time — try again in a few minutes.",
+        "unavailable": "Answering is unavailable right now — the list below still works.",
+        "noMatch": "Nothing matches that."
+    }
+}

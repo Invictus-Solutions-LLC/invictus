@@ -1,25 +1,25 @@
 {
-    "header": "Hover Over A Skill For Current Proficiency",
+    "header": "What I work with",
     "skills": [
         {
             "image": "/logos/python.svg",
-            "level": 90,
-            "name": "Python"
+            "name": "Python",
+            "category": "languages"
         },
         {
-            "image": "/logos/javascript.svg",
-            "level": 60,
-            "name": "JavaScript"
-        },
-        {
-            "image": "/logos/git.svg",
-            "level": 50,
-            "name": "Git"
+            "image": "/logos/nextjs.svg",
+            "name": "NextJS",
+            "category": "web"
         },
         {
             "image": "/logos/docker.svg",
-            "level": 40,
-            "name": "Docker"
+            "name": "Docker",
+            "category": "infrastructure"
+        },
+        {
+            "image": "/logos/hacker.svg",
+            "name": "Ethical Hacking",
+            "category": "security"
         }
     ],
     "certifications": [
@@ -27,6 +27,25 @@
             "name": "Example Certification",
             "image": "/logos/hacker.svg",
             "url": "https://www.credential.net/your-credential-id"
+        }
+    ],
+    "intro": "Grouped by what it's for, so you can find what you're looking for quickly.",
+    "categories": [
+        {
+            "id": "languages",
+            "label": "Languages"
+        },
+        {
+            "id": "web",
+            "label": "Web"
+        },
+        {
+            "id": "infrastructure",
+            "label": "Infrastructure"
+        },
+        {
+            "id": "security",
+            "label": "Security"
         }
     ]
 }

@@ -1,0 +1,9 @@
+{
+    "name": "<Your Name>",
+    "shortName": "<Your Name>",
+    "title": "<Your Name> — What You Do, Where You Are",
+    "description": "One or two sentences describing who you are and what you do. Search engines show roughly the first 155 characters, so lead with what matters.",
+    "url": "https://example.com",
+    "image": "/og.jpg",
+    "imageAlt": "<Your Name> — what you do"
+}

@@ -1,0 +1,22 @@
+{
+    "header": "How working together goes",
+    "intro": "No mystery, no black box. Here's the whole process before you commit to anything.",
+    "steps": [
+        {
+            "title": "You tell me the problem",
+            "text": "In your words. No technical vocabulary required — that's my job, not yours."
+        },
+        {
+            "title": "I scope it honestly",
+            "text": "A fixed price and timeline — including telling you if you don't actually need me."
+        },
+        {
+            "title": "You see it every week",
+            "text": "Something working in your hands each week, so nothing is a surprise at the end."
+        },
+        {
+            "title": "You own it",
+            "text": "Code, accounts and documentation handed over. No lock-in, no hostage situation."
+        }
+    ]
+}

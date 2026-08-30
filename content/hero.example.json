@@ -1,13 +1,19 @@
 {
-    "image": "/hero.png",
-    "prefix": "root@invictus:~# ",
-    "titles": [
-        "Software Engineer",
-        "Ethical Hacker"
-    ],
-    "words": [
-        "Hi, I'm <Your Name>",
-        "./run.sh",
-        "PWN3D !!!"
+    "location": "City, State",
+    "greeting": "",
+    "headline": "<Your Name>",
+    "image": "/hero.jpg",
+    "imageAlt": "Portrait of <Your Name>",
+    "ctas": [
+        {
+            "label": "Work with me",
+            "href": "#contact",
+            "variant": "primary"
+        },
+        {
+            "label": "Hiring? See my experience",
+            "href": "#experience",
+            "variant": "secondary"
+        }
     ]
 }

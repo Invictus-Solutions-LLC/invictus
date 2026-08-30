@@ -1,6 +1,14 @@
 {
+    "location": "Fixture City",
+    "headline": "Fixture headline",
     "image": "/hero.png",
-    "prefix": "root@fixture:~# ",
-    "titles": ["Fixture Title"],
-    "words": ["Fixture word"]
+    "imageAlt": "Fixture portrait",
+    "ctas": [
+        {
+            "label": "Fixture",
+            "href": "#contact",
+            "variant": "primary"
+        }
+    ],
+    "greeting": "Aloha"
 }

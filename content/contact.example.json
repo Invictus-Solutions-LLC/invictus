@@ -2,5 +2,16 @@
     "header": "Let's Connect.",
     "phone": "+1-555-555-5555",
     "email": "you@example.com",
-    "headquarters": "City, State"
+    "headquarters": "City, State",
+    "cta": {
+        "header": "Got something that needs building?",
+        "invitation": "Say what you need in your own words — no technical vocabulary required.",
+        "buttonLabel": "Start a conversation"
+    },
+    "status": {
+        "sending": "establishing uplink… transmitting",
+        "success": "transmission complete",
+        "error": "transmission failed"
+    },
+    "linkLabel": "Get in touch"
 }

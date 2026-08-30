@@ -1,0 +1,10 @@
+{
+    "lines": [
+        "[    0.000042] bios v1.0.0 — power-on self test... ok",
+        "[    0.238551] mounting /dev/portfolio... ok",
+        "[    0.312907] loading modules: next react tailwind",
+        "[  OK  ] started portfolio.service",
+        "[  OK  ] reached target graphical interface",
+        "[    0.842013] incoming connection from guest... accepted"
+    ]
+}

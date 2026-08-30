@@ -1,0 +1,18 @@
+{
+    "header": "What I'm digging into now",
+    "intro": "Not finished work — the things you're actively building with. Honest about where each one is.",
+    "entries": [
+        {
+            "title": "Something already running",
+            "text": "Describe a thing a visitor can see or use right now.",
+            "status": "live",
+            "statusLabel": "Live on this site"
+        },
+        {
+            "title": "Something in progress",
+            "text": "Describe what you're learning or building. One true sentence beats three impressive ones.",
+            "status": "building",
+            "statusLabel": "In progress"
+        }
+    ]
+}

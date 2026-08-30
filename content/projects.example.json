@@ -1,4 +1,6 @@
 {
+    "header": "Things I've built",
+    "intro": "What each project fixed, in words the person who needed it would use.",
     "projects": [
         {
             "name": "Example Project",
