@@ -1,17 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-export const BOOT_LINES = [
-    '[    0.000042] invictus bios v8.0.8 — power-on self test... ok',
-    '[    0.104217] cpu0: hacker mode enabled',
-    '[    0.238551] mounting /dev/portfolio... ok',
-    '[    0.312907] loading modules: next react tailwind',
-    '[    0.487114] decrypting payload... done',
-    '[  OK  ] started invictus808.service',
-    '[  OK  ] started matrix-rain.daemon',
-    '[  OK  ] reached target graphical interface',
-    '[    0.842013] incoming connection from guest... accepted',
-];
-
 export const LINE_INTERVAL_MS = 280;
 export const HOLD_MS = 1600;
 export const FADE_MS = 500;
@@ -19,7 +7,10 @@ export const FADE_MS = 500;
 // Re-attach (repeat page loads within a session): a quick tmux-style
 // reconnect with a text progress bar instead of the full boot log.
 export const REATTACH_BAR_CELLS = 16;
-export const REATTACH_TICK_MS = 45;
+// 70ms rather than the original 45: at 45 the bar filled in 720ms, which is
+// quick enough that it reads as having appeared already full. 70 gives a 1.1s
+// fill — unmistakably a progress bar — against a 350ms hold once it lands.
+export const REATTACH_TICK_MS = 70;
 export const REATTACH_HOLD_MS = 350;
 
 // Reduced-motion holds: the fully-rendered screen shows as one static frame,
@@ -39,7 +30,7 @@ const STORAGE_KEY = 'invictus-boot-shown';
 // The overlay is part of the server-rendered HTML (initial phase 'covering')
 // so it hides the page from the very first paint — otherwise the hero flashes
 // in the gap between first paint and hydration.
-function BootSequence() {
+function BootSequence({ lines }: BootProps) {
     const [phase, setPhase] = useState<'covering' | 'boot' | 'reattach' | 'fading' | 'hidden'>('covering');
     const [lineCount, setLineCount] = useState(0);
     const [progress, setProgress] = useState(0);
@@ -92,7 +83,7 @@ function BootSequence() {
             finished = true;
             removeSkipListeners();
             if (mode === 'boot') {
-                setLineCount(BOOT_LINES.length);
+                setLineCount(lines.length);
             } else {
                 setProgress(REATTACH_BAR_CELLS);
             }
@@ -108,7 +99,7 @@ function BootSequence() {
         if (reducedMotion) {
             // Static variant: the completed screen as a single frame.
             if (mode === 'boot') {
-                setLineCount(BOOT_LINES.length);
+                setLineCount(lines.length);
             } else {
                 setProgress(REATTACH_BAR_CELLS);
             }
@@ -117,10 +108,10 @@ function BootSequence() {
                 mode === 'boot' ? REDUCED_BOOT_HOLD_MS : REDUCED_REATTACH_HOLD_MS
             ));
         } else if (mode === 'boot') {
-            BOOT_LINES.forEach((_, index) => {
+            lines.forEach((_, index) => {
                 timers.current.push(setTimeout(() => setLineCount(index + 1), (index + 1) * LINE_INTERVAL_MS));
             });
-            timers.current.push(setTimeout(finish, BOOT_LINES.length * LINE_INTERVAL_MS + HOLD_MS));
+            timers.current.push(setTimeout(finish, lines.length * LINE_INTERVAL_MS + HOLD_MS));
         } else {
             for (let step = 1; step <= REATTACH_BAR_CELLS; step += 1) {
                 timers.current.push(setTimeout(() => setProgress(step), step * REATTACH_TICK_MS));
@@ -135,7 +126,7 @@ function BootSequence() {
             timers.current.forEach(clearTimeout);
             removeSkipListeners();
         };
-    }, []);
+    }, [lines]);
 
     if (phase === 'hidden') {
         return null;
@@ -148,33 +139,38 @@ function BootSequence() {
     return (
         <div
             id='boot-sequence'
-            role='status'
-            aria-label={phase === 'reattach' || (phase === 'fading' && progress > 0) ? 'Reconnecting' : 'Boot sequence'}
-            className={`fixed inset-0 z-[999] flex flex-col justify-center bg-[#0a0a0a] px-6 md:px-16 font-mono text-xs md:text-sm transition-opacity duration-500 ${phase === 'fading' ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+            // Decorative, and deliberately not a live region. role='status'
+            // would announce every fake kernel line as it appeared, reading a
+            // stream of invented boot output over whatever the visitor was
+            // actually listening to — and "Boot sequence" means nothing to them.
+            // The real page is fully rendered underneath and reachable the whole
+            // time, so hiding the decoration costs a screen-reader user nothing.
+            aria-hidden='true'
+            className={`fixed inset-0 z-[999] flex flex-col justify-center bg-bg px-6 md:px-16 font-mono text-xs md:text-sm transition-opacity duration-500 ${phase === 'fading' ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         >
             {
                 phase === 'reattach' || (phase === 'fading' && progress > 0) ?
                     <div>
                         <p
-                            className='text-gray-400'
+                            className='text-muted'
                         >
                             reconnecting to session
                             <span
-                                className='text-terminal-red'
+                                className='text-warm'
                             >
                                 {' invictus808'}
                             </span>
                             ...
                         </p>
                         <p
-                            className='text-gray-400'
+                            className='text-muted'
                         >
                             {`[${bar}] ${percent}%`}
                         </p>
                         {
                             attached &&
                             <p
-                                className='text-terminal-green'
+                                className='text-accent'
                             >
                                 attached.
                             </p>
@@ -183,11 +179,11 @@ function BootSequence() {
                     :
                     <div>
                         {
-                            BOOT_LINES.slice(0, lineCount).map((line, index) => {
+                            lines.slice(0, lineCount).map((line, index) => {
                                 return (
                                     <p
                                         key={index}
-                                        className={line.startsWith('[  OK  ]') ? 'text-terminal-green' : 'text-gray-400'}
+                                        className={line.startsWith('[  OK  ]') ? 'text-accent' : 'text-muted'}
                                     >
                                         {line}
                                     </p>
@@ -198,7 +194,7 @@ function BootSequence() {
             }
 
             <p
-                className='absolute bottom-6 right-6 text-gray-600'
+                className='absolute bottom-6 right-6 text-muted/60'
             >
                 press any key to skip
             </p>
