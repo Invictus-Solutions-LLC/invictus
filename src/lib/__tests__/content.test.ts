@@ -155,16 +155,41 @@ describe('content loader', () => {
     // appears inside that prose, the page introduces its owner twice in a row —
     // the exact redundancy this hero was reworked to remove — and it is also
     // what a truncation or copy-paste slip between the two files looks like.
+    //
+    // Run against the committed examples, because that is all CI has: the real
+    // content files are gitignored, so an earlier version of this test that read
+    // them directly passed on a machine that had them and failed everywhere
+    // else. The real files get the same guard, but only when they exist.
     it('does not repeat the about prose as the hero heading', () => {
-        process.env.CONTENT_DIR = path.join(process.cwd(), 'content');
-        const { getHeroContent, getAboutContent } = require('@/lib/content');
+        const source = path.join(process.cwd(), 'content');
 
-        const { headline } = getHeroContent();
-        const prose = getAboutContent().text.join(' ');
+        const assertHeadingIsNotTheProse = (dir: string) => {
+            // content.ts reads CONTENT_DIR once at module load, so the module
+            // registry has to be dropped between the two directories.
+            jest.resetModules();
+            process.env.CONTENT_DIR = dir;
+            const { getHeroContent, getAboutContent } = require('@/lib/content');
 
-        expect(headline.trim().length).toBeGreaterThan(2);
-        expect(headline).toBe(headline.trim());
-        expect(prose).not.toContain(headline.trim());
+            const { headline } = getHeroContent();
+            const prose = getAboutContent().text.join(' ');
+
+            expect(headline.trim().length).toBeGreaterThan(2);
+            expect(headline).toBe(headline.trim());
+            expect(prose).not.toContain(headline.trim());
+        };
+
+        const examples = fs.mkdtempSync(path.join(require('os').tmpdir(), 'hero-'));
+        ['hero', 'about'].forEach((name) => {
+            fs.copyFileSync(
+                path.join(source, `${name}.example.json`),
+                path.join(examples, `${name}.json`),
+            );
+        });
+        assertHeadingIsNotTheProse(examples);
+
+        if (['hero', 'about'].every((n) => fs.existsSync(path.join(source, `${n}.json`)))) {
+            assertHeadingIsNotTheProse(source);
+        }
     });
 
     // The committed *.example.json files are what CI and a fresh clone actually
