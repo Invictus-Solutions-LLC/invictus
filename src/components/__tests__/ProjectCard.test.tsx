@@ -2,32 +2,42 @@ import { render, screen } from '@testing-library/react';
 import ProjectCard from '@/components/ProjectCard';
 
 const project: Project = {
-    name: 'Invictus',
-    image: '/logos/invictus.png',
-    url: 'https://example.com/invictus',
-    description: 'A portfolio site.',
+    name: 'FloOps',
+    image: '/logos/floops.svg',
+    url: 'https://floops.io',
+    description: 'FloOps is a full-stack operations management platform for golf courses, written up in full by its author.',
 };
 
 describe('ProjectCard', () => {
-    it('renders the project name, description, and image', () => {
+    it('leads with the project name', () => {
         render(<ProjectCard {...project} />);
 
-        expect(screen.getByText('Invictus')).toBeInTheDocument();
-        expect(screen.getByText('A portfolio site.')).toBeInTheDocument();
-        expect(screen.getByAltText(project.name)).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: project.name })).toBeInTheDocument();
     });
 
-    it('links image, title, and caption to the project url in a new tab', () => {
+    // Shown in full and up front — not shortened, not paraphrased, and not
+    // hidden behind a disclosure the reader has to find.
+    it("renders the author's full description directly on the card", () => {
         render(<ProjectCard {...project} />);
 
-        const links = screen.getAllByRole('link');
-        expect(links).toHaveLength(3);
-        links.forEach((link) => {
-            expect(link).toHaveAttribute('href', project.url);
-            expect(link).toHaveAttribute('target', '_blank');
-            expect(link).toHaveAttribute('rel', 'noopener noreferrer');
-        });
-        expect(screen.getByRole('link', { name: project.name })).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: `open ${project.url}` })).toBeInTheDocument();
+        expect(screen.getByText(project.description)).toBeInTheDocument();
+        expect(screen.queryByText(/read the detail/i)).not.toBeInTheDocument();
+    });
+
+    it('opens the project safely in a new tab', () => {
+        render(<ProjectCard {...project} />);
+
+        const link = screen.getByRole('link', { name: /visit floops/i });
+        expect(link).toHaveAttribute('href', project.url);
+        expect(link).toHaveAttribute('target', '_blank');
+        expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    });
+
+    // The heading already names the project; a duplicate alt would make a
+    // screen reader read it twice.
+    it('marks the artwork as decorative', () => {
+        const { container } = render(<ProjectCard {...project} />);
+
+        expect(container.querySelector('img')).toHaveAttribute('alt', '');
     });
 });

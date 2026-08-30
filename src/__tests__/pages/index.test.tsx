@@ -1,12 +1,27 @@
 jest.mock('@/lib/content', () => ({
-    getHeroContent: jest.fn(() => ({ image: '/hero.png', prefix: '$ ', titles: [], words: [] })),
-    getAboutContent: jest.fn(() => ({ header: 'About', image: '/about.png', text: [] })),
-    getExperienceContent: jest.fn(() => ({ experiences: [] })),
-    getSkillsContent: jest.fn(() => ({ header: 'Skills', skills: [] })),
-    getProjectsContent: jest.fn(() => ({ projects: [] })),
-    getContactContent: jest.fn(() => ({ header: 'Contact', phone: '', email: '', headquarters: '' })),
+    getHeroContent: jest.fn(() => ({
+        location: 'City', greeting: '', headline: 'Headline', image: '/hero.png', imageAlt: 'Portrait', ctas: [],
+    })),
+    getAboutContent: jest.fn(() => ({ text: [] })),
+    getExperienceContent: jest.fn(() => ({ header: 'Experience', intro: '', experiences: [] })),
+    getSkillsContent: jest.fn(() => ({ header: 'Skills', intro: '', categories: [], skills: [] })),
+    getProjectsContent: jest.fn(() => ({ header: 'Work', intro: '', projects: [] })),
+    getProcessContent: jest.fn(() => ({ header: 'Process', intro: '', steps: [] })),
+    getLabContent: jest.fn(() => ({ header: 'Lab', intro: '', entries: [] })),
+    getContactContent: jest.fn(() => ({
+        header: 'Contact', phone: '', email: '', headquarters: '',
+        status: { sending: 'establishing uplink… transmitting', success: 'transmission complete', error: 'transmission failed' },
+        cta: { header: 'CTA', invitation: '', buttonLabel: 'Go' }, linkLabel: 'Get in touch',
+    })),
     getSocialsContent: jest.fn(() => ({ socials: [] })),
     getFooterContent: jest.fn(() => ({ text: 'Example Inc. All Rights Reserved.' })),
+    getBootContent: jest.fn(() => ({ lines: ['[  OK  ] started test.service'] })),
+    getAskContent: jest.fn(() => ({ triggerLabel: 'Ask anything', examples: ['do you know Python?'], messages: { asking: 'Reading…', throttled: 'Too many questions — wait a few minutes.', unavailable: 'Unavailable right now.', noMatch: 'Nothing matches that.' } })),
+    getSeoContent: jest.fn(() => ({
+        name: 'Example Person', shortName: 'Example', title: 'Example — Engineer',
+        description: 'A description.', url: 'https://example.com',
+        image: '/hero.png', imageAlt: 'Example Person',
+    })),
 }));
 
 import { getServerSideProps } from '@/pages/index';
@@ -16,35 +31,33 @@ import {
     getExperienceContent,
     getSkillsContent,
     getProjectsContent,
+    getProcessContent,
+    getLabContent,
     getContactContent,
     getSocialsContent,
     getFooterContent,
+    getSeoContent,
+    getAskContent,
+    getBootContent,
 } from '@/lib/content';
 
 describe('Home getServerSideProps', () => {
     it('assembles page props directly from the content loader, with no network round trip', async () => {
         const result = await getServerSideProps();
 
-        expect(getHeroContent).toHaveBeenCalled();
-        expect(getAboutContent).toHaveBeenCalled();
-        expect(getExperienceContent).toHaveBeenCalled();
-        expect(getSkillsContent).toHaveBeenCalled();
-        expect(getProjectsContent).toHaveBeenCalled();
-        expect(getContactContent).toHaveBeenCalled();
-        expect(getSocialsContent).toHaveBeenCalled();
-        expect(getFooterContent).toHaveBeenCalled();
-
-        expect(result).toEqual({
-            props: {
-                heroProps: { image: '/hero.png', prefix: '$ ', titles: [], words: [] },
-                aboutProps: { header: 'About', image: '/about.png', text: [] },
-                experienceProps: { experiences: [] },
-                skillsProps: { header: 'Skills', skills: [] },
-                projectsProps: { projects: [] },
-                contactProps: { header: 'Contact', phone: '', email: '', headquarters: '' },
-                socialsProps: { socials: [] },
-                footerProps: { text: 'Example Inc. All Rights Reserved.' },
-            },
+        [
+            getHeroContent, getAboutContent, getExperienceContent, getSkillsContent,
+            getProjectsContent, getProcessContent, getLabContent, getContactContent,
+            getSocialsContent, getFooterContent, getSeoContent, getAskContent, getBootContent,
+        ].forEach((loader) => {
+            expect(loader).toHaveBeenCalled();
         });
+
+        expect(Object.keys(result.props)).toEqual([
+            'heroProps', 'aboutProps', 'experienceProps', 'skillsProps', 'projectsProps',
+            'processProps', 'labProps', 'contactProps', 'socialsProps', 'footerProps',
+            'seoProps', 'askProps', 'bootProps', 'personSchema',
+        ]);
+        expect(result.props.footerProps).toEqual({ text: 'Example Inc. All Rights Reserved.' });
     });
 });

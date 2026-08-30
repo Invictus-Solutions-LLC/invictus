@@ -1,79 +1,51 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import AnimatedImage from '@/components/AnimatedImage';
-import { useResetScrollOnLeave } from '@/hooks/useResetScrollOnLeave';
+import ContentImage from '@/components/ContentImage';
 
+// The card leads with the project's own name and lets the author's description
+// do the explaining — every one of them opens by saying what the thing is, so a
+// separate headline only restated the first sentence in weaker words.
 function ProjectCard({ name, image, url, description }: Project) {
-    const ref = useResetScrollOnLeave<HTMLDivElement>();
-
     return (
-        <div
-            ref={ref}
-            className='flex flex-col h-full flex-shrink-0 w-full snap-center space-y-5 items-center overflow-y-auto scrollbar-thin scroll-smooth scrollbar-track-transparent scrollbar-thumb-[#FF0000]/70 scrollbar-thumb-rounded-full'
-        >
-            <a
-                href={url}
-                target='_blank'
-                rel='noopener noreferrer'
-                aria-label={`Open ${name} project`}
-            >
-                <AnimatedImage
+        <article className='card card-interactive group grid overflow-hidden sm:grid-cols-[240px_1fr]'>
+            {/* Every project image is a square 1024x1024 mark, so the panel lets
+                it fill edge to edge rather than floating small in the middle.
+                object-contain keeps it uncropped whatever shape it really is. */}
+            <div className='card-shot aspect-square bg-gradient-to-br from-[#103A48] to-[#0A2029] sm:aspect-auto'>
+                <ContentImage
                     src={image}
-                    alt={name}
+                    alt=''
                     width={512}
                     height={512}
-                    sizes={'(min-width: 1024px) 256px, (min-width: 768px) 192px, 128px'}
-                    initial={{
-                        y: -100,
-                        opacity: 0,
-                    }}
-                    animate={{
-                        y: 0,
-                        opacity: 1,
-                    }}
-                    transition={{
-                        duration: 1.2,
-                    }}
-                    className='w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 object-contain'
+                    sizes='(min-width: 640px) 240px, 100vw'
+                    className='h-full w-full object-contain'
                 />
-            </a>
+            </div>
 
-            <div
-                className='relative w-full space-y-4 px-0 md:px-10 max-w-6xl'
-            >
-                <h3
-                    className='text-2xl md:text-4xl font-semibold text-center'
-                >
-                    <a
-                        href={url}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='underline decoration-terminal-red/50 hover:text-terminal-red transition-colors'
-                    >
-                        {name}
-                    </a>
+            <div className='flex flex-col p-6 sm:p-7'>
+                <h3 className='text-xl font-semibold leading-snug'>
+                    {name}
                 </h3>
 
-                <p
-                    className='text-md md:text-lg text-center md:text-left px-2'
-                >
+                <p className='mt-3 text-[15px] leading-relaxed text-shell-muted'>
                     {description}
                 </p>
 
-                <p
-                    className='commentCaption text-center md:text-left'
+                <a
+                    href={url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='mt-5 inline-flex w-fit items-center gap-1.5 font-mono text-xs font-medium text-shell-accent hover:underline'
                 >
-                    <a
-                        href={url}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='hover:text-terminal-red transition-colors'
+                    {`Visit ${name}`}
+                    <span
+                        aria-hidden='true'
+                        className='card-arrow'
                     >
-                        {`open ${url}`}
-                    </a>
-                </p>
+                        →
+                    </span>
+                </a>
             </div>
-        </div>
+        </article>
     );
 }
 

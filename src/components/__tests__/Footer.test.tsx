@@ -2,15 +2,21 @@ import { render, screen } from '@testing-library/react';
 import Footer from '@/components/Footer';
 
 describe('Footer', () => {
-    it('renders the session name, copyright, and section shortcuts', () => {
-        render(<Footer text='Example Inc. All Rights Reserved.' />);
+    it('takes the wordmark from content rather than hardcoding it', () => {
+        render(<Footer text='Invictus808.' socials={[]} name='Ada Lovelace' />);
 
-        expect(screen.getByText('[invictus808]')).toBeInTheDocument();
-        expect(screen.getByText(new RegExp(`© ${new Date().getFullYear()} Example Inc`))).toBeInTheDocument();
+        expect(screen.getByText('Ada Lovelace')).toBeInTheDocument();
+    });
 
-        const nav = screen.getByRole('navigation', { name: 'Section shortcuts' });
-        expect(nav).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: '2:experience' })).toHaveAttribute('href', '#experience');
-        expect(screen.getByRole('link', { name: '5:contact' })).toHaveAttribute('href', '#contact');
+    it('renders the copyright with the current year', () => {
+        render(<Footer text='Invictus808. All Rights Reserved.' socials={[]} name='Blaise' />);
+
+        expect(screen.getByText(`© ${new Date().getFullYear()} Invictus808. All Rights Reserved.`)).toBeInTheDocument();
+    });
+
+    it('lists social profiles in a named navigation landmark', () => {
+        render(<Footer text='Invictus808.' socials={['https://github.com/example']} name='Blaise' />);
+
+        expect(screen.getByRole('navigation', { name: /social profiles/i })).toBeInTheDocument();
     });
 });
