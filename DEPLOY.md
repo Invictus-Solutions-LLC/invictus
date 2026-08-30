@@ -45,6 +45,14 @@ sidecar that keeps the Let's Encrypt certificate renewed automatically.
    # Generate with: openssl rand -hex 24
    RESUME_ACCESS_TOKENS=
 
+   # --- ⌘K answering (optional) ---
+   # Enables /api/ask, which answers questions from your content/*.json files.
+   # Leave empty and the ⌘K palette stays a fast navigator — nothing breaks.
+   # Every call costs money; the endpoint is rate limited per caller and globally.
+   ANTHROPIC_API_KEY=
+   # Optional model override; defaults to claude-opus-5.
+   # ANTHROPIC_MODEL=claude-haiku-4-5
+
    # --- Reverse proxy (leave as-is for either topology below) ---
    # nginx fronts the app in both documented setups, so the rate limiter can
    # read the real client IP from the last X-Forwarded-For hop. Set to false
@@ -118,6 +126,23 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
 Certificate renewal is automatic (the `certbot` container checks twice a day and only actually
 renews when the cert is due). No further action needed once step 5 above has run once.
+
+## If every page returns 500
+
+The app reads `content/*.json` at request time from the bind-mounted directory.
+The container runs as an unprivileged user (uid 1001), so the host directory has
+to be readable by it — an ownership or permission mismatch is the most common
+cause of a fresh deploy serving 500s while `/api/health` still returns 200
+(health is content-independent by design).
+
+```bash
+docker compose -f docker-compose.prod.yml logs invictus | tail -20
+chmod 755 content && chmod 644 content/*.json
+```
+
+The error message distinguishes the two cases: "was not found" means the file is
+genuinely absent, "could not be read (EACCES)" means it exists but the container
+user cannot open it.
 
 ## Alternative: behind an existing host nginx
 
