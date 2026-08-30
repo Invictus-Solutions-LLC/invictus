@@ -18,8 +18,11 @@ function Hero({ location, greeting, headline, image, imageAlt, ctas, paragraphs,
         <div className='relative overflow-hidden'>
             <Ambient />
 
-            <div className='relative mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-12 md:px-10 md:pb-24 md:pt-20 lg:grid-cols-[1fr_380px] lg:items-start'>
-                <div>
+            <div className='relative mx-auto grid max-w-6xl gap-x-12 gap-y-10 px-6 pb-16 pt-12 md:px-10
+                            md:pb-24 md:pt-20 lg:grid-cols-[1fr_380px] lg:items-start lg:gap-y-0'>
+                {/* Heading block. Split from the prose so that the portrait can
+                    fall between them once the two columns stack. */}
+                <div className='order-1 lg:order-none'>
                     <p className='eyebrow mb-6 flex items-center gap-2 text-warm'>
                         <svg
                             aria-hidden='true'
@@ -56,7 +59,32 @@ function Hero({ location, greeting, headline, image, imageAlt, ctas, paragraphs,
                                 : headline
                         }
                     </h1>
+                </div>
 
+                {/* Second on a stacked layout, so a visitor meets the person
+                    before reading four paragraphs about him — on a phone the
+                    portrait previously sat below the prose AND both calls to
+                    action, about 1,100px down. On lg it returns to the right
+                    column and spans both rows, unchanged. */}
+                <div className='order-2 flex w-full max-w-sm flex-col gap-4 lg:order-none lg:max-w-none
+                                lg:row-span-2 lg:sticky lg:top-24'>
+                    <ContentImage
+                        src={image}
+                        alt={imageAlt}
+                        width={760}
+                        height={1013}
+                        priority={true}
+                        sizes='(min-width: 1024px) 380px, (min-width: 448px) 384px, 90vw'
+                        className='aspect-[3/4] w-full rounded-3xl border border-line object-cover'
+                    />
+
+                    {
+                        certification &&
+                        <CertificationCard {...certification} />
+                    }
+                </div>
+
+                <div className='order-3 lg:order-none'>
                     {
                         paragraphs.map((paragraph: string, index: number) => {
                             return (
@@ -88,23 +116,6 @@ function Hero({ location, greeting, headline, image, imageAlt, ctas, paragraphs,
                             })
                         }
                     </div>
-                </div>
-
-                <div className='flex flex-col gap-4 lg:sticky lg:top-24'>
-                    <ContentImage
-                        src={image}
-                        alt={imageAlt}
-                        width={760}
-                        height={1013}
-                        priority={true}
-                        sizes='(min-width: 1024px) 380px, (min-width: 640px) 60vw, 90vw'
-                        className='aspect-[3/4] w-full rounded-3xl border border-line object-cover'
-                    />
-
-                    {
-                        certification &&
-                        <CertificationCard {...certification} />
-                    }
                 </div>
             </div>
         </div>

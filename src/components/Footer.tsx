@@ -45,7 +45,9 @@ function Footer({ text, socials, name }: Props) {
                     </ul>
                 </nav>
 
-                <div className='flex items-center gap-4'>
+                {/* Stacked below sm: side by side, the toggle and the copyright
+                    left the copyright wrapping mid-sentence on a phone. */}
+                <div className='flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4'>
                     {/* The header hides the toggle below sm to protect the CTA;
                         this keeps it reachable on a phone. */}
                     <ThemeToggle className='sm:hidden' />
