@@ -86,13 +86,13 @@ describe('Contact', () => {
         await fillIn(user);
         await user.click(screen.getByRole('button', { name: /send message/i }));
 
-        const line = await screen.findByText(/establishing uplink/);
+        const line = await screen.findByText(/establishing uplink/, { selector: '[aria-hidden="true"]' });
         expect(line).toHaveAttribute('aria-hidden', 'true');
         expect(screen.getByText('Sending your message…')).toHaveClass('sr-only');
 
         settle({ ok: true, json: async () => ({ message: 'Message sent successfully.' }) } as Response);
 
-        const done = await screen.findByText(/transmission complete/);
+        const done = await screen.findByText(/transmission complete/, { selector: '[aria-hidden="true"]' });
         expect(done).toHaveAttribute('aria-hidden', 'true');
         // The sentence a visitor can act on is never inside the hidden prefix.
         expect(screen.getByText('Message sent successfully.')).toBeInTheDocument();
@@ -109,7 +109,7 @@ describe('Contact', () => {
         await fillIn(user);
         await user.click(screen.getByRole('button', { name: /send message/i }));
 
-        const failed = await screen.findByText(/transmission failed/);
+        const failed = await screen.findByText(/transmission failed/, { selector: '[aria-hidden="true"]' });
         expect(failed).toHaveAttribute('aria-hidden', 'true');
         expect(screen.getByText('Failed to send message. Please try again later.')).toBeInTheDocument();
 

@@ -99,7 +99,7 @@ describe('CommandPalette', () => {
 
         await user.type(screen.getByRole('combobox'), 'sudo');
 
-        expect(await screen.findByText(/not in the sudoers file/)).toBeInTheDocument();
+        expect(await screen.findByText(/not in the sudoers file/, { selector: '.sr-only' })).toBeInTheDocument();
         expect(screen.queryByText('Nothing matches that.')).not.toBeInTheDocument();
     });
 
@@ -111,7 +111,7 @@ describe('CommandPalette', () => {
 
         await user.type(screen.getByRole('combobox'), 'sudo');
 
-        expect(await screen.findByText(/not in the sudoers file/)).toBeInTheDocument();
+        expect(await screen.findByText(/not in the sudoers file/, { selector: '.sr-only' })).toBeInTheDocument();
         expect(screen.queryByRole('option', { name: /ask/i })).not.toBeInTheDocument();
     });
 
@@ -121,7 +121,7 @@ describe('CommandPalette', () => {
 
         await user.type(screen.getByRole('combobox'), '  SUDO  ');
 
-        expect(await screen.findByText(/not in the sudoers file/)).toBeInTheDocument();
+        expect(await screen.findByText(/not in the sudoers file/, { selector: '.sr-only' })).toBeInTheDocument();
     });
 
     // The animation is decoration; the sentence is the content. A screen reader
@@ -132,7 +132,7 @@ describe('CommandPalette', () => {
 
         await user.type(screen.getByRole('combobox'), 'sudo');
 
-        const spoken = await screen.findByText('nice try. you are not in the sudoers file.');
+        const spoken = await screen.findByText('nice try. you are not in the sudoers file.', { selector: '.sr-only' });
         expect(spoken).toHaveClass('sr-only');
     });
 
@@ -143,7 +143,7 @@ describe('CommandPalette', () => {
 
         await user.type(screen.getByRole('combobox'), 'do you know sudo?');
 
-        expect(screen.queryByText(/not in the sudoers file/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/not in the sudoers file/, { selector: '.sr-only' })).not.toBeInTheDocument();
         expect(screen.getByRole('option', { name: /ask/i })).toBeInTheDocument();
     });
 
@@ -176,7 +176,7 @@ describe('CommandPalette', () => {
         await user.type(screen.getByRole('combobox'), 'do you know kubernetes?');
         await user.keyboard('{Enter}');
 
-        expect(await screen.findByText(/used Kubernetes/)).toBeInTheDocument();
+        expect(await screen.findByText(/used Kubernetes/, { selector: '.sr-only' })).toBeInTheDocument();
         expect(screen.queryByText('skills.json')).not.toBeInTheDocument();
         expect(screen.queryByText(/based on/i)).not.toBeInTheDocument();
     });
@@ -195,7 +195,7 @@ describe('CommandPalette', () => {
         await user.type(screen.getByRole('combobox'), 'do you know kubernetes?');
         await user.keyboard('{Enter}');
 
-        const spoken = await screen.findByText('He has, on several projects.');
+        const spoken = await screen.findByText('He has, on several projects.', { selector: '.sr-only' });
         expect(spoken).toHaveClass('sr-only');
     });
 

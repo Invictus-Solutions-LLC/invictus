@@ -18,7 +18,13 @@ services:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - ANTHROPIC_MODEL=${ANTHROPIC_MODEL:-}
     ports:
-      - "3000:3000"
+      # Loopback by default, matching the production service. The dev stack is
+      # handed real RESEND_API_KEY, ANTHROPIC_API_KEY and RESUME_ACCESS_TOKENS,
+      # so a bare "3000:3000" published it to every device on the network —
+      # anyone on the same wifi could send mail on your account or spend your
+      # model credits. Set DEV_BIND=0.0.0.0 when you deliberately want to reach
+      # the dev server from a phone on the same network.
+      - "${DEV_BIND:-127.0.0.1}:3000:3000"
     volumes:
       - ./src/:/app/src/
       - ./public/:/app/public/

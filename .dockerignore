@@ -5,7 +5,7 @@ node_modules
 .next
 
 # Ignore development-specific files
-.DS_Store
+**/.DS_Store
 .env
 .env.local
 .env.development.local
@@ -31,10 +31,14 @@ out
 .idea
 .vscode
 
-# Ignore test files and directories
-__tests__
-test
-tests
+# Ignore test files and directories. The `**/` prefix matters: Docker matches
+# these from the context root, so a bare `__tests__` never matched
+# src/components/__tests__ and every spec was copied into the builder.
+**/__tests__
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
 coverage
 e2e
 playwright-report
@@ -50,17 +54,17 @@ prettier.config.js
 .gitattributes
 
 # Ignore log files
-*.log
+**/*.log
 
 # Ignore temporary files
-*.tmp
+**/*.tmp
 
 # Ignore documentation files
 docs
 
 # Ignore backup files
-*.bak
-*.backup
+**/*.bak
+**/*.backup
 
 # Ignore local development files
 .next-cache
@@ -68,8 +72,8 @@ node_modules/.cache
 node_modules/.bin
 
 # Ignore editor backup files
-*~
-.*.swp
+**/*~
+**/.*.swp
 
 # Ignore macOS-specific files
-.DS_Store
+**/.DS_Store
