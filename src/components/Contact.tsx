@@ -4,6 +4,10 @@ import Reveal from '@/components/Reveal';
 
 type SubmitStatus = 'idle' | 'sending' | 'success' | 'error';
 
+// Generous for a mail send that normally takes under a second, short enough
+// that a visitor is not left staring at a disabled button.
+const SEND_TIMEOUT_MS = 20_000;
+
 // Inline, like every other icon in this codebase. Pulling the icon library in
 // for three glyphs cost 21 MB in the runtime image and was the only place the
 // project drew icons from a package rather than drawing them.
@@ -20,11 +24,21 @@ function Contact({ header, phone, email, headquarters, cta, status: statusLabels
 
     const onSubmit: SubmitHandler<ContactInputs> = async (formData) => {
         setStatus('sending');
+
+        // A stalled connection — flaky mobile signal, a captive portal — used to
+        // leave this button disabled and the message trapped forever, with no way
+        // to retry short of reloading and retyping. fetch has no timeout of its
+        // own, so the abort is the only thing that ends the wait. Sending mail is
+        // fast; anything past this is not coming back.
+        const controller = new AbortController();
+        const timeout = setTimeout(() => { controller.abort(); }, SEND_TIMEOUT_MS);
+
         try {
             const response = await fetch('/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
+                signal: controller.signal,
             });
             const data: { message: string } = await response.json();
 
@@ -39,8 +53,13 @@ function Contact({ header, phone, email, headquarters, cta, status: statusLabels
             reset();
         }
         catch {
+            // Covers an aborted request as well as a dropped one: either way the
+            // visitor gets a message they can act on and a button they can press.
             setStatus('error');
             setStatusMessage('Failed to send message. Please try again later.');
+        }
+        finally {
+            clearTimeout(timeout);
         }
     };
 

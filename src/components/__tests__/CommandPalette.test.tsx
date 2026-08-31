@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CommandPalette from '@/components/CommandPalette';
 import type { PaletteCommand } from '@/components/CommandPalette';
@@ -297,6 +297,39 @@ describe('CommandPalette', () => {
 
     // The whole point of the fallback: an unconfigured or rate-limited endpoint
     // must leave a working navigation palette rather than an error screen.
+    // The palette sat on "asking" forever when a connection stalled: fetch has
+    // no timeout, and there is no cancel button for the visitor to press.
+    it('sends a cancellable request', async () => {
+        const fetchSpy = jest.spyOn(global, 'fetch').mockResolvedValue({
+            ok: true,
+            json: async () => ({ answer: 'He does.', sources: [], sectionId: null }),
+        } as Response);
+
+        const user = userEvent.setup();
+        setup();
+
+        await user.type(screen.getByRole('combobox'), 'do you know kubernetes?');
+        await user.keyboard('{Enter}');
+
+        await waitFor(() => { expect(fetchSpy).toHaveBeenCalled(); });
+        const init = fetchSpy.mock.calls[0]?.[1] as RequestInit;
+        expect(init.signal).toBeInstanceOf(AbortSignal);
+    });
+
+    it('falls back to plain navigation when the request is aborted', async () => {
+        jest.spyOn(global, 'fetch').mockRejectedValue(
+            new DOMException('The operation was aborted.', 'AbortError'),
+        );
+
+        const user = userEvent.setup();
+        setup();
+
+        await user.type(screen.getByRole('combobox'), 'do you know kubernetes?');
+        await user.keyboard('{Enter}');
+
+        expect(await screen.findByText(messages.unavailable)).toBeInTheDocument();
+    });
+
     it('degrades to plain navigation when answering is unavailable', async () => {
         jest.spyOn(global, 'fetch').mockResolvedValue({ ok: false, status: 503 } as Response);
 

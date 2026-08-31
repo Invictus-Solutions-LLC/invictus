@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Contact from '@/components/Contact';
 
@@ -55,6 +55,42 @@ describe('Contact', () => {
         expect(await screen.findByText('Name is required.')).toBeInTheDocument();
         expect(screen.getByLabelText('Name')).toHaveAttribute('aria-invalid', 'true');
         expect(fetchSpy).not.toHaveBeenCalled();
+    });
+
+    // A stalled connection used to leave this button disabled forever with the
+    // visitor's typed message trapped behind it — no retry short of reloading and
+    // starting over. fetch has no timeout of its own, so the request has to be
+    // cancellable and the abort has to land somewhere useful.
+    it('sends a cancellable request', async () => {
+        const fetchSpy = jest.spyOn(global, 'fetch').mockResolvedValue({
+            ok: true,
+            json: async () => ({ message: 'Message sent successfully.' }),
+        } as Response);
+
+        const user = userEvent.setup();
+        render(<Contact {...contactProps} />);
+        await fillIn(user);
+        await user.click(screen.getByRole('button', { name: /send message/i }));
+
+        await waitFor(() => { expect(fetchSpy).toHaveBeenCalled(); });
+        const init = fetchSpy.mock.calls[0]?.[1] as RequestInit;
+        expect(init.signal).toBeInstanceOf(AbortSignal);
+    });
+
+    it('recovers, and keeps the message, when the request is aborted', async () => {
+        jest.spyOn(global, 'fetch').mockRejectedValue(
+            new DOMException('The operation was aborted.', 'AbortError'),
+        );
+
+        const user = userEvent.setup();
+        render(<Contact {...contactProps} />);
+        await fillIn(user);
+        await user.click(screen.getByRole('button', { name: /send message/i }));
+
+        // Usable again, with something to act on and the text still there.
+        expect(await screen.findByRole('button', { name: /send message/i })).toBeEnabled();
+        expect(await screen.findByText('Failed to send message. Please try again later.')).toBeInTheDocument();
+        expect(screen.getByLabelText('Message')).toHaveValue('Hello there.');
     });
 
     it('posts the submission and reports success', async () => {

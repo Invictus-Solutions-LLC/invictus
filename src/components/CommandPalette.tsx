@@ -16,6 +16,10 @@ export type PaletteCommand = {
 // left with a blank placeholder just because that list is empty.
 const FALLBACK_PLACEHOLDER = 'Ask a question, or jump to a section…';
 
+// The server gives the model 30s before it gives up (see src/pages/api/ask),
+// so this is the point past which no answer is coming.
+const ASK_TIMEOUT_MS = 30_000;
+
 type Answer = {
     answer: string;
     sectionId: string | null;
@@ -175,11 +179,19 @@ function CommandPalette({ onClose, commands, examples, messages, terminal }: Pro
     const ask = useCallback(async () => {
         setAskState('asking');
         setAnswer(null);
+
+        // Without this the palette sat on "asking" forever when a connection
+        // stalled. fetch has no timeout, and the visitor has no cancel button —
+        // the abort is what returns the palette to a usable state.
+        const controller = new AbortController();
+        const timeout = setTimeout(() => { controller.abort(); }, ASK_TIMEOUT_MS);
+
         try {
             const response = await fetch('/api/ask', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ question: query }),
+                signal: controller.signal,
             });
 
             if (!response.ok) {
@@ -198,7 +210,12 @@ function CommandPalette({ onClose, commands, examples, messages, terminal }: Pro
             setAskState('answered');
         }
         catch {
+            // An abort lands here too, and "unavailable" is the honest word for
+            // it: the list below still works, which is what that message says.
             setAskState('unavailable');
+        }
+        finally {
+            clearTimeout(timeout);
         }
     }, [query]);
 
