@@ -304,3 +304,23 @@
         word-break: break-all;
     }
 }
+
+/* Forced colours (Windows High Contrast and equivalents).
+   These modes replace author colours with the user's system palette, which
+   erases anything whose shape came only from a background-color. The primary
+   button — including the contact form's submit — rendered as plain underlined
+   text with no button affordance, and the selected theme in the toggle flattened
+   to the same Canvas as its unselected siblings.
+
+   Borders and system colour keywords survive forced colours, so they are what
+   carry meaning here. Everything else on the page already draws a border. */
+@media (forced-colors: active) {
+    .btn-primary {
+        border: 1px solid ButtonText;
+    }
+
+    [role='radio'][aria-checked='true'] {
+        background: Highlight;
+        color: HighlightText;
+    }
+}

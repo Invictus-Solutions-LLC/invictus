@@ -195,3 +195,56 @@ test.describe('printing', () => {
         expect(contrastRatio(parseRgb(background), [255, 255, 255])).toBeGreaterThan(4.5);
     });
 });
+
+// Windows High Contrast and equivalents replace author colours with the user's
+// system palette. Anything whose shape came only from a background-color loses
+// it: the primary button rendered as plain underlined text with no button
+// affordance, and the selected theme flattened into its unselected siblings.
+//
+// The context is built by hand because forcedColors is a context option, not a
+// test fixture in this Playwright version.
+test.describe('forced colours', () => {
+    test('primary buttons keep a visible boundary', async ({ browser, baseURL }) => {
+        const context = await browser.newContext({ forcedColors: 'active' });
+        const page = await context.newPage();
+        await page.goto(baseURL as string);
+        await page.keyboard.press('Escape');
+
+        // Every primary button, including the header CTA that once duplicated
+        // the class inline and so escaped this rule entirely.
+        const buttons = page.locator('.btn-primary');
+        const count = await buttons.count();
+        expect(count).toBeGreaterThan(0);
+
+        for (let index = 0; index < count; index += 1) {
+            const width = await buttons.nth(index).evaluate((element) => {
+                return window.getComputedStyle(element).borderTopWidth;
+            });
+            expect(width).not.toBe('0px');
+        }
+
+        await context.close();
+    });
+
+    test('the selected theme stays distinguishable', async ({ browser, baseURL }) => {
+        const context = await browser.newContext({ forcedColors: 'active' });
+        const page = await context.newPage();
+        await page.goto(baseURL as string);
+        await page.keyboard.press('Escape');
+
+        const readBackground = (locator: ReturnType<typeof page.locator>) => {
+            return locator.evaluate((element) => {
+                return window.getComputedStyle(element).backgroundColor;
+            });
+        };
+
+        // The toggle renders in both the header and the footer, so scope to one.
+        const toggle = page.locator('header [role="radiogroup"]');
+        const on = await readBackground(toggle.locator('[role="radio"][aria-checked="true"]'));
+        const off = await readBackground(toggle.locator('[role="radio"][aria-checked="false"]').first());
+
+        expect(on).not.toBe(off);
+
+        await context.close();
+    });
+});

@@ -94,11 +94,16 @@ function Header({ ctaLabel, askLabel, onOpenPalette }: Props) {
 
                     <ThemeToggle className='hidden sm:flex' />
 
+                    {/* The shared primary-button class with a smaller, rounder
+                        shape for the bar. It duplicated every one of those
+                        declarations inline before, which meant a rule written
+                        against .btn-primary — the forced-colours border, for one —
+                        silently skipped the most prominent button on the page.
+                        Tailwind's utilities layer wins over @apply, so the radius
+                        and padding here still override. */}
                     <Link
                         href='#contact'
-                        className='inline-flex whitespace-nowrap rounded-full bg-accent px-4 py-2 text-sm font-semibold
-                                   text-accent-ink transition duration-200 ease-shore hover:-translate-y-0.5
-                                   hover:brightness-[1.07] motion-reduce:transform-none motion-reduce:transition-none'
+                        className='btn-primary whitespace-nowrap rounded-full px-4 py-2'
                     >
                         {ctaLabel}
                     </Link>
