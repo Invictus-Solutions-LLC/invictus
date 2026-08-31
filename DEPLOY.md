@@ -74,8 +74,16 @@ sidecar that keeps the Let's Encrypt certificate renewed automatically.
    why this extra step exists):
 
    ```bash
-   ./nginx/init-letsencrypt.sh
+   STAGING=1 ./nginx/init-letsencrypt.sh   # rehearsal: proves the challenge works
+   ./nginx/init-letsencrypt.sh             # then the real certificate
    ```
+
+   Do the staging run first. Let's Encrypt allows only **5 duplicate certificates
+   per week** for the same names, and this is the step where DNS has not
+   propagated yet or port 80 is still closed — a few failed attempts against the
+   production endpoint can lock you out of issuing for a week. The staging run
+   issues an untrusted certificate (browsers will warn) purely to prove the
+   HTTP-01 challenge succeeds, and has far looser limits.
 
 ## Deploy / update
 
