@@ -229,3 +229,78 @@
         @apply border-accent;
     }
 }
+
+/* Printing.
+   Saving this page as a PDF is a real path — a recruiter does it — and the site
+   defaults to dark. Browsers suppress background colours when printing unless
+   "Background graphics" is ticked, so the dark palette put near-white text on
+   white paper at 1.13:1. Effectively a blank page.
+
+   Corrected at the token level rather than per component: every colour on the
+   site resolves through these variables, so redefining them here re-renders the
+   whole page on paper terms from one place, for either theme. */
+@media print {
+    :root,
+    :root.dark,
+    :root.light {
+        --color-bg: 255 255 255;
+        --color-surface: 255 255 255;
+        --color-shell: 255 255 255;
+        --color-fg: 17 17 17;
+        --color-shell-fg: 17 17 17;
+        --color-muted: 70 70 70;
+        --color-shell-muted: 70 70 70;
+        --color-line: 190 190 190;
+        --color-shell-line: 190 190 190;
+        /* Accents become ink: a colour that reads as emphasis on screen is just
+           expensive grey on a home printer. */
+        --color-accent: 17 17 17;
+        --color-accent-soft: 17 17 17;
+        --color-shell-accent: 17 17 17;
+        --color-accent-ink: 255 255 255;
+        --color-warm: 70 70 70;
+        --shadow-card: none;
+        --shadow-card-hover: none;
+        color-scheme: light;
+    }
+
+    body {
+        background: #fff;
+    }
+
+    /* Interactive chrome carries no meaning on paper: a sticky nav, the search
+       dialog, the intro overlay, the empty form fields, and buttons that cannot
+       be pressed. The contact *details* beside the form are kept. */
+    header,
+    #boot-sequence,
+    [role='dialog'],
+    #contact form,
+    .btn-primary,
+    .btn-secondary {
+        display: none;
+    }
+
+    /* Ambient texture is decoration that would only cost ink. */
+    .animate-caustic,
+    .animate-swell,
+    .animate-drift {
+        display: none;
+    }
+
+    /* A card split down the middle by a page break is unreadable. */
+    .card,
+    article {
+        break-inside: avoid;
+    }
+
+    /* A printed project link is a dead end without its address, so the URL is
+       spelled out — but only in the work section. Applied to every external
+       link it also expanded the credential URL, a 60-character UUID nobody can
+       retype, which blew the certification card's layout apart. The rule earns
+       its place exactly where the addresses are short and worth having. */
+    #work a[href^='http']::after {
+        content: ' (' attr(href) ')';
+        font-size: 0.85em;
+        word-break: break-all;
+    }
+}

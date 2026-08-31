@@ -154,3 +154,44 @@ test.describe('accessibility', () => {
         });
     }
 });
+
+// A recruiter saving the page as a PDF is a real path, and the site defaults to
+// dark. Browsers suppress background colours when printing unless "Background
+// graphics" is ticked, so before the print stylesheet existed the dark palette
+// put near-white text on white paper at 1.13:1 — a blank-looking page.
+test.describe('printing', () => {
+    for (const theme of ['dark', 'light'] as const) {
+        test(`stays legible on paper from the ${theme} theme`, async ({ page }) => {
+            await useTheme(page, theme);
+            await gotoHome(page);
+            await page.emulateMedia({ media: 'print' });
+
+            const colour = await page.evaluate(() => {
+                return window.getComputedStyle(document.body).color;
+            });
+
+            // Measured against paper, not against the on-screen background.
+            expect(contrastRatio(parseRgb(colour), [255, 255, 255])).toBeGreaterThanOrEqual(4.5);
+        });
+    }
+
+    test('drops chrome that cannot be used on paper', async ({ page }) => {
+        await gotoHome(page);
+        await page.emulateMedia({ media: 'print' });
+
+        await expect(page.locator('header')).toBeHidden();
+        await expect(page.locator('#contact form')).toBeHidden();
+    });
+
+    // The rules must stay behind the media query: a leak would repaint the site.
+    test('leaves the on-screen rendering alone', async ({ page }) => {
+        await useTheme(page, 'dark');
+        await gotoHome(page);
+
+        await expect(page.locator('header')).toBeVisible();
+        const background = await page.evaluate(() => {
+            return window.getComputedStyle(document.body).backgroundColor;
+        });
+        expect(contrastRatio(parseRgb(background), [255, 255, 255])).toBeGreaterThan(4.5);
+    });
+});
